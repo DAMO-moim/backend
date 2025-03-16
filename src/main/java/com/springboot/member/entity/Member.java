@@ -1,21 +1,20 @@
-package com.springboot.member;
+package com.springboot.member.entity;
 
 import com.springboot.audit.BaseEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 //임시 멤버 엔티티
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-class Member extends BaseEntity {
+public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
@@ -31,4 +30,7 @@ class Member extends BaseEntity {
 
     @Column(nullable = false)
     private String password;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles = new ArrayList<>();
 }
