@@ -1,0 +1,14 @@
+#배포할 server 실행 환경 설정(mysql 연동)
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost{서버명}:3306{포트번호}/(DB명)
+    username: {root}
+    password: {password}
+  jpa:
+    hibernate:
+      ddl-auto: create  # (1) 스키마 자동 생성
+    show-sql: true      # (2) SQL 쿼리 출력
+    properties:
+      hibernate:
+        format_sql: true  # (3) SQL pretty print
