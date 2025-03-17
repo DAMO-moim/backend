@@ -36,3 +36,19 @@ jwt:
   key: ${JWT_SECRET_KEY}
   access-token-expiration-minutes: 10
   refresh-token-expiration-minutes: 420
+
+# swagger
+springdoc:
+  swagger-ui:
+    path: /swagger
+    operationsSorter: alpha
+    tags-sorter: alpha
+    disable-swagger-default-url: true
+    display-request-duration: true
+  api-docs:
+    path: /api-docs
+  show-actuator: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  paths-to-match:
+    - /v1/**

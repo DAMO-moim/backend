@@ -10,6 +10,14 @@ tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
 
+jar {
+	enabled = false
+}
+
+group = 'com.springboot'
+version = 'SNAPSHOT'
+sourceCompatibility = '11'
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
@@ -39,6 +47,9 @@ dependencies {
 	runtimeOnly	'io.jsonwebtoken:jjwt-jackson:0.11.5'
 	//mysql 연동
     //runtimeOnly 'mysql:mysql-connector-java'
+
+	//스웨거
+	implementation 'org.springdoc:springdoc-openapi-ui:1.6.15'
 }
 
 tasks.named('javadoc') {

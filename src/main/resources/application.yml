@@ -1,1 +1,4 @@
 #local, server 공통 실행 환경 설정
+spring:
+  profiles:
+    active: local #server배포시 변경필요
