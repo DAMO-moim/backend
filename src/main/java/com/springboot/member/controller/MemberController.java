@@ -64,7 +64,7 @@ public class MemberController {
         return new ResponseEntity<>(new SingleResponseDto<>(mapper.memberToMemberResponse(member)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "회원 정보 수정", notes = "회원 정보를 조회합니다.")
+    @ApiOperation(value = "회원 정보 단일 조회", notes = "회원 단일 정보를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "회원 조회 완료"),
             @ApiResponse(code = 404, message = "Member Not Found")
@@ -75,6 +75,7 @@ public class MemberController {
         return new ResponseEntity<>(new SingleResponseDto<>(mapper.memberToMemberResponse(member)), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "회원 정보 전체 조회", notes = "회원 전체 정보를 조회합니다.")
     @GetMapping
     public ResponseEntity getMembers(@Positive @RequestParam int page,
                                      @Positive @RequestParam int size,
