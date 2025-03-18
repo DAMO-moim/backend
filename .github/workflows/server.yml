@@ -29,3 +29,32 @@ jobs:
           docker build -t spring-cicd .
           docker tag spring-cicd hogeun99/spring-cicd:${GITHUB_SHA::7}
           docker push hogeun99/spring-cicd:${GITHUB_SHA::7}
+      #위 내용은 지속적 통합을 위한 스크립트입니다.
+      #지속적 통합을 위한 스크립트 아래에 작성합니다.
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+      - name: Start Session Manager session
+        run: aws ssm start-session --target i-06a6c86f847100e6d
+      - name: Deploy to Server
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ap-northeast-2
+        run: |
+          aws ssm send-command \
+            --instance-ids i-06a6c86f847100e6d \
+            --document-name "AWS-RunShellScript" \
+            --parameters "commands=[
+              'if sudo docker ps -a --format \\'{{.Names}}\\' | grep -q \\'^server$\\'; then',
+              '  sudo docker stop server',
+              '  sudo docker rm server',
+              'fi',
+              'sudo docker pull hogeun99/spring-cicd:${GITHUB_SHA::7}',
+              'sudo docker tag hogeun99/spring-cicd:${GITHUB_SHA::7} spring-cicd',
+              'sudo docker run -d --name server -p 8080:8080 spring-cicd'
+            ]" \
+            --output text
