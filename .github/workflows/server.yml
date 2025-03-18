@@ -8,8 +8,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    env:
-      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+#    env:
+#      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
@@ -55,6 +55,8 @@ jobs:
               'fi',
               'sudo docker pull hogeun99/spring-cicd:${GITHUB_SHA::7}',
               'sudo docker tag hogeun99/spring-cicd:${GITHUB_SHA::7} spring-cicd',
-              'sudo docker run -d --name server -p 8080:8080 spring-cicd'
+              'sudo docker run -d --name server -p 8080:8080 \\
+                -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \\
+                spring-cicd'
             ]" \
             --output text
