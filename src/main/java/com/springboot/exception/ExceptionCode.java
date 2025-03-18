@@ -5,6 +5,7 @@ import lombok.Getter;
 public enum ExceptionCode {
     MEMBER_NOT_FOUND(404,"Member not found"),
     MEMBER_EXISTS(409,"Member exists"),
+    MEMBER_NOT_OWNER(403, "You are not the owner of this resource"),
     GROUP_NOT_FOUND(404,"Group not found"),
     GROUP_EXISTS(409,"Group exists"),
     SCHEDULE_NOT_FOUND(404,"Group Schedule not found"),
@@ -14,7 +15,9 @@ public enum ExceptionCode {
     COMMENT_NOT_FOUND(404,"Comment not found"),
     COMMENT_EXISTS(409,"Comment exists"),
     USER_NOT_LOGGED_IN(401, "You are not logged in"),
-    LOGOUT_ERROR(409, "logout error");
+    LOGOUT_ERROR(409, "logout error"),
+    ACCESS_DENIED(403, "접근 권한이 없습니다."),
+    UNAUTHORIZED_ACCESS(403, "관리자 권한이 없습니다.");
 
     @Getter
     private int status;
