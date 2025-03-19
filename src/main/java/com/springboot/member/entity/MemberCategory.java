@@ -1,6 +1,7 @@
 package com.springboot.member.entity;
 
 import com.springboot.category.entity.Category;
+import com.springboot.group.entity.Group;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,4 +24,11 @@ public class MemberCategory {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    public void setMember(Member member) {
+        this.member = member;
+        if (!member.getMemberCategories().contains(this)) {
+            member.setMemberCategory(this);
+        }
+    }
 }

@@ -2,6 +2,7 @@ package com.springboot.category.entity;
 
 import com.springboot.audit.BaseEntity;
 import com.springboot.group.entity.Group;
+import com.springboot.group.entity.GroupMember;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,4 +28,18 @@ public class SubCategory {
 
     @OneToMany(mappedBy = "subCategory")
     private List<Group> groups;
+
+    public void setCategory(Category category) {
+        this.category = category;
+        if (!category.getSubCategories().contains(this)) {
+            category.setSubCategory(this);
+        }
+    }
+
+    public void setGroup(Group group) {
+        groups.add(group);
+        if (group.getSubCategory() != this) {
+            group.setSubCategory(this);
+        }
+    }
 }

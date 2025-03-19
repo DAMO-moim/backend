@@ -1,5 +1,6 @@
 package com.springboot.member.entity;
 
+import com.springboot.group.entity.Group;
 import com.springboot.schedule.entity.Schedule;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,6 +36,20 @@ public class MemberSchedule {
 
         ParticipationStatus(String status) {
             this.status = status;
+        }
+    }
+
+    public void setSchedule(Schedule schedule) {
+        this.schedule = schedule;
+        if (!schedule.getMemberSchedules().contains(this)) {
+            schedule.setMemberSchedule(this);
+        }
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+        if (!member.getMemberSchedules().contains(this)) {
+            member.setMemberSchedule(this);
         }
     }
 }

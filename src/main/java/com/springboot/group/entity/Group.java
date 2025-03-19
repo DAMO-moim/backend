@@ -2,6 +2,7 @@ package com.springboot.group.entity;
 
 import com.springboot.board.entity.Board;
 import com.springboot.category.entity.SubCategory;
+import com.springboot.comment.entity.Comment;
 import com.springboot.member.entity.Member;
 import com.springboot.schedule.entity.Schedule;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -38,13 +40,56 @@ public class Group {
     @Column(nullable = false)
     private String endBirth;
 
-    @OneToMany(mappedBy = "Group")
+    @OneToMany(mappedBy = "group", cascade = CascadeType.PERSIST)
     private List<Schedule> schedules;
 
-    @OneToMany(mappedBy = "Group")
+    @OneToMany(mappedBy = "group", cascade = CascadeType.PERSIST)
     private List<Board> boards;
 
     @ManyToOne
     @JoinColumn(name = "subCategory_id")
     private SubCategory subCategory;
+
+    @OneToMany(mappedBy = "group", cascade = CascadeType.PERSIST)
+    private List<GroupMember> groupMembers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "group", cascade = CascadeType.PERSIST)
+    private List<GroupTag> groupTags = new ArrayList<>();
+
+    // 영속성 전이, 동기화
+    public void setBoard(Board board) {
+        boards.add(board);
+        if (board.getGroup() != this) {
+            board.setGroup(this);
+        }
+    }
+
+    public void setGroupMember(GroupMember groupMember) {
+        groupMembers.add(groupMember);
+        if (groupMember.getGroup() != this) {
+            groupMember.setGroup(this);
+        }
+    }
+
+    public void setSchedule(Schedule schedule) {
+        schedules.add(schedule);
+        if (schedule.getGroup() != this) {
+            schedule.setGroup(this);
+        }
+    }
+
+    public void setSubCategory(SubCategory subCategory) {
+        this.subCategory = subCategory;
+        if (!subCategory.getGroups().contains(this)) {
+            subCategory.setGroup(this);
+        }
+    }
+
+    public void setGroupTag(GroupTag groupTag) {
+        groupTags.add(groupTag);
+        if (groupTag.getGroup() != this) {
+            groupTag.setGroup(this);
+        }
+    }
+
 }
