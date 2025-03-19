@@ -49,5 +49,6 @@ springdoc:
   api-docs:
     enabled: true
   swagger-ui:
+    path: /swagger-ui.html  # ✅ Swagger UI 경로 설정
     display-request-duration: true
     try-it-out-enabled: true

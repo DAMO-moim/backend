@@ -3,7 +3,7 @@ package com.springboot.board.controller;
 import com.springboot.board.dto.BoardtDto;
 import com.springboot.board.service.BoardService;
 import com.springboot.member.entity.Member;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
-@ApiOperation(value = "게시글 정보 API", tags = {"Board Controller"})
 @RestController
 @RequestMapping("/groups/{group-id}/boards")
 @Validated
@@ -28,7 +27,7 @@ public class BoardController {
         this.boardService = boardService;
     }
 
-    @ApiOperation(value = "게시글 등록", notes = "게시글을 등록합니다.")
+    @Operation(summary = "게시글 등록", description = "게시글 등록합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "게시글 등록 완료"),
             @ApiResponse(responseCode = "400", description = "Board Validation failed")
@@ -42,7 +41,7 @@ public class BoardController {
         return null;
     }
 
-    @ApiOperation(value = "게시글 수정", notes = "게시글을 수정합니다.")
+    @Operation(summary = "게시글 등록", description = "게시글 등록합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "게시글 수정 완료"),
             @ApiResponse(responseCode = "400", description = "Board Not Found")
@@ -57,7 +56,7 @@ public class BoardController {
         return null;
     }
 
-    @ApiOperation(value = "게시글 조회", notes = "게시글을 조회합니다.")
+    @Operation(summary = "게시글 등록", description = "게시글 등록합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시글 조회 완료"),
             @ApiResponse(responseCode = "400", description = "Board Validation failed")
@@ -72,7 +71,7 @@ public class BoardController {
         return null;
     }
 
-    @ApiOperation(value = "게시글 전체 조회", notes = "게시글을 전체 조회합니다.")
+    @Operation(summary = "게시글 등록", description = "게시글 등록합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시글 조회 완료"),
             @ApiResponse(responseCode = "400", description = "Board Validation failed")
@@ -90,7 +89,7 @@ public class BoardController {
         return null;
     }
 
-    @ApiOperation(value = "게시글 삭제", notes = "게시글을 삭제합니다.")
+    @Operation(summary = "게시글 등록", description = "게시글 등록합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "게시글 삭제 완료"),
             @ApiResponse(responseCode = "400", description = "Board Validation failed")

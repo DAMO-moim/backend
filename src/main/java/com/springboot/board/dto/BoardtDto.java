@@ -1,14 +1,10 @@
 package com.springboot.board.dto;
 
-import com.springboot.board.entity.Board;
-import com.springboot.comment.dto.CommentDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 
 public class BoardtDto {
     @Getter
