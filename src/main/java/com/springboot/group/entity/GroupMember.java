@@ -25,6 +25,8 @@ public class GroupMember {
     @JoinColumn(name = "group_id")
     private Group group;
 
+    private GroupRoles groupRoles = GroupRoles.GROUP_MEMBER;
+
     // 영속성 전이, 동기화
     public void setMember(Member member) {
         this.member = member;
@@ -38,6 +40,18 @@ public class GroupMember {
         this.group = group;
         if (group.getGroupMembers().contains(this)) {
             group.setGroupMember(this);
+        }
+    }
+
+    public enum GroupRoles {
+        GROUP_LEADER("모임장"),
+        GROUP_MEMBER("모임원");
+
+        @Getter
+        private String status;
+
+        GroupRoles(String status) {
+            this.status = status;
         }
     }
 }

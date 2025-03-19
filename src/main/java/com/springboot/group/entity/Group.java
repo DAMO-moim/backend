@@ -17,10 +17,14 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
+@Table(name = "club")
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long groupId;
+
+    @Column(nullable = false)
+    private String image;
 
     @Column(nullable = false)
     private String groupName;
@@ -55,6 +59,8 @@ public class Group {
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.PERSIST)
     private List<GroupTag> groupTags = new ArrayList<>();
+
+    private GroupStatus groupStatus = GroupStatus.GROUP_ACTIVE;
 
     // 영속성 전이, 동기화
     public void setBoard(Board board) {
@@ -92,4 +98,15 @@ public class Group {
         }
     }
 
+    public enum GroupStatus {
+        GROUP_ACTIVE("모임 등록 완료"),
+        GROUP_DELETE("모임 삭제 상태");
+
+        @Getter
+        private String status;
+
+        GroupStatus(String status) {
+            this.status = status;
+        }
+    }
 }

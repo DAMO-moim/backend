@@ -42,7 +42,7 @@ public class Schedule {
     @JoinColumn(name = "group_id")
     private Group group;
 
-    @OneToMany
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.PERSIST)
     private List<MemberSchedule> memberSchedules;
 
     private ScheduleStatus scheduleStatus = ScheduleStatus.SCHEDULE_YES;
