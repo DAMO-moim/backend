@@ -1,11 +1,13 @@
 package com.springboot.category.entity;
 
 import com.springboot.audit.BaseEntity;
+import com.springboot.group.entity.Group;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,4 +24,7 @@ public class SubCategory {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @OneToMany(mappedBy = "subCategory")
+    private List<Group> groups;
 }

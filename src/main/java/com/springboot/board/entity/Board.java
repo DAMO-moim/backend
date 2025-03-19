@@ -21,26 +21,33 @@ public class Board extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long boardId;
 
+    // 게시글 제목
     @Column(nullable = false)
     private String title;
 
+    // 게시글 내용
     @Column(nullable = false)
     private String content;
 
+    // 게시글 이미지
     @Column
     private String image;
 
+    // 게시글 상태
     @Column(nullable = false)
     private BoardStatus boardStatus = BoardStatus.BOARD_POST;
 
+    // 회원 과 게시글 1 : N -> 단방향, 게시글이 회원을 객체로 가짐
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
 
+    // 모임 과 게시글 1 : N -> 양방향, 게시글 쪽은 모임을 객체로 가짐
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;
 
+    // 게시글과 댓글 1 : N -> 단방향, 게시글이 댓글을 리스트로 가짐
     @OneToMany(mappedBy = "board")
     private List<Comment> comments = new ArrayList<>();
 
