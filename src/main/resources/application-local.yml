@@ -22,9 +22,11 @@ spring:
     properties:
       hibernate:
         format_sql: true  # (3) SQL pretty print
+    defer-datasource-initialization: true  # data.sql 실행 시점 조정
   sql:
     init:
-      data-locations: classpath*:db/h2/data.sql
+      mode: always
+#      data-locations: classpath*:db/h2/data.sql
 logging:
   level:
     org:
@@ -42,3 +44,10 @@ jwt:
   key: ${JWT_SECRET_KEY}
   access-token-expiration-minutes: 10
   refresh-token-expiration-minutes: 420
+springdoc:
+  default-flat-param-object: true  
+  api-docs:
+    enabled: true
+  swagger-ui:
+    display-request-duration: true
+    try-it-out-enabled: true

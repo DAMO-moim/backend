@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface TagMapper {
-    //List<Tag>를 받아서 ResponseDto로 변환하는 메서드 추가
+    //List<Tag>를 받아서 ResponseDto로 변환하는 메서드
     default TagResponseDto tagtoResponseDto(List<Tag> tags) {
         Map<String, List<String>> groupedTags = tags.stream()
                 .collect(Collectors.groupingBy(
