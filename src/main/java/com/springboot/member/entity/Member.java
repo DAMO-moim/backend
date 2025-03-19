@@ -1,6 +1,7 @@
 package com.springboot.member.entity;
 
 import com.springboot.audit.BaseEntity;
+import com.springboot.schedule.entity.Schedule;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -44,6 +45,15 @@ public class Member extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     @Column(length = 20, nullable = false)
     private Gender gender;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<MemberCategory> memberCategories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberGroup> memberGroups = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Schedule> schedules = new ArrayList<>();
 
     public enum MemberStatus {
         MEMBER_ACTIVE("활동 상태"),
