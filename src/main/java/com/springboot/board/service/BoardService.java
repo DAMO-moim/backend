@@ -28,7 +28,6 @@ public class BoardService {
         this.memberService = memberService;
     }
 
-    //질문글 작성
     public Board createBoard(Board board, long memberId, long groupId){
         //해당 모임이 실제 존재하는지 검증(groupId받와야함)
         //Group group = groupService.findVerifiedGroup(groupId);
@@ -68,7 +67,6 @@ public class BoardService {
         return boardRepository.save(board);
     }
 
-    //특정 질문글 조회
     @Transactional(readOnly = true)
     public Board findBoard(long boardId, long memberId){
         Board board = findVerifiedBoard(boardId);
@@ -76,32 +74,32 @@ public class BoardService {
         return board;
     }
 
-    //전체 질문글 조회
     @Transactional(readOnly = true)
     public Page<Board> findBoards(int page, int size, long memberId) {
         //작성자(회원)이 실제 가입되어있는 회원인지 검증
         Member member = memberService.findVerifiedMember(memberId);
-
+        //그룹도 받아와야할듯
+        Group group = new Group();
         //해당 모임의 모임원인지 확인한다. (테스트 필요)
         Optional<GroupMember> groupMemberRole = group.getGroupMembers().stream()
                 .filter(gm -> gm.getMember().equals(member))
                 .findFirst();
 
-        Page<Board> boards = PageRequest.of(page, size, sortType));
-
-        return boards;
+        //Page<Board> boards = PageRequest.of(page, size, sortType));
+        return boardRepository.findAll(PageRequest.of(page, size,
+                Sort.by("coffeeId").descending()));
     }
 
+    public void deleteBoard(long boardId, long memberId){
+        //삭제는 작성자만 가능해야 하며 관리자는 할 수 없기에 작성자인지만 검증한다.
+        Board board = findVerifiedBoard(boardId);
+        isBoardOwner(board, memberId);
+
+        board.setBoardStatus(Board.BoardStatus.BOARD_DELETE);
+        boardRepository.save(board);
+    }
     //게시글 존재 여부 확인
-    public Board findVerifiedBoard(long boardId, long memberId){
-        //작성자(회원)이 실제 가입되어있는 회원인지 검증
-        Member member = memberService.findVerifiedMember(memberId);
-
-        //해당 모임의 모임원인지 확인한다. (테스트 필요)
-        Optional<GroupMember> groupMemberRole = group.getGroupMembers().stream()
-                .filter(gm -> gm.getMember().equals(member))
-                .findFirst();
-
+    public Board findVerifiedBoard(long boardId){
         Optional<Board> optionalBoard = boardRepository.findById(boardId);
         Board board = optionalBoard.orElseThrow(()->
                 new BusinessLogicException(ExceptionCode.BOARD_NOT_FOUND));
