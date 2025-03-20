@@ -1,5 +1,7 @@
 package com.springboot.board.dto;
 
+import antlr.collections.List;
+import com.springboot.comment.entity.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +16,8 @@ public class BoardtDto {
 
         @NotBlank(message = "내용은 최소한 1글자라도 있어야 합니다.")
         private String content;
+
+        private String image;
     }
 
     @Getter
@@ -34,5 +38,10 @@ public class BoardtDto {
         private long boardId;
         private String title;
         private String content;
+        private String image;
+        private long memberId;
+        private String memberName;
+        //아직 안만들어짐
+        //private List<CommentResponseDto> comments;
     }
 }
