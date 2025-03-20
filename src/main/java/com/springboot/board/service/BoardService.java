@@ -85,8 +85,10 @@ public class BoardService {
     public void deleteBoard(long boardId, long memberId, long groupId){
         //isMemberOfGroup(memberId, groupId);
 
-        //삭제는 작성자만 가능해야 한다.
+        //해당 게시글이 있는지 검증
         Board board = findVerifiedBoard(boardId);
+        //삭제는 작성자만 가능해야 한다.
+        //작성자가 맞는지 검증
         isBoardOwner(board, memberId);
 
         board.setBoardStatus(Board.BoardStatus.BOARD_DELETE);
