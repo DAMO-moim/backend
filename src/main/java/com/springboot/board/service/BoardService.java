@@ -39,6 +39,7 @@ public class BoardService {
         return boardRepository.save(board);
     }
 
+    @Transactional
     public Board updateBoard(Board board, long memberId, long groupId){
         //해당 모임의 모임원인지 확인한다. (테스트 필요)
         //isMemberOfGroup(memberId, groupId);
@@ -60,7 +61,7 @@ public class BoardService {
         Optional.ofNullable(board.getContent())
                 .ifPresent(content -> findBoard.setContent(content));
 
-        return boardRepository.save(board);
+        return boardRepository.save(findBoard);
     }
 
     @Transactional(readOnly = true)
@@ -84,7 +85,7 @@ public class BoardService {
     public void deleteBoard(long boardId, long memberId, long groupId){
         //isMemberOfGroup(memberId, groupId);
 
-        //삭제는 작성자만 가능해야 하며 관리자는 할 수 없기에 작성자인지만 검증한다.
+        //삭제는 작성자만 가능해야 한다.
         Board board = findVerifiedBoard(boardId);
         isBoardOwner(board, memberId);
 
