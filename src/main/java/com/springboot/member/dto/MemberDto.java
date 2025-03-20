@@ -22,7 +22,7 @@ public class MemberDto {
         @Schema(description = "사용자 비밀번호", example = "zizonhuzzang")
         private String password;
 
-        @Schema(description = "사용자 성별", example = "Girl")
+        @Schema(description = "사용자 성별", example = "MAN")
         private Member.Gender gender;
 
         @Schema(description = "사용자 출생년도", example = "1892")
@@ -44,11 +44,11 @@ public class MemberDto {
 
         @Setter
         @Schema(description = "사용자 비밀번호", example = "zizonhuzzang")
-        private long password;
+        private String password;
 
         @Setter
         @Schema(description = "사용자 이름", example = "홍성민")
-        private long name;
+        private String name;
     }
 
     @AllArgsConstructor

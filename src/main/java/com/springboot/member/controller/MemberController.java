@@ -7,6 +7,7 @@ import com.springboot.member.entity.Member;
 import com.springboot.member.mapper.MemberMapper;
 import com.springboot.member.service.MemberService;
 import com.springboot.utils.UriCreator;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.data.domain.Page;
@@ -53,8 +54,8 @@ public class MemberController {
     })
     @PatchMapping("/{member-id}")
     public ResponseEntity patchMember(@PathVariable("member-id") @Positive long memberId,
-                                      @Valid @RequestBody MemberDto.Patch memberPatchDto,
-                                      @AuthenticationPrincipal Member authenticatedmember){
+                                      @RequestBody @Valid MemberDto.Patch memberPatchDto,
+                                      @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember){
         memberPatchDto.setMemberId(memberId);
         Member member = memberService.updateMember(mapper.memberPatchToMember(memberPatchDto), authenticatedmember.getMemberId());
         return new ResponseEntity<>(new SingleResponseDto<>(mapper.memberToMemberResponse(member)), HttpStatus.OK);
@@ -74,7 +75,7 @@ public class MemberController {
     @GetMapping
     public ResponseEntity getMembers(@Positive @RequestParam int page,
                                      @Positive @RequestParam int size,
-                                     @AuthenticationPrincipal Member authenticatedmember){
+                                     @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember){
         Page<Member> memberPage = memberService.findMembers(page - 1, size, authenticatedmember.getMemberId());
         List<Member> members = memberPage.getContent();
         return new ResponseEntity<>
@@ -88,7 +89,7 @@ public class MemberController {
     })
     @DeleteMapping("/{member-id}")
     public ResponseEntity deleteMember(@PathVariable("member-id") @Positive long memberId,
-                                       @AuthenticationPrincipal Member authenticatedmember){
+                                       @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember){
 //        memberService.deleteMember(memberId, authenticatedmember.getMemberId());
 //
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
