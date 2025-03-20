@@ -36,7 +36,8 @@ public class Group {
     private int maxMemberCount;
 
     @Column(nullable = false)
-    private Member.Gender gender;
+    @Enumerated(EnumType.STRING)
+    private GroupGender gender;
 
     @Column(nullable = false)
     private String startBirth;
@@ -95,6 +96,19 @@ public class Group {
         groupTags.add(groupTag);
         if (groupTag.getGroup() != this) {
             groupTag.setGroup(this);
+        }
+    }
+
+    public enum GroupGender {
+        MAN("남자"),
+        GIRL("여자"),
+        ALL("무관");
+
+        @Getter
+        private String status;
+
+        GroupGender(String status) {
+            this.status = status;
         }
     }
 
