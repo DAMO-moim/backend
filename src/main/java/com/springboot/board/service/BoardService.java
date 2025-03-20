@@ -69,17 +69,22 @@ public class BoardService {
         //작성자 존재 여부와 해당 모임의 모임원인지 확인한다. (테스트 필요)
         //isMemberOfGroup(memberId, groupId);
         Member member = memberService.findVerifiedMember(memberId);
+        Board findBoard = findVerifiedBoard(boardId);
+
+        if(!findBoard.getBoardStatus().equals(Board.BoardStatus.BOARD_POST)){
+            throw new BusinessLogicException(ExceptionCode.BOARD_NOT_FOUND);
+        }
 
         return findVerifiedBoard(boardId);
     }
 
     @Transactional(readOnly = true)
     public Page<Board> findBoards(int page, int size, long memberId, long groupId) {
-
-
+        //게시글 정렬기능 있다면 생각
         //Page<Board> boards = PageRequest.of(page, size, sortType));
-        return boardRepository.findAll(PageRequest.of(page, size,
-                Sort.by("boardId").descending()));
+
+        return boardRepository.findByBoardStatusNot(Board.BoardStatus.BOARD_DELETE,
+                PageRequest.of(page, size, Sort.by("boardId").descending()));
     }
 
     public void deleteBoard(long boardId, long memberId, long groupId){
@@ -90,6 +95,10 @@ public class BoardService {
         //삭제는 작성자만 가능해야 한다.
         //작성자가 맞는지 검증
         isBoardOwner(board, memberId);
+
+        if(!board.getBoardStatus().equals(Board.BoardStatus.BOARD_POST)){
+            throw new BusinessLogicException(ExceptionCode.BOARD_NOT_FOUND);
+        }
 
         board.setBoardStatus(Board.BoardStatus.BOARD_DELETE);
         boardRepository.save(board);
