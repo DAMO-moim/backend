@@ -46,7 +46,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         //Username, Password 정보를 포함한 UsernamePasswordAuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
+                new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
 
         //위에서 생성한 토큰을 AuthenticationManager에게 전달하여 인증처리 위임
         //AuthenticationManager가 실행하면서 인증을 처리한다.

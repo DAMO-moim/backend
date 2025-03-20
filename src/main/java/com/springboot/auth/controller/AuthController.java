@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 // 로그아웃을 하기 위한 컨트롤러 계층 구현
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
     private final AuthService authService;
 
