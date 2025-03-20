@@ -1,14 +1,12 @@
 package com.springboot.board.dto;
 
-import antlr.collections.List;
-import com.springboot.comment.entity.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 
-public class BoardtDto {
+public class BoardDto {
     @Getter
     public static class Post {
         @NotBlank(message = "제목은 공백이 아니어야 합니다.")
