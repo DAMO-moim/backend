@@ -22,10 +22,10 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/test/members")
+@RequestMapping("/members")
 @Validated
 public class MemberController {
-    private static final String MEMBER_DEFAULT_URL = "/test/members";
+    private static final String MEMBER_DEFAULT_URL = "/members";
     private final MemberService memberService;
     private final MemberMapper mapper;
 

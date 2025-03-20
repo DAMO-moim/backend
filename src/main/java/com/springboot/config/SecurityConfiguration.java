@@ -2,6 +2,8 @@ package com.springboot.config;
 
 import com.springboot.auth.filter.JwtAuthenticationFilter;
 import com.springboot.auth.filter.JwtVerificationFilter;
+import com.springboot.auth.handler.MemberAccessDeniedHandler;
+import com.springboot.auth.handler.MemberAuthenticationEntryPoint;
 import com.springboot.auth.handler.MemberAuthenticationFailureHandler;
 import com.springboot.auth.handler.MemberAuthenticationSuccessHandler;
 import com.springboot.auth.jwt.JwtTokenizer;
@@ -56,6 +58,10 @@ public class SecurityConfiguration {
                 .formLogin().disable()
                 .httpBasic().disable()
                 .exceptionHandling()
+                .authenticationEntryPoint(new MemberAuthenticationEntryPoint())
+                .accessDeniedHandler(new MemberAccessDeniedHandler())
+                .and()
+                .apply(new CustomFilterConfigurer())
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
                         .anyRequest().permitAll()
@@ -93,7 +99,7 @@ public class SecurityConfiguration {
 
             //필터 객체 생성하며 필요한 객체를 DI 시켜준다.
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer);
-            jwtAuthenticationFilter.setFilterProcessesUrl("/api/auth/login");
+            jwtAuthenticationFilter.setFilterProcessesUrl("/auth/login");
 
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());

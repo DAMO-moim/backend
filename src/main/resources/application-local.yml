@@ -49,6 +49,8 @@ springdoc:
   api-docs:
     enabled: true
   swagger-ui:
-    path: /swagger-ui.html  # ✅ Swagger UI 경로 설정
+    path: /swagger-ui.html
     display-request-duration: true
     try-it-out-enabled: true
+file:
+  upload-dir: src/main/resources/localStorage
