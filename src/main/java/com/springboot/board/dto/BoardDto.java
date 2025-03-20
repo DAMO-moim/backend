@@ -1,10 +1,13 @@
 package com.springboot.board.dto;
 
+import com.springboot.comment.dto.CommentDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
+import java.util.List;
 
 public class BoardDto {
     @Getter
@@ -39,7 +42,7 @@ public class BoardDto {
         private String image;
         private long memberId;
         private String memberName;
-        //아직 안만들어짐
-        //private List<CommentResponseDto> comments;
+        private LocalDateTime createdAt;
+        private List<CommentDto.Response> comments;
     }
 }
