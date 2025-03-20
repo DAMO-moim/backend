@@ -19,7 +19,11 @@ public enum ExceptionCode {
     LOGOUT_ERROR(409, "logout error"),
     ACCESS_DENIED(403, "접근 권한이 없습니다."),
     UNAUTHORIZED_ACCESS(403, "관리자 권한이 없습니다."),
-    UNAUTHORIZED_MEMBER_ACCESS(401,"Not authorized to access this resource");
+    UNAUTHORIZED_MEMBER_ACCESS(401,"Not authorized to access this resource"),
+    INVALID_MEMBER_COUNT(400, "모임 인원 수는 최소 2명, 최대 100명으로 설정해야 합니다."),
+    MEMBER_NOT_GROUP_LEADER(400, "모임장이 아닙니다."),
+    MEMBER_NOT_FOUND_IN_GROUP(401, "모임 내 회원을 찾을 수 없습니다"),
+    MEMBER_NOT_IN_GROUP(403, "회원이 모임에 가입한 상태가 아님");
 
     @Getter
     private int status;
