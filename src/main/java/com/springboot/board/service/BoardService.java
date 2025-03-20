@@ -31,7 +31,7 @@ public class BoardService {
     }
 
     public Board createBoard(Board board, long memberId, long groupId){
-        //작성자 존재 여부와 해당 모임의 모임원인지 확인한다. (테스트 필요)
+        //해당 모임의 모임원인지 확인한다. (테스트 필요)
         //isMemberOfGroup(memberId, groupId);
         Member member = memberService.findVerifiedMember(memberId);
 
@@ -40,8 +40,9 @@ public class BoardService {
     }
 
     public Board updateBoard(Board board, long memberId, long groupId){
-        //작성자 존재 여부와 해당 모임의 모임원인지 확인한다. (테스트 필요)
-        isMemberOfGroup(memberId, groupId);
+        //해당 모임의 모임원인지 확인한다. (테스트 필요)
+        //isMemberOfGroup(memberId, groupId);
+        Member member = memberService.findVerifiedMember(memberId);
 
         //해당 게시글이 존재하는지 검증
         Board findBoard = findVerifiedBoard(board.getBoardId());
@@ -77,11 +78,11 @@ public class BoardService {
 
         //Page<Board> boards = PageRequest.of(page, size, sortType));
         return boardRepository.findAll(PageRequest.of(page, size,
-                Sort.by("coffeeId").descending()));
+                Sort.by("boardId").descending()));
     }
 
     public void deleteBoard(long boardId, long memberId, long groupId){
-        isMemberOfGroup(memberId, groupId);
+        //isMemberOfGroup(memberId, groupId);
 
         //삭제는 작성자만 가능해야 하며 관리자는 할 수 없기에 작성자인지만 검증한다.
         Board board = findVerifiedBoard(boardId);
@@ -106,32 +107,24 @@ public class BoardService {
     }
 
     //작성자 존재 여부와 작성자가 모임원인지 검증하는 메서드
-    public Board isMemberOfGroup(long memberId, long groupId){
-        Member member = memberService.findVerifiedMember(memberId);
-        // 2. 더미 Group 생성 및 초기화
-        Group group = new Group();
-        group.setGroupId(groupId);
-        group.setGroupMembers(new ArrayList<>()); //멤버 리스트 초기화
-
-        // 3. 더미 GroupMember 생성 및 리스트 추가
-        GroupMember groupMember = new GroupMember();
-        groupMember.setGroup(group);
-        groupMember.setMember(member);
-        group.getGroupMembers().add(groupMember); //리스트에 추가
-        //Group group = groupService.findVerifiedGroup(groupId);
-
-        Optional<GroupMember> groupMemberRole = group.getGroupMembers().stream()
-                .filter(gm -> gm.getMember().equals(member))
-                .findFirst();
-
-        if(groupMemberRole.isEmpty()) {
-            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
-        }
-
-        Board board = new Board();
-        board.setMember(member);
-        board.setGroup(group);
-
-        return board;
-    }
+//    public Board isMemberOfGroup(Member member, long groupId) {
+//        //해당 그룹이 존재하는지 검증
+////        Group group = GroupService.findVerifiedGroup(groupId);
+////
+////        //해당 그룹의 모임원이 맞는지 검증
+////        Optional<GroupMember> groupMemberRole = group.getGroupMembers().stream()
+////                .filter(gm -> gm.getMember().equals(member))
+////                .findFirst();
+////
+////        if(groupMemberRole.isEmpty()) {
+////            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+////        }
+////
+////        Board board = new Board();
+////        board.setMember(member);
+////        board.setGroup(group);
+////
+////        return board;
+////    }
+//    }
 }
