@@ -63,7 +63,7 @@ public class BoardController {
         boardPatchDto.setBoardId(boardId);
         Board board = boardService.updateBoard(mapper.boardPatchDtoToBoard(boardPatchDto), member.getMemberId(),groupId);
 
-        return new ResponseEntity<>(new SingleResponseDto<>(mapper.boardToBoardResponseDto(board)), HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Operation(summary = "게시글 조회", description = "게시글을 조회합니다.")
