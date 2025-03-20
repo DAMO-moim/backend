@@ -24,7 +24,7 @@ import java.util.List;
 
 @ApiOperation(value = "회원 정보 API", tags = {"Member Controller"})
 @RestController
-@RequestMapping("/test/members")
+@RequestMapping("/members")
 @Validated
 public class MemberController {
     private static final String MEMBER_DEFAULT_URL = "/test/members";

@@ -2,6 +2,8 @@ package com.springboot.config;
 
 import com.springboot.auth.filter.JwtAuthenticationFilter;
 import com.springboot.auth.filter.JwtVerificationFilter;
+import com.springboot.auth.handler.MemberAccessDeniedHandler;
+import com.springboot.auth.handler.MemberAuthenticationEntryPoint;
 import com.springboot.auth.handler.MemberAuthenticationFailureHandler;
 import com.springboot.auth.handler.MemberAuthenticationSuccessHandler;
 import com.springboot.auth.jwt.JwtTokenizer;
@@ -53,10 +55,14 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())// CORS 설정 활성화
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                .apply(new CustomFilterConfigurer())
+                .and()
                 .formLogin().disable()
                 .httpBasic().disable()
                 .exceptionHandling()
-                .and()
+                .authenticationEntryPoint(new MemberAuthenticationEntryPoint())
+                .accessDeniedHandler(new MemberAccessDeniedHandler())
+                .and() // 메서드 체이닝
                 .authorizeHttpRequests(authorize -> authorize
                         .anyRequest().permitAll()
                 );
@@ -93,7 +99,7 @@ public class SecurityConfiguration {
 
             //필터 객체 생성하며 필요한 객체를 DI 시켜준다.
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer);
-            jwtAuthenticationFilter.setFilterProcessesUrl("/api/auth/login");
+            jwtAuthenticationFilter.setFilterProcessesUrl("/auth/login");
 
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
