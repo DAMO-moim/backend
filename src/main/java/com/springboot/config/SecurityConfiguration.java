@@ -55,14 +55,14 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())// CORS 설정 활성화
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .apply(new CustomFilterConfigurer())
-                .and()
                 .formLogin().disable()
                 .httpBasic().disable()
                 .exceptionHandling()
                 .authenticationEntryPoint(new MemberAuthenticationEntryPoint())
                 .accessDeniedHandler(new MemberAccessDeniedHandler())
-                .and() // 메서드 체이닝
+                .and()
+                .apply(new CustomFilterConfigurer())
+                .and()
                 .authorizeHttpRequests(authorize -> authorize
                         .anyRequest().permitAll()
                 );
