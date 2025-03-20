@@ -91,7 +91,7 @@ public class BoardController {
     public ResponseEntity getBoards(@PathVariable("group-id") Long groupId,
                                     @Positive @RequestParam int page,
                                     @Positive @RequestParam int size,
-                                    @RequestParam String sort,
+                                    //@RequestParam String sort,
                                     @AuthenticationPrincipal Member member){
         Page<Board> boardPage = boardService.findBoards(page -1, size, member.getMemberId(), groupId);
         List<Board> boards = boardPage.getContent();

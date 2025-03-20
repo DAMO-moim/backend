@@ -15,7 +15,7 @@ public class BoardDto {
         @NotBlank(message = "내용은 최소한 1글자라도 있어야 합니다.")
         private String content;
 
-        private String image;
+       // private String image
     }
 
     @Getter
