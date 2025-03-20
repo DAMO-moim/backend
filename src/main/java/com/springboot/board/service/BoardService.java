@@ -14,6 +14,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Transactional
@@ -29,29 +31,22 @@ public class BoardService {
     }
 
     public Board createBoard(Board board, long memberId, long groupId){
-        //해당 모임이 실제 존재하는지 검증(groupId받와야함)
-        //Group group = groupService.findVerifiedGroup(groupId);
-        Group group = new Group();
-        //작성자(회원)이 실제 가입되어있는 회원인지 검증
+        //작성자 존재 여부와 해당 모임의 모임원인지 확인한다. (테스트 필요)
+        //isMemberOfGroup(memberId, groupId);
         Member member = memberService.findVerifiedMember(memberId);
 
-        //해당 모임의 모임원인지 확인한다. (테스트 필요)
-        Optional<GroupMember> groupMemberRole = group.getGroupMembers().stream()
-                .filter(gm -> gm.getMember().equals(member))
-                .findFirst();
-
-        if(groupMemberRole.isEmpty()) {
-            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
-        }
-
+        board.setMember(member);
         return boardRepository.save(board);
     }
 
     public Board updateBoard(Board board, long memberId, long groupId){
-        //작성자(회원)이 실제 가입되어있는 회원인지 검증
-        Member member = memberService.findVerifiedMember(memberId);
+        //작성자 존재 여부와 해당 모임의 모임원인지 확인한다. (테스트 필요)
+        isMemberOfGroup(memberId, groupId);
+
         //해당 게시글이 존재하는지 검증
         Board findBoard = findVerifiedBoard(board.getBoardId());
+
+        //해당 게시글의 작성자인지 검증
         isBoardOwner(findBoard, memberId);
 
         //게시글 등록 상태가 아니라면 수정 불가능
@@ -68,29 +63,26 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public Board findBoard(long boardId, long memberId){
-        Board board = findVerifiedBoard(boardId);
+    public Board findBoard(long boardId, long memberId, long groupId){
+        //작성자 존재 여부와 해당 모임의 모임원인지 확인한다. (테스트 필요)
+        //isMemberOfGroup(memberId, groupId);
+        Member member = memberService.findVerifiedMember(memberId);
 
-        return board;
+        return findVerifiedBoard(boardId);
     }
 
     @Transactional(readOnly = true)
-    public Page<Board> findBoards(int page, int size, long memberId) {
-        //작성자(회원)이 실제 가입되어있는 회원인지 검증
-        Member member = memberService.findVerifiedMember(memberId);
-        //그룹도 받아와야할듯
-        Group group = new Group();
-        //해당 모임의 모임원인지 확인한다. (테스트 필요)
-        Optional<GroupMember> groupMemberRole = group.getGroupMembers().stream()
-                .filter(gm -> gm.getMember().equals(member))
-                .findFirst();
+    public Page<Board> findBoards(int page, int size, long memberId, long groupId) {
+
 
         //Page<Board> boards = PageRequest.of(page, size, sortType));
         return boardRepository.findAll(PageRequest.of(page, size,
                 Sort.by("coffeeId").descending()));
     }
 
-    public void deleteBoard(long boardId, long memberId){
+    public void deleteBoard(long boardId, long memberId, long groupId){
+        isMemberOfGroup(memberId, groupId);
+
         //삭제는 작성자만 가능해야 하며 관리자는 할 수 없기에 작성자인지만 검증한다.
         Board board = findVerifiedBoard(boardId);
         isBoardOwner(board, memberId);
@@ -111,5 +103,35 @@ public class BoardService {
     public void isBoardOwner(Board board, long memberId){
         //member service계층에 구현된 본인확인 메서드 재사용
         memberService.isAuthenticatedMember(board.getMember().getMemberId(), memberId);
+    }
+
+    //작성자 존재 여부와 작성자가 모임원인지 검증하는 메서드
+    public Board isMemberOfGroup(long memberId, long groupId){
+        Member member = memberService.findVerifiedMember(memberId);
+        // 2. 더미 Group 생성 및 초기화
+        Group group = new Group();
+        group.setGroupId(groupId);
+        group.setGroupMembers(new ArrayList<>()); //멤버 리스트 초기화
+
+        // 3. 더미 GroupMember 생성 및 리스트 추가
+        GroupMember groupMember = new GroupMember();
+        groupMember.setGroup(group);
+        groupMember.setMember(member);
+        group.getGroupMembers().add(groupMember); //리스트에 추가
+        //Group group = groupService.findVerifiedGroup(groupId);
+
+        Optional<GroupMember> groupMemberRole = group.getGroupMembers().stream()
+                .filter(gm -> gm.getMember().equals(member))
+                .findFirst();
+
+        if(groupMemberRole.isEmpty()) {
+            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+        }
+
+        Board board = new Board();
+        board.setMember(member);
+        board.setGroup(group);
+
+        return board;
     }
 }
