@@ -8,9 +8,14 @@ import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
 import com.springboot.member.entity.Member;
 import com.springboot.member.service.MemberService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -60,6 +65,14 @@ public class CommentService {
 
         findComment.setCommentStatus(Comment.CommentStatus.COMMENT_DELETE);
         commentRepository.save(findComment);
+    }
+
+    public Page<Comment> findComments(int page, int size, long memberId, long boardId){
+        Member findMember = memberService.findVerifiedMember(memberId);
+        Board findBoard = boardService.findVerifiedBoard(boardId);
+
+        return commentRepository.findByCommentStatusNot(Comment.CommentStatus.COMMENT_DELETE,
+                PageRequest.of(page, size, Sort.by("commentId").descending()));
     }
     //작성자가 맞는지 검증하는 메서드
     public void isCommentOwner(Comment comment, long memberId){

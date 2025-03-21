@@ -1,21 +1,26 @@
 package com.springboot.comment.controller;
 
+import com.springboot.board.entity.Board;
 import com.springboot.comment.dto.CommentDto;
 import com.springboot.comment.entity.Comment;
 import com.springboot.comment.mapper.CommentMapper;
 import com.springboot.comment.service.CommentService;
+import com.springboot.dto.MultiResponseDto;
 import com.springboot.member.entity.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import java.util.List;
 
 @RestController
 @RequestMapping("/boards/{board-id}/comment")
@@ -69,4 +74,22 @@ public class CommentController {
         commentService.deleteComment(commentId, boardId, member.getMemberId());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @Operation(summary = "게시글 전체 조회", description = "게시글 전체 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게시글 조회 완료"),
+            @ApiResponse(responseCode = "400", description = "Board Validation failed")
+    })
+    @GetMapping
+    public ResponseEntity getBoards(@PathVariable("board-id") long boardId,
+                                    @Positive @RequestParam int page,
+                                    @Positive @RequestParam int size,
+                                    @Parameter(hidden = true) @AuthenticationPrincipal Member member){
+        Page<Comment> commentPage = commentService.findComments(page -1, size, member.getMemberId(), boardId);
+        List<Comment> comments = commentPage.getContent();
+
+        return new ResponseEntity<>(new MultiResponseDto<>
+                (mapper.commentToCommentResponseDtos(comments),commentPage),HttpStatus.OK);
+    }
+
 }

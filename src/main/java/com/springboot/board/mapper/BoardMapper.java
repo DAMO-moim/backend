@@ -20,21 +20,9 @@ public interface BoardMapper {
     @Mapping(target = "image", ignore = true) // 만약 image를 사용하지 않는다면 무시
     Board boardPostDtoToBoard(BoardDto.Post requestBody);
     Board boardPatchDtoToBoard(BoardDto.Patch requestBody);
-    List<BoardDto.Responses> boardsToBoardResponseDtos(List<Board> boards);
-    //게시글 전체 조회(댓글x)
-    default BoardDto.Responses boardToBoardResponsesDto(Board board){
-        return new BoardDto.Responses(
-                board.getBoardId(),
-                board.getTitle(),
-                board.getContent(),
-                board.getImage(),
-                board.getMember().getMemberId(),
-                board.getMember().getName(),
-                board.getCreateAt()
-        );
-    }
+    List<BoardDto.Response> boardsToBoardResponseDtos(List<Board> boards);
 
-    //게시글 단일 조회(댓글o)
+    //게시글 단일 조회
     default BoardDto.Response boardToBoardResponseDto(Board board){
         return new BoardDto.Response(
                 board.getBoardId(),
@@ -43,17 +31,7 @@ public interface BoardMapper {
                 board.getImage(),
                 board.getMember().getMemberId(),
                 board.getMember().getName(),
-                board.getCreateAt(),
-                //리스트 요소마다 Response를 담아서 응답으로 보낸다
-                board.getComments().stream()
-                        .map(comment -> new CommentDto.Response(
-                                comment.getCommentId(),
-                                comment.getContent(),
-                                comment.getCreateAt(),
-                                comment.getMember().getMemberId(),
-                                comment.getMember().getName()
-                        ))
-                        .collect(Collectors.toList())
+                board.getCreateAt()
         );
     }
 }

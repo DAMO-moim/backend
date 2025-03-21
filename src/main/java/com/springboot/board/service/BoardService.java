@@ -78,12 +78,6 @@ public class BoardService {
             throw new BusinessLogicException(ExceptionCode.BOARD_NOT_FOUND);
         }
 
-        //댓글의 상태가 등록상태일때만 조회한다.
-        List<Comment> filteredComments = findBoard.getComments().stream()
-                .filter(c -> c.getCommentStatus().equals(Comment.CommentStatus.COMMENT_POST))
-                .collect(Collectors.toList());
-        findBoard.setComments(filteredComments);
-
         return findBoard;
     }
 
