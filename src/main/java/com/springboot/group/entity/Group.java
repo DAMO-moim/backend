@@ -2,8 +2,6 @@ package com.springboot.group.entity;
 
 import com.springboot.board.entity.Board;
 import com.springboot.category.entity.SubCategory;
-import com.springboot.comment.entity.Comment;
-import com.springboot.member.entity.Member;
 import com.springboot.schedule.entity.Schedule;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +21,7 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long groupId;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String image;
 
     @Column(nullable = false)
@@ -35,14 +33,15 @@ public class Group {
     @Column(nullable = false)
     private int maxMemberCount;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Member.Gender gender;
+    private GroupGender gender = GroupGender.NONE;
 
     @Column(nullable = false)
-    private String startBirth;
+    private String minBirth;
 
     @Column(nullable = false)
-    private String endBirth;
+    private String maxBirth;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.PERSIST)
     private List<Schedule> schedules;
@@ -60,6 +59,8 @@ public class Group {
     @OneToMany(mappedBy = "group", cascade = CascadeType.PERSIST)
     private List<GroupTag> groupTags = new ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private GroupStatus groupStatus = GroupStatus.GROUP_ACTIVE;
 
     // 영속성 전이, 동기화
@@ -106,6 +107,18 @@ public class Group {
         private String status;
 
         GroupStatus(String status) {
+            this.status = status;
+        }
+    }
+
+    public enum GroupGender {
+        MAN("남자"),
+        GIRL("여자"),
+        NONE("무관");
+
+        @Getter
+        private String status;
+        GroupGender(String status) {
             this.status = status;
         }
     }
