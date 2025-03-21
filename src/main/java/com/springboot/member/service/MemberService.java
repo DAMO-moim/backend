@@ -17,8 +17,10 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Transactional
 @Service
@@ -43,9 +45,10 @@ public class MemberService {
         member.getMemberCategories().stream()
                 .forEach(memberCategory ->
                         categoryService.findVerifiedCategory(memberCategory.getCategory().getCategoryId()));
-
-        //우선순위 부여
         List<MemberCategory> memberCategories = member.getMemberCategories();
+        //카테고리 중복 체크
+        validateNoDuplicateCategories(memberCategories);
+        //카테고리 우선순위 부여
         for(int i = 0; i < memberCategories.size(); i++){
             memberCategories.get(i).setPriority(i+1);
         }
@@ -117,5 +120,17 @@ public class MemberService {
     public boolean isAdmin(long memberId){
         Member member = findVerifiedMember(memberId);
         return member.getRoles().contains("ADMIN");
+    }
+
+    //카테고리 중복체크를 위한 메서드
+    private void validateNoDuplicateCategories(List<MemberCategory> memberCategories) {
+        Set<Long> uniqueCategoryIds = new HashSet<>();
+
+        for (MemberCategory mc : memberCategories) {
+            Long categoryId = mc.getCategory().getCategoryId();
+            if (!uniqueCategoryIds.add(categoryId)) {
+                throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+            }
+        }
     }
 }
