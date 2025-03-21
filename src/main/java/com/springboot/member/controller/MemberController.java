@@ -97,15 +97,11 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @PatchMapping("/categories")
+    public ResponseEntity patchMemberCategory( @RequestBody @Valid MemberCategoryDto.Patch patchDto,
+                                               @Parameter(hidden = true) @AuthenticationPrincipal Member member) {
 
-
-//    @PostMapping("/categories")
-//    public ResponseEntity<Void> saveMemberCategories(
-//            @RequestBody @Valid MemberCategoryDto.Post memberCategoryPostDto,
-//            @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedMember) {
-//
-//        List<MemberCategory> memberCategories = mapper.
-//
-//        return new ResponseEntity<>(HttpStatus.CREATED);
-//    }
+        memberService.updateMemberCategories(member.getMemberId(), patchDto.getCategoryIds());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

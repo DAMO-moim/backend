@@ -38,7 +38,7 @@ public class MemberDto {
         private String phoneNumber;
 
         @Size(min = 1, max = 3)
-        private List<MemberCategoryDto> memberCategories;
+        private List<MemberCategoryDto.Post> memberCategories;
     }
 
     @Getter

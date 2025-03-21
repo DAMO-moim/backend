@@ -96,6 +96,11 @@ public class MemberService {
         return memberRepository.save(findMember);
     }
 
+    public void updateMemberCategories(long memberId, List<Long> categoryIds){
+        //수정 필요
+        validateNoDuplicateCategories(categoryIds);
+    }
+
     public void verifyExistsEmail(String email){
         Optional<Member> member = memberRepository.findByEmail(email);
 
