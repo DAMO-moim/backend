@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> {
-    Optional<GroupMember> findByGroupAndMemberId(Group group, long memberId);
-    boolean existsByGroupAndMemberId(Group group, Long memberId);
+    Optional<GroupMember> findByGroupAndMember_MemberId(Group group, long memberId);
+    boolean existsByGroupAndMember_MemberId(Group group, long memberId);
 }
