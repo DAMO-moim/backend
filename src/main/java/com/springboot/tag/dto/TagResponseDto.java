@@ -3,6 +3,7 @@ package com.springboot.tag.dto;
 import com.springboot.tag.entity.Tag;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
+@Builder
 @Schema(name = "ResponseDto", description = "태그 응답 DTO")
 public class TagResponseDto {
     @Schema(
