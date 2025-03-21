@@ -21,7 +21,20 @@ public interface BoardMapper {
     Board boardPostDtoToBoard(BoardDto.Post requestBody);
     Board boardPatchDtoToBoard(BoardDto.Patch requestBody);
     List<BoardDto.Response> boardsToBoardResponseDtos(List<Board> boards);
+    //게시글 전체 조회(댓글x)
+    default BoardDto.Responses boardToBoardResponsesDto(Board board){
+        return new BoardDto.Responses(
+                board.getBoardId(),
+                board.getTitle(),
+                board.getContent(),
+                board.getImage(),
+                board.getMember().getMemberId(),
+                board.getMember().getName(),
+                board.getCreateAt()
+        );
+    }
 
+    //게시글 단일 조회(댓글o)
     default BoardDto.Response boardToBoardResponseDto(Board board){
         return new BoardDto.Response(
                 board.getBoardId(),

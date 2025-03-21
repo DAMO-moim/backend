@@ -45,4 +45,16 @@ public class BoardDto {
         private LocalDateTime createdAt;
         private List<CommentDto.Response> comments;
     }
+
+    @AllArgsConstructor
+    @Getter
+    public static class Responses {
+        private long boardId;
+        private String title;
+        private String content;
+        private String image;
+        private long memberId;
+        private String memberName;
+        private LocalDateTime createdAt;
+    }
 }
