@@ -101,7 +101,7 @@ public class BoardController {
                 (mapper.boardsToBoardResponseDtos(boards),boardPage),HttpStatus.OK);
     }
 
-    @Operation(summary = "게시글 등록", description = "게시글 등록합니다.")
+    @Operation(summary = "게시글 삭제", description = "게시글 삭제합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "게시글 삭제 완료"),
             @ApiResponse(responseCode = "400", description = "Board Validation failed")

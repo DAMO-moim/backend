@@ -17,7 +17,7 @@ public class CommentDto {
     @Getter
     public static class Patch{
         @Setter
-        @Schema(description = "댓글 ID", example = "1")
+        @Schema(hidden = true)
         private long commentId;
 
         @Schema(description = "댓글 내용", example = "본문이에용")

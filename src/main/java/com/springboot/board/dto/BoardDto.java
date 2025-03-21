@@ -27,6 +27,7 @@ public class BoardDto {
     @Getter
     public static class Patch{
         @Setter
+        @Schema(hidden = true)
         private long boardId;
 
         @Schema(description = "게시글 제목", example = "수정된 제목이야")

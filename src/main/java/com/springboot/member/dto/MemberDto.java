@@ -39,7 +39,7 @@ public class MemberDto {
     @Getter
     public static class Patch{
         @Setter
-        @Parameter(description = "사용자 ID", example = "1")
+        @Schema(hidden = true)
         private long memberId;
 
         @Setter
