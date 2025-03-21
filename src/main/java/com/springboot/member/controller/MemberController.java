@@ -2,8 +2,10 @@ package com.springboot.member.controller;
 
 import com.springboot.dto.MultiResponseDto;
 import com.springboot.dto.SingleResponseDto;
+import com.springboot.member.dto.MemberCategoryDto;
 import com.springboot.member.dto.MemberDto;
 import com.springboot.member.entity.Member;
+import com.springboot.member.entity.MemberCategory;
 import com.springboot.member.mapper.MemberMapper;
 import com.springboot.member.service.MemberService;
 import com.springboot.utils.UriCreator;
@@ -93,5 +95,17 @@ public class MemberController {
 //        memberService.deleteMember(memberId, authenticatedmember.getMemberId());
 //
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+
+
+    @PostMapping("/categories")
+    public ResponseEntity<Void> saveMemberCategories(
+            @RequestBody @Valid MemberCategoryDto.Post memberCategoryPostDto,
+            @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedMember) {
+
+        List<MemberCategory> memberCategories = mapper.
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

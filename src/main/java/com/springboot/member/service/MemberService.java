@@ -1,6 +1,7 @@
 package com.springboot.member.service;
 
 import com.springboot.auth.utils.AuthorityUtils;
+import com.springboot.category.entity.Category;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
 import com.springboot.member.entity.Member;
@@ -76,6 +77,7 @@ public class MemberService {
 
         return memberRepository.save(findMember);
     }
+
     public void verifyExistsEmail(String email){
         Optional<Member> member = memberRepository.findByEmail(email);
 

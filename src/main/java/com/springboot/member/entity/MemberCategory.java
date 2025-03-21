@@ -25,6 +25,8 @@ public class MemberCategory {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    private int priority;
+
     public void setMember(Member member) {
         this.member = member;
         if (!member.getMemberCategories().contains(this)) {
