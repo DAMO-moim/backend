@@ -85,6 +85,7 @@ public class GroupController {
     @GetMapping("/{group-id}")
     public ResponseEntity getGroup(@PathVariable("group-id") @Positive long groupId,
                                    @AuthenticationPrincipal Member authenticatedmember) {
+
         Group group = groupService.findGroup(groupId, authenticatedmember.getMemberId());
 
         GroupDto.Response groupResponse = groupMapper.groupToGroupResponse(group);
@@ -122,4 +123,16 @@ public class GroupController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    // 모임 가입 요청
+    @Operation(summary = "모임 가입", description = "하나의 모임에 가입합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "모임 가입 성공"),
+            @ApiResponse(responseCode = "400", description = "이미 가입된 회원입니다.")
+    })
+    @PostMapping("/{group-id}/join")
+    public ResponseEntity joinGroup(@PathVariable("group-id") long groupId,
+                                    @AuthenticationPrincipal Member member) {
+        groupService.joinGroup(groupId, member.getMemberId());
+        return ResponseEntity.ok().build();
+    }
 }
