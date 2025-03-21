@@ -20,7 +20,7 @@ public interface BoardMapper {
     @Mapping(target = "image", ignore = true) // 만약 image를 사용하지 않는다면 무시
     Board boardPostDtoToBoard(BoardDto.Post requestBody);
     Board boardPatchDtoToBoard(BoardDto.Patch requestBody);
-    List<BoardDto.Response> boardsToBoardResponseDtos(List<Board> boards);
+    List<BoardDto.Responses> boardsToBoardResponseDtos(List<Board> boards);
     //게시글 전체 조회(댓글x)
     default BoardDto.Responses boardToBoardResponsesDto(Board board){
         return new BoardDto.Responses(
