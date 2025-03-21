@@ -3,13 +3,12 @@ package com.springboot.member.dto;
 import com.springboot.member.entity.Member;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
+@Builder
 public class MemberDto {
     @Getter
     public static class Post {
@@ -53,8 +52,10 @@ public class MemberDto {
 
     @AllArgsConstructor
     @Getter
+    @Setter
+    @NoArgsConstructor
+    @Builder
     public static class Response {
-        @Parameter(description = "사용자 ID", example = "1")
         private long memberId;
 
         @Schema(description = "사용자 이메일", example = "example@gmail.com")
@@ -75,5 +76,16 @@ public class MemberDto {
         public String getMemberStatus() {
             return memberStatus.getStatus();
         }
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @Builder
+    public static class MemberOfGroupResponse {
+        private long memberId;
+        @Schema(description = "사용자 이름", example = "홍성민")
+        private String name;
     }
 }
