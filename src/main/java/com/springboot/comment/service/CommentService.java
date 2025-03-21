@@ -23,6 +23,8 @@ public class CommentService {
     public Comment createComment(long boardId, Comment comment, long memberId){
         Member findMember = memberService.findVerifiedMember(memberId);
         Board findBoard = boardService.findVerifiedBoard(boardId);
+        comment.setBoard(findBoard);
+        comment.setMember(findMember);
 
         //게시글에 댓글 추가
         findBoard.getComments().add(comment);

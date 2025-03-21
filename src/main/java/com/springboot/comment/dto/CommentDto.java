@@ -10,13 +10,13 @@ public class CommentDto {
     @Getter
     public static class Post{
         @Schema(description = "댓글 내용", example = "본문이에용")
-        private String comment;
+        private String content;
     }
 
     @Getter
     public static class Patch{
         @Schema(description = "댓글 내용", example = "본문이에용")
-        private String comment;
+        private String content;
     }
 
     @AllArgsConstructor
@@ -24,7 +24,7 @@ public class CommentDto {
     public static class Response{
         private long commentId;
         @Schema(description = "댓글 내용", example = "본문이에용")
-        private String comment;
+        private String content;
         private LocalDateTime createdAt;
         private long memberId;
         private String memberName;
