@@ -99,13 +99,13 @@ public class MemberController {
 
 
 
-    @PostMapping("/categories")
-    public ResponseEntity<Void> saveMemberCategories(
-            @RequestBody @Valid MemberCategoryDto.Post memberCategoryPostDto,
-            @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedMember) {
-
-        List<MemberCategory> memberCategories = mapper.
-
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
+//    @PostMapping("/categories")
+//    public ResponseEntity<Void> saveMemberCategories(
+//            @RequestBody @Valid MemberCategoryDto.Post memberCategoryPostDto,
+//            @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedMember) {
+//
+//        List<MemberCategory> memberCategories = mapper.
+//
+//        return new ResponseEntity<>(HttpStatus.CREATED);
+//    }
 }

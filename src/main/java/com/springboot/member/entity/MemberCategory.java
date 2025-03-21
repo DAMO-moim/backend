@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 @Getter
 @Setter
@@ -25,6 +27,8 @@ public class MemberCategory {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Min(value = 1)
+    @Max(value = 3)
     private int priority;
 
     public void setMember(Member member) {

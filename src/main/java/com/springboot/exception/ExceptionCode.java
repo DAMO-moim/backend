@@ -19,7 +19,8 @@ public enum ExceptionCode {
     LOGOUT_ERROR(409, "logout error"),
     ACCESS_DENIED(403, "접근 권한이 없습니다."),
     UNAUTHORIZED_ACCESS(403, "관리자 권한이 없습니다."),
-    UNAUTHORIZED_MEMBER_ACCESS(401,"Not authorized to access this resource");
+    UNAUTHORIZED_MEMBER_ACCESS(401,"Not authorized to access this resource"),
+    CATEGORY_NOT_FOUND(404,"Category not found");
 
     @Getter
     private int status;

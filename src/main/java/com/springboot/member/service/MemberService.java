@@ -2,9 +2,11 @@ package com.springboot.member.service;
 
 import com.springboot.auth.utils.AuthorityUtils;
 import com.springboot.category.entity.Category;
+import com.springboot.category.service.CategoryService;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
 import com.springboot.member.entity.Member;
+import com.springboot.member.entity.MemberCategory;
 import com.springboot.member.repository.MemberRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,23 +26,36 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthorityUtils authorityUtils;
+    private final CategoryService categoryService;
 
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, AuthorityUtils authorityUtils) {
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, AuthorityUtils authorityUtils, CategoryService categoryService) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityUtils = authorityUtils;
+        this.categoryService = categoryService;
     }
 
     public Member createMember(Member member){
         //중복 이메일 여부 확인
         verifyExistsEmail(member.getEmail());
 
+        //카테고리 존재 여부 확인
+        member.getMemberCategories().stream()
+                .forEach(memberCategory ->
+                        categoryService.findVerifiedCategory(memberCategory.getCategory().getCategoryId()));
+
+        //우선순위 부여
+        List<MemberCategory> memberCategories = member.getMemberCategories();
+        for(int i = 0; i < memberCategories.size(); i++){
+            memberCategories.get(i).setPriority(i+1);
+        }
         String encryptedPassword = passwordEncoder.encode(member.getPassword());
         member.setPassword(encryptedPassword);
 
         //권한 목록 저장
         List<String> roles = authorityUtils.createAuthorities(member.getEmail());
         member.setRoles(roles);
+
 
         return memberRepository.save(member);
     }

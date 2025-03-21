@@ -10,14 +10,36 @@ import org.mapstruct.ReportingPolicy;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 //매핑되지 않은 필드가 있더라도 에러를 무시하도록 설정
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface MemberMapper {
-    Member memberPostToMember(MemberDto.Post requestBody);
+    //Member memberPostToMember(MemberDto.Post requestBody);
     Member memberPatchToMember(MemberDto.Patch requestBody);
     MemberDto.Response memberToMemberResponse(Member member);
     List<MemberDto.Response> membersToMemberResponses(List<Member> members);
-    MemberCategory categoryPostToMemberCategory(List<MemberCategory> memberCategories);
 
+    default Member memberPostToMember(MemberDto.Post requestBody) {
+        Member member = new Member();
+        member.setEmail(requestBody.getEmail());
+        member.setPassword(requestBody.getPassword());
+        member.setName(requestBody.getName());
+        member.setPhoneNumber(requestBody.getPhoneNumber());
+        member.setGender(requestBody.getGender());
+        member.setBirth(requestBody.getBirth());
+        List<MemberCategory> memberCategories = requestBody.getMemberCategories().stream()
+                .map(memberCategoryDto -> {
+                    Category category = new Category();
+                    category.setCategoryId(memberCategoryDto.getCategoryId());
+
+                    MemberCategory memberCategory = new MemberCategory();
+                    memberCategory.setCategory(category);
+                    memberCategory.setMember(member);
+                    return memberCategory;
+                })
+                .collect(Collectors.toList());
+        member.setMemberCategories(memberCategories);
+        return member;
+    }
 }

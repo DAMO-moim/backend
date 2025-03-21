@@ -9,6 +9,8 @@ import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.util.List;
 
 public class MemberDto {
     @Getter
@@ -34,6 +36,9 @@ public class MemberDto {
 
         @Schema(description = "사용자 전화번호", example = "010-1111-2222")
         private String phoneNumber;
+
+        @Size(min = 1, max = 3)
+        private List<MemberCategoryDto> memberCategories;
     }
 
     @Getter
