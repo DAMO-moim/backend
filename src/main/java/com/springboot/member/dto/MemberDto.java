@@ -65,6 +65,8 @@ public class MemberDto {
         @Schema(description = "사용자 이메일", example = "example@gmail.com")
         private String email;
 
+        private String image;
+
         @Schema(description = "사용자 이름", example = "홍성민")
         private String name;
 

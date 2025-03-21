@@ -62,5 +62,7 @@ public class BoardDto {
 
         @Schema(description = "작성 일자", example = "2025-03-21")
         private LocalDateTime createdAt;
+
+        private int commentCount;
     }
 }
