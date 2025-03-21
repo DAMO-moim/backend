@@ -31,4 +31,15 @@ public class CommentController {
         Comment comment = commentService.createComment(boardId, mapper.commentPostDtoToComment(commentPostDto), member.getMemberId());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @PatchMapping("{comment-id}")
+    public ResponseEntity patchComment(@PathVariable("board-id") long boardId,
+                                       @PathVariable("comment-id") long commentId,
+                                       @Valid @RequestBody CommentDto.Patch commentPatchDto,
+                                       @AuthenticationPrincipal Member member){
+        commentPatchDto.setCommentId(commentId);
+        Comment comment = commentService.updateComment(boardId, mapper.commentPatchDtoToComment(commentPatchDto), member.getMemberId());
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
