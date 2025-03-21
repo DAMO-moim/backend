@@ -8,6 +8,7 @@ import com.springboot.dto.MultiResponseDto;
 import com.springboot.dto.SingleResponseDto;
 import com.springboot.member.entity.Member;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,7 @@ public class BoardController {
     @PostMapping
     public ResponseEntity postBoard(@Valid @RequestBody BoardDto.Post boardPostDto,
                                        @PathVariable("group-id") Long groupId,
-                                       @AuthenticationPrincipal Member member) {
+                                       @Parameter(hidden = true) @AuthenticationPrincipal Member member) {
         Board board = boardService.createBoard(mapper.boardPostDtoToBoard(boardPostDto), member.getMemberId(), groupId);
 
         return new ResponseEntity<>(new SingleResponseDto<>(mapper.boardToBoardResponseDto(board)), HttpStatus.CREATED);
@@ -59,7 +60,7 @@ public class BoardController {
     public ResponseEntity patchBoard(@PathVariable("board-id") @Positive long boardId,
                                      @PathVariable("group-id") Long groupId,
                                      @Valid @RequestBody BoardDto.Patch boardPatchDto,
-                                     @AuthenticationPrincipal Member member){
+                                     @Parameter(hidden = true) @AuthenticationPrincipal Member member){
         boardPatchDto.setBoardId(boardId);
         Board board = boardService.updateBoard(mapper.boardPatchDtoToBoard(boardPatchDto), member.getMemberId(),groupId);
 
@@ -74,7 +75,7 @@ public class BoardController {
     @GetMapping("/{board-id}")
     public ResponseEntity getBoard(@PathVariable("board-id") @Positive long boardId,
                                    @PathVariable("group-id") Long groupId,
-                                   @AuthenticationPrincipal Member member,
+                                   @Parameter(hidden = true) @AuthenticationPrincipal Member member,
                                    //@RequestParam("file") MultipartFile file,
                                    HttpServletRequest request, HttpServletResponse response){
         Board board = boardService.findBoard(boardId, member.getMemberId(),groupId);
@@ -92,7 +93,7 @@ public class BoardController {
                                     @Positive @RequestParam int page,
                                     @Positive @RequestParam int size,
                                     //@RequestParam String sort,
-                                    @AuthenticationPrincipal Member member){
+                                    @Parameter(hidden = true) @AuthenticationPrincipal Member member){
         Page<Board> boardPage = boardService.findBoards(page -1, size, member.getMemberId(), groupId);
         List<Board> boards = boardPage.getContent();
 
@@ -108,7 +109,7 @@ public class BoardController {
     @DeleteMapping("/{board-id}")
     public ResponseEntity deleteBoard(@PathVariable("board-id") @Positive long boardId,
                                       @PathVariable("group-id") Long groupId,
-                                      @AuthenticationPrincipal Member member){
+                                      @Parameter(hidden = true) @AuthenticationPrincipal Member member){
         boardService.deleteBoard(boardId, member.getMemberId(), groupId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
