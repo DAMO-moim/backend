@@ -2,6 +2,7 @@ package com.springboot.board.service;
 
 import com.springboot.board.entity.Board;
 import com.springboot.board.repository.BoardRepository;
+import com.springboot.comment.entity.Comment;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
 import com.springboot.group.entity.Group;
@@ -16,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -75,7 +78,13 @@ public class BoardService {
             throw new BusinessLogicException(ExceptionCode.BOARD_NOT_FOUND);
         }
 
-        return findVerifiedBoard(boardId);
+        //댓글의 상태가 등록상태일때만 조회한다.
+        List<Comment> filteredComments = findBoard.getComments().stream()
+                .filter(c -> c.getCommentStatus().equals(Comment.CommentStatus.COMMENT_POST))
+                .collect(Collectors.toList());
+        findBoard.setComments(filteredComments);
+
+        return findBoard;
     }
 
     @Transactional(readOnly = true)

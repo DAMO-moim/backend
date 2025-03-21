@@ -50,6 +50,17 @@ public class CommentService {
         return commentRepository.save(findComment);
     }
 
+    public void deleteComment(long commentId, long boardId, long memberId) {
+        Member findMember = memberService.findVerifiedMember(memberId);
+        Board findBoard = boardService.findVerifiedBoard(boardId);
+        //해당 댓글이 실제로 존재하는지 확인이 필요
+        Comment findComment = findVerifiedComment(commentId);
+        //해당 댓글의 작성자인지 검증이 필요하다.
+        isCommentOwner(findComment, memberId);
+
+        findComment.setCommentStatus(Comment.CommentStatus.COMMENT_DELETE);
+        commentRepository.save(findComment);
+    }
     //작성자가 맞는지 검증하는 메서드
     public void isCommentOwner(Comment comment, long memberId){
         memberService.isAuthenticatedMember(comment.getMember().getMemberId(), memberId);
