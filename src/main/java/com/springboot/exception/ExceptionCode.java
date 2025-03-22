@@ -22,7 +22,8 @@ public enum ExceptionCode {
     INVALID_CREDENTIALS(401,"잘못된 이메일 또는 비밀번호입니다."),
     UNAUTHORIZED_MEMBER_ACCESS(401,"Not authorized to access this resource"),
     CATEGORY_NOT_FOUND(404,"Category not found"),
-    CHAT_NOT_FOUND(404,"ChatRoom not found");
+    CHAT_NOT_FOUND(404,"ChatRoom not found"),
+    MESSAGE_NOT_FOUND(404,"Message not found");
 
     @Getter
     private int status;
