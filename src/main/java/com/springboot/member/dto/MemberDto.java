@@ -7,6 +7,8 @@ import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.util.List;
 
 @Builder
 public class MemberDto {
@@ -21,7 +23,7 @@ public class MemberDto {
         @Schema(description = "사용자 비밀번호", example = "zizonhuzzang")
         private String password;
 
-        @Schema(description = "사용자 성별", example = "Girl")
+        @Schema(description = "사용자 성별", example = "MAN")
         private Member.Gender gender;
 
         @Schema(description = "사용자 출생년도", example = "1892")
@@ -33,21 +35,30 @@ public class MemberDto {
 
         @Schema(description = "사용자 전화번호", example = "010-1111-2222")
         private String phoneNumber;
+
+        @Size(min = 1, max = 3)
+        private List<MemberCategoryDto.Post> memberCategories;
+    }
+
+    @Getter
+    public static class Delete{
+        private String email;
+        private String password;
     }
 
     @Getter
     public static class Patch{
         @Setter
-        @Parameter(description = "사용자 ID", example = "1")
+        @Schema(hidden = true)
         private long memberId;
 
         @Setter
         @Schema(description = "사용자 비밀번호", example = "zizonhuzzang")
-        private long password;
+        private String password;
 
         @Setter
         @Schema(description = "사용자 이름", example = "홍성민")
-        private long name;
+        private String name;
     }
 
     @AllArgsConstructor
@@ -60,6 +71,8 @@ public class MemberDto {
 
         @Schema(description = "사용자 이메일", example = "example@gmail.com")
         private String email;
+
+        private String image;
 
         @Schema(description = "사용자 이름", example = "홍성민")
         private String name;

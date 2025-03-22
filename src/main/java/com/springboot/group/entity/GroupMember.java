@@ -25,6 +25,7 @@ public class GroupMember {
     @JoinColumn(name = "group_id")
     private Group group;
 
+    @Enumerated(EnumType.STRING)
     private GroupRoles groupRoles = GroupRoles.GROUP_MEMBER;
 
     // 영속성 전이, 동기화

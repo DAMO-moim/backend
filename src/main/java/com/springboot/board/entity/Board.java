@@ -34,6 +34,7 @@ public class Board extends BaseEntity {
     private String image;
 
     // 게시글 상태
+    @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
     private BoardStatus boardStatus = BoardStatus.BOARD_POST;
 

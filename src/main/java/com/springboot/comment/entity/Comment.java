@@ -21,6 +21,7 @@ public class Comment extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
+    @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
     private CommentStatus commentStatus = CommentStatus.COMMENT_POST;
 

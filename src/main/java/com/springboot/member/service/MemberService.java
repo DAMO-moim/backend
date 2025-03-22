@@ -1,9 +1,12 @@
 package com.springboot.member.service;
 
 import com.springboot.auth.utils.AuthorityUtils;
+import com.springboot.category.entity.Category;
+import com.springboot.category.service.CategoryService;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
 import com.springboot.member.entity.Member;
+import com.springboot.member.entity.MemberCategory;
 import com.springboot.member.repository.MemberRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,8 +17,10 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Transactional
 @Service
@@ -23,23 +28,37 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthorityUtils authorityUtils;
+    private final CategoryService categoryService;
 
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, AuthorityUtils authorityUtils) {
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, AuthorityUtils authorityUtils, CategoryService categoryService) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityUtils = authorityUtils;
+        this.categoryService = categoryService;
     }
 
     public Member createMember(Member member){
         //중복 이메일 여부 확인
         verifyExistsEmail(member.getEmail());
 
+        //카테고리 존재 여부 확인
+        member.getMemberCategories().stream()
+                .forEach(memberCategory ->
+                        categoryService.findVerifiedCategory(memberCategory.getCategory().getCategoryId()));
+        List<MemberCategory> memberCategories = member.getMemberCategories();
+        //카테고리 중복 체크
+        validateNoDuplicateCategories(memberCategories);
+        //카테고리 우선순위 부여
+        for(int i = 0; i < memberCategories.size(); i++){
+            memberCategories.get(i).setPriority(i+1);
+        }
         String encryptedPassword = passwordEncoder.encode(member.getPassword());
         member.setPassword(encryptedPassword);
 
         //권한 목록 저장
         List<String> roles = authorityUtils.createAuthorities(member.getEmail());
         member.setRoles(roles);
+
 
         return memberRepository.save(member);
     }
@@ -76,6 +95,47 @@ public class MemberService {
 
         return memberRepository.save(findMember);
     }
+
+    public void myDeleteMember(Member member, long memberId){
+        //로그인한 사용자 찾기
+        Member findMember = findVerifiedMember(memberId);
+        //입력한 이메일과 비밀번호를 가진 사용자 찾기
+        // Optional<Member> deleteMember = memberRepository.findByEmail(member.getEmail());
+        if(!member.getEmail().equals(findMember.getEmail())){
+            throw new BusinessLogicException(ExceptionCode.INVALID_CREDENTIALS);
+        }
+
+        if(!passwordEncoder.matches(member.getPassword(), findMember.getPassword())){
+            throw new BusinessLogicException(ExceptionCode.INVALID_CREDENTIALS);
+        }
+
+        //둘다 문제없으면 탈퇴
+        findMember.setMemberStatus(Member.MemberStatus.MEMBER_QUIT);
+        memberRepository.save(findMember);
+    }
+
+    public void deleteMember(long memberId, Member admin){
+        if(!isAdmin(admin.getMemberId())){
+           throw new BusinessLogicException(ExceptionCode.ACCESS_DENIED);
+        }
+        //삭제할 멤버 찾기
+        Member findMember = findVerifiedMember(memberId);
+        findMember.setMemberStatus(Member.MemberStatus.MEMBER_QUIT);
+        memberRepository.save(findMember);
+    }
+
+    public void updateMemberCategories(long memberId, List<Long> categoryIds){
+        //수정 필요
+        //validateNoDuplicateCategories(categoryIds);
+    }
+
+    public List<MemberCategory> findMemberCategroies(long memberId){
+        Member member = findVerifiedMember(memberId);
+        List<MemberCategory> memberCategories = member.getMemberCategories();
+
+        return memberCategories;
+    }
+
     public void verifyExistsEmail(String email){
         Optional<Member> member = memberRepository.findByEmail(email);
 
@@ -100,5 +160,17 @@ public class MemberService {
     public boolean isAdmin(long memberId){
         Member member = findVerifiedMember(memberId);
         return member.getRoles().contains("ADMIN");
+    }
+
+    //카테고리 중복체크를 위한 메서드
+    private void validateNoDuplicateCategories(List<MemberCategory> memberCategories) {
+        Set<Long> uniqueCategoryIds = new HashSet<>();
+
+        for (MemberCategory mc : memberCategories) {
+            Long categoryId = mc.getCategory().getCategoryId();
+            if (!uniqueCategoryIds.add(categoryId)) {
+                throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+            }
+        }
     }
 }

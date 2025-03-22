@@ -81,6 +81,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private String delegateAccessToken(Member member){
         //사용자 정보 저장
         Map<String, Object> claims = new HashMap<>();
+        //claims에 memeberId를 넣지 않으면 메세지를 입력할때마다 db에서 회원을 조회해야 하여 성능이 저하됨
+        claims.put("memberId", member.getMemberId());
         claims.put("username", member.getEmail());
         claims.put("roles", member.getRoles());
 
