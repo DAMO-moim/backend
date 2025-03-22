@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -134,6 +135,7 @@ public class GroupService {
         return group;
     }
 
+    @Transactional
     public void joinGroup(long groupId, long memberId) {
         // (1) 모임 존재 확인
         Group group = findVerifiedGroup(groupId);
@@ -145,6 +147,11 @@ public class GroupService {
         boolean alreadyExists = groupMemberRepository.existsByGroupAndMember_MemberId(group, memberId);
         if (alreadyExists) {
             throw new BusinessLogicException(ExceptionCode.MEMBER_ALREADY_JOINED_GROUP);
+        }
+
+        // 모임 최대 인원수 초과했는지 확인
+        if (group.getGroupMembers().size() >= group.getMaxMemberCount()) {
+            throw new BusinessLogicException(ExceptionCode.GROUP_FULL);
         }
 
         // (4) 모임원으로 등록
