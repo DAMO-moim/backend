@@ -21,6 +21,7 @@ public class CategoryService {
     public List<Category> findCategories(){
         return categoryRepository.findAll();
     }
+
     public Category findVerifiedCategory(long categoryId){
         Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
         Category category = optionalCategory.orElseThrow(()->

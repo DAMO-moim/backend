@@ -108,13 +108,13 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PatchMapping("/categories")
-    public ResponseEntity patchMemberCategory( @RequestBody @Valid MemberCategoryDto.Patch patchDto,
-                                               @Parameter(hidden = true) @AuthenticationPrincipal Member member) {
-
-        memberService.updateMemberCategories(member.getMemberId(), patchDto.getCategoryIds());
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+//    @PatchMapping("/categories")
+//    public ResponseEntity patchMemberCategory( @RequestBody @Valid MemberCategoryDto.Patch patchDto,
+//                                               @Parameter(hidden = true) @AuthenticationPrincipal Member member) {
+//
+//        memberService.updateMemberCategories(member.getMemberId(), patchDto.getCategoryIds());
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 
     //사용자의 카테고리 내역 조회
     @GetMapping("/categories")
