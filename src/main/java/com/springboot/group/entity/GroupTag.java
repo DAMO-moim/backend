@@ -1,6 +1,5 @@
 package com.springboot.group.entity;
 
-import com.springboot.category.entity.SubCategory;
 import com.springboot.tag.entity.Tag;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
