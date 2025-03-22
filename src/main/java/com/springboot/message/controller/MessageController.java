@@ -26,7 +26,7 @@ public class MessageController {
     private final SimpMessagingTemplate messagingTemplate;
 
     //클라이언트로 메세지 전송 요청을 받으면 클라이언트가 chatRoomID를 가진 채팅방에 메세지를 보낸다.
-    @MessageMapping("/chat/{roomId}/sendMessage") // 메시지 발행 엔드포인트
+    @MessageMapping("/chat/{chatroom-id}/sendMessage") // 메시지 발행 엔드포인트
     public void sendMessage(@DestinationVariable String chatRoomId,
                             MessageDto.Post messageDto,
                             SimpMessageHeaderAccessor headerAccessor){

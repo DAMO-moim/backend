@@ -9,7 +9,7 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface MessageMapper {
     @Mapping(target = "member.memberId", source = "memberId")
-    @Mapping(target = "chatRoom.id", source = "chatRoomId")
+    @Mapping(target = "chatRoom.chatRoomId", source = "chatRoomId")
     Message messagePostToMessage(MessageDto.Post requestBody);
 
     @Mapping(source = "member.name", target = "writer")
