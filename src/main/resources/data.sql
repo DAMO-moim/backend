@@ -38,4 +38,8 @@ INSERT INTO category (category_id, category_name) VALUES (11, '독서');
 INSERT INTO category (category_id, category_name) VALUES (12, '공예');
 INSERT INTO category (category_id, category_name) VALUES (13, '주류');
 
-
+INSERT INTO chat_room (chat_room_id, category_id) VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4);
