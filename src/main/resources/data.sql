@@ -29,6 +29,8 @@ INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUE
 INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (12, '기타', 4);
 
 INSERT INTO category (category_id, category_name) VALUES (5, '반려동물');
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (13, '강아지', 5);
+
 INSERT INTO category (category_id, category_name) VALUES (6, '문화/공연');
 INSERT INTO category (category_id, category_name) VALUES (7, '영화');
 INSERT INTO category (category_id, category_name) VALUES (8, '요리/제조');
