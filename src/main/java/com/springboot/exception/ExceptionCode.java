@@ -24,7 +24,9 @@ public enum ExceptionCode {
     MEMBER_NOT_GROUP_LEADER(400, "모임장이 아닙니다."),
     MEMBER_NOT_FOUND_IN_GROUP(401, "모임 내 회원을 찾을 수 없습니다"),
     MEMBER_NOT_IN_GROUP(403, "회원이 모임에 가입한 상태가 아님"),
-    MEMBER_ALREADY_JOINED_GROUP(409, "이미 모임에 가입한 회원입니다.");
+    MEMBER_ALREADY_JOINED_GROUP(409, "이미 모임에 가입한 회원입니다."),
+    GROUP_FULL(400, "모임의 최대 인원 수를 초과했습니다.");
+
 
     @Getter
     private int status;
