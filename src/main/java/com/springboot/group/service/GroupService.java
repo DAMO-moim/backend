@@ -4,7 +4,9 @@ import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
 import com.springboot.group.entity.Group;
 import com.springboot.group.entity.GroupMember;
+import com.springboot.group.entity.GroupRecommend;
 import com.springboot.group.repository.GroupMemberRepository;
+import com.springboot.group.repository.GroupRecommendRepository;
 import com.springboot.group.repository.GroupRepository;
 import com.springboot.member.entity.Member;
 import com.springboot.member.service.MemberService;
@@ -22,11 +24,13 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final MemberService memberService;
     private final GroupMemberRepository groupMemberRepository;
+    private final GroupRecommendRepository groupRecommendRepository;
 
-    public GroupService(GroupRepository groupRepository, MemberService memberService, GroupMemberRepository groupMemberRepository) {
+    public GroupService(GroupRepository groupRepository, MemberService memberService, GroupMemberRepository groupMemberRepository, GroupRecommendRepository groupRecommendRepository) {
         this.groupRepository = groupRepository;
         this.memberService = memberService;
         this.groupMemberRepository = groupMemberRepository;
+        this.groupRecommendRepository = groupRecommendRepository;
     }
 
 
@@ -143,6 +147,33 @@ public class GroupService {
         groupMember.setGroupRoles(GroupMember.GroupRoles.GROUP_MEMBER);
 
         groupMemberRepository.save(groupMember);
+    }
+
+    @Transactional
+    public void toggleRecommend(Long groupId, Long memberId) {
+        Group group = findVerifiedGroup(groupId);
+        Member member = memberService.findVerifiedMember(memberId);
+
+        // 모임에 속한 멤버만 추천 가능
+        validateGroupMember(group, memberId);
+
+        Optional<GroupRecommend> optionalRecommend = groupRecommendRepository.findByGroupAndMember(group, member);
+
+        if (optionalRecommend.isPresent()) {
+            // 이미 추천한 상태 → 취소
+            groupRecommendRepository.delete(optionalRecommend.get());
+            group.setRecommend(group.getRecommend() - 1);
+        } else {
+            // 추천 추가
+            GroupRecommend recommend = GroupRecommend.builder()
+                    .group(group)
+                    .member(member)
+                    .build();
+            groupRecommendRepository.save(recommend);
+            group.setRecommend(group.getRecommend() + 1);
+        }
+
+        groupRepository.save(group);
     }
 
     // 모임이 이미 존재하는지 검증하는 메서드
