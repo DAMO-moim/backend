@@ -1,6 +1,5 @@
 package com.springboot.group.service;
 
-import com.springboot.category.entity.SubCategory;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
 import com.springboot.group.entity.Group;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -118,26 +116,6 @@ public class GroupService {
         // (3) 모임 삭제
         groupRepository.delete(group);
     }
-
-    // Controller에 지금 모임 가입이 없음
-    // 그거 넣어서 Service 계층에 비즈니스 로직이랑 연결
-    // 가입했을 때 DB에 모임에 멤버가 가입되도록 해야하고
-    // 그전에 해야될게 모임생성할때 내가 생성자니까 내가 그 모임에 자동가입되어야하고
-    // 권한이 모임장으로 변경되어야함
-//    public Group Group(long groupId, long memberId) {
-//        // (1) 모임 존재 여부 확인
-//        Group group = groupRepository.findById(groupId)
-//                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.GROUP_NOT_FOUND));
-//
-//        // 회원이 존재하는지
-//        memberService.findVerifiedMember(memberId);
-//
-//        // (2) 사용자가 해당 모임의 멤버인지 검증
-//        validateGroupMember(group, memberId);
-//
-//        // (3) 모임 정보 반환
-//        return group;
-//    }
 
     @Transactional
     public void joinGroup(long groupId, long memberId) {
