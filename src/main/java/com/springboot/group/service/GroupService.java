@@ -33,6 +33,7 @@ public class GroupService {
 
 
     // 모임 생성 서비스 로직 구현
+    @Transactional
     public Group createGroup(Group group, long memberId) {
         // (1) 회원이 존재하는지 검증
         Member member = memberService.findVerifiedMember(memberId);
@@ -103,6 +104,7 @@ public class GroupService {
         return groupPage;
     }
 
+    @Transactional
     public void deleteGroup(long groupId, long memberId) {
         // (1) 삭제할 모임 조회
         Group group = groupRepository.findById(groupId)
@@ -110,6 +112,8 @@ public class GroupService {
 
         // (2) 요청한 사용자가 모임장인지 검증
         validateGroupLeader(group, memberId);
+
+        groupMemberRepository.deleteAllByGroup(group);
 
         // (3) 모임 삭제
         groupRepository.delete(group);
@@ -120,20 +124,20 @@ public class GroupService {
     // 가입했을 때 DB에 모임에 멤버가 가입되도록 해야하고
     // 그전에 해야될게 모임생성할때 내가 생성자니까 내가 그 모임에 자동가입되어야하고
     // 권한이 모임장으로 변경되어야함
-    public Group Group(long groupId, long memberId) {
-        // (1) 모임 존재 여부 확인
-        Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.GROUP_NOT_FOUND));
-
-        // 회원이 존재하는지
-        memberService.findVerifiedMember(memberId);
-
-        // (2) 사용자가 해당 모임의 멤버인지 검증
-        validateGroupMember(group, memberId);
-
-        // (3) 모임 정보 반환
-        return group;
-    }
+//    public Group Group(long groupId, long memberId) {
+//        // (1) 모임 존재 여부 확인
+//        Group group = groupRepository.findById(groupId)
+//                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.GROUP_NOT_FOUND));
+//
+//        // 회원이 존재하는지
+//        memberService.findVerifiedMember(memberId);
+//
+//        // (2) 사용자가 해당 모임의 멤버인지 검증
+//        validateGroupMember(group, memberId);
+//
+//        // (3) 모임 정보 반환
+//        return group;
+//    }
 
     @Transactional
     public void joinGroup(long groupId, long memberId) {
