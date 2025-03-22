@@ -50,6 +50,10 @@ dependencies {
 
 	//스웨거
 	implementation("org.springdoc:springdoc-openapi-ui:1.6.11")
+
+	//채팅 구현
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'// 추가
+	implementation("org.springframework.security:spring-security-messaging")
 }
 
 tasks.named('javadoc') {
