@@ -53,7 +53,7 @@ public class Group {
     @JoinColumn(name = "subCategory_id")
     private SubCategory subCategory;
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "group", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<GroupMember> groupMembers = new ArrayList<>();
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.PERSIST)
