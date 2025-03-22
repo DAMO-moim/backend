@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> {
     Optional<GroupMember> findByGroupAndMember_MemberId(Group group, long memberId);
     boolean existsByGroupAndMember_MemberId(Group group, long memberId);
+    void deleteAllByGroup(Group group);
 }
