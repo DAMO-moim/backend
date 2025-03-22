@@ -135,4 +135,16 @@ public class GroupController {
         groupService.joinGroup(groupId, member.getMemberId());
         return ResponseEntity.ok().build();
     }
+
+    @Operation(summary = "모임 추천", description = "모임을 추천합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "모임 추천 성공"),
+            @ApiResponse(responseCode = "401", description = "내가 속한 모임만 추천할 수 있습니다.")
+    })
+    @PostMapping("/{group-id}/recommend")
+    public ResponseEntity toggleRecommend(@PathVariable("group-id") Long groupId,
+                                     @AuthenticationPrincipal Member member) {
+        groupService.toggleRecommend(groupId, member.getMemberId());
+        return ResponseEntity.ok().build();
+    }
 }
