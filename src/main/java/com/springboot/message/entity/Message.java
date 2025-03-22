@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
@@ -27,6 +29,9 @@ public class Message {
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     public void setMember(Member member) {
         this.member = member;

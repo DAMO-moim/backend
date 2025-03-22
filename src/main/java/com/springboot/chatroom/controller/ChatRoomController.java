@@ -30,8 +30,10 @@ public class ChatRoomController {
 
     //하나의 카테고리 채팅방 조회
     @GetMapping({"chatroom-id"})
-    public ResponseEntity getChatRoom(@PathVariable("category-id") long categoryId,
+    public ResponseEntity getChatRoom(@PathVariable("chatroom-id") long chatRoomId,
                                       @Schema(hidden = true) @AuthenticationPrincipal Member member){
+        ChatRoom chatRoom = chatRoomService.findChatRoom(chatRoomId, member.getMemberId());
+        ChatRoomDto.Response response = mapper.chatRoomToChatRoomResponse(chatRoom);
 
         return null;
     }

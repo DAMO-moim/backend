@@ -35,9 +35,22 @@ public class ChatRoomService {
     public ChatRoom findChatRoom(long chatRoomId, long memberId) {
         Member findMember = memberService.findVerifiedMember(memberId);
         ChatRoom findChat = findVerifiedChatRoom(chatRoomId);
+        //회원이 가진 카테고리가 맞는지 검증
+        validateMemberInChatRoom(findChat.getCategory(), findMember);
 
         return chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CHAT_NOT_FOUND));
+    }
+
+    //멤버가 카테고리에 포함되어있는지 검증
+    public void validateMemberInChatRoom(Category category, Member member){
+        List<MemberCategory> memberCategories = memberService.findMemberCategroies(member.getMemberId());
+        boolean hasAccess = memberCategories.stream()
+                .anyMatch(memberCategory -> memberCategory.getCategory().equals(category));
+
+        if (!hasAccess) {
+            throw new BusinessLogicException(ExceptionCode.ACCESS_DENIED);
+        }
     }
 
     //전체 채팅방 목록 조회
