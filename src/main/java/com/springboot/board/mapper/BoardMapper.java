@@ -24,6 +24,9 @@ public interface BoardMapper {
 
     //게시글 단일 조회
     default BoardDto.Response boardToBoardResponseDto(Board board){
+        long commentCount = board.getComments().stream()
+                .filter(comment -> comment.getCommentStatus() != Comment.CommentStatus.COMMENT_DELETE)
+                .count();
         return new BoardDto.Response(
                 board.getBoardId(),
                 board.getTitle(),
@@ -32,7 +35,7 @@ public interface BoardMapper {
                 board.getMember().getMemberId(),
                 board.getMember().getName(),
                 board.getCreateAt(),
-                board.getComments().size()
+                commentCount
         );
     }
 }
