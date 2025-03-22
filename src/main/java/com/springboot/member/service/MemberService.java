@@ -96,6 +96,34 @@ public class MemberService {
         return memberRepository.save(findMember);
     }
 
+    public void myDeleteMember(Member member, long memberId){
+        //로그인한 사용자 찾기
+        Member findMember = findVerifiedMember(memberId);
+        //입력한 이메일과 비밀번호를 가진 사용자 찾기
+        // Optional<Member> deleteMember = memberRepository.findByEmail(member.getEmail());
+        if(!member.getEmail().equals(findMember.getEmail())){
+            throw new BusinessLogicException(ExceptionCode.INVALID_CREDENTIALS);
+        }
+
+        if(!passwordEncoder.matches(member.getPassword(), findMember.getPassword())){
+            throw new BusinessLogicException(ExceptionCode.INVALID_CREDENTIALS);
+        }
+
+        //둘다 문제없으면 탈퇴
+        findMember.setMemberStatus(Member.MemberStatus.MEMBER_QUIT);
+        memberRepository.save(findMember);
+    }
+
+    public void deleteMember(long memberId, Member admin){
+        if(!isAdmin(admin.getMemberId())){
+           throw new BusinessLogicException(ExceptionCode.ACCESS_DENIED);
+        }
+        //삭제할 멤버 찾기
+        Member findMember = findVerifiedMember(memberId);
+        findMember.setMemberStatus(Member.MemberStatus.MEMBER_QUIT);
+        memberRepository.save(findMember);
+    }
+
     public void updateMemberCategories(long memberId, List<Long> categoryIds){
         //수정 필요
         //validateNoDuplicateCategories(categoryIds);

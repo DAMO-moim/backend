@@ -42,6 +42,12 @@ public class MemberDto {
     }
 
     @Getter
+    public static class Delete{
+        private String email;
+        private String password;
+    }
+
+    @Getter
     public static class Patch{
         @Setter
         @Schema(hidden = true)

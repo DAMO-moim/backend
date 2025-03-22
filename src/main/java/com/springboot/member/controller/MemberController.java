@@ -89,11 +89,22 @@ public class MemberController {
             @ApiResponse(responseCode = "204", description = "회원 삭제 완료"),
             @ApiResponse(responseCode = "404", description = "Member not found")
     })
+
+    @DeleteMapping
+    public ResponseEntity myDeleteMember(@Valid @RequestBody MemberDto.Delete memberDeleteDto,
+                                         @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember) {
+        Member member = mapper.memberDeleteToMember(memberDeleteDto);
+        memberService.myDeleteMember(member, authenticatedmember.getMemberId());
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    //관리자가 회원 탈퇴시킬때 api
     @DeleteMapping("/{member-id}")
     public ResponseEntity deleteMember(@PathVariable("member-id") @Positive long memberId,
                                        @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember){
-//        memberService.deleteMember(memberId, authenticatedmember.getMemberId());
-//
+        memberService.deleteMember(memberId, authenticatedmember);
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

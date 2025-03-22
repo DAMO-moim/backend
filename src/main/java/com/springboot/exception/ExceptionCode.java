@@ -19,6 +19,7 @@ public enum ExceptionCode {
     LOGOUT_ERROR(409, "logout error"),
     ACCESS_DENIED(403, "접근 권한이 없습니다."),
     UNAUTHORIZED_ACCESS(403, "관리자 권한이 없습니다."),
+    INVALID_CREDENTIALS(401,"잘못된 이메일 또는 비밀번호입니다."),
     UNAUTHORIZED_MEMBER_ACCESS(401,"Not authorized to access this resource"),
     CATEGORY_NOT_FOUND(404,"Category not found");
 
