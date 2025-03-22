@@ -1,4 +1,4 @@
 package com.springboot.message.service;
 
-public class MassageService {
+public class MessageService {
 }

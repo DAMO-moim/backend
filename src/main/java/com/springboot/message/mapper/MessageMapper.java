@@ -1,4 +1,4 @@
 package com.springboot.message.mapper;
 
-public interface MassageMapper {
+public interface MessageMapper {
 }
