@@ -29,13 +29,13 @@ public class ChatRoomController {
     }
 
     //하나의 카테고리 채팅방 조회
-    @GetMapping({"chatroom-id"})
+    @GetMapping({"/{chatroom-id}"})
     public ResponseEntity getChatRoom(@PathVariable("chatroom-id") long chatRoomId,
                                       @Schema(hidden = true) @AuthenticationPrincipal Member member){
         ChatRoom chatRoom = chatRoomService.findChatRoom(chatRoomId, member.getMemberId());
         ChatRoomDto.Response response = mapper.chatRoomToChatRoomResponse(chatRoom);
 
-        return null;
+        return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     //회원의 카테고리별 채팅방 목록 조회
