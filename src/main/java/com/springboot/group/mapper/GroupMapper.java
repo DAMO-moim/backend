@@ -25,6 +25,7 @@ public interface GroupMapper {
                 .gender(group.getGender())
                 .minBirth(group.getMinBirth())
                 .maxBirth(group.getMaxBirth())
+                .recommend(group.getRecommend())
 //                .subCategoryName(group.getSubCategory().getSubCategoryName())
                 // ✅ 멤버 리스트 변환
                 .members(group.getGroupMembers().stream()
