@@ -104,4 +104,14 @@ public class MemberController {
         memberService.updateMemberCategories(member.getMemberId(), patchDto.getCategoryIds());
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    //사용자의 카테고리 내역 조회
+    @GetMapping("/categories")
+    public ResponseEntity getMemberCategory(@Parameter(hidden = true) @AuthenticationPrincipal Member member) {
+
+        List<MemberCategory> memberCategories = memberService.findMemberCategroies(member.getMemberId());
+        List<MemberCategoryDto.Response> responseList = mapper.memberCategoriesToResponseDto(memberCategories);
+
+        return new ResponseEntity<>(new SingleResponseDto<>(responseList), HttpStatus.OK);
+    }
 }

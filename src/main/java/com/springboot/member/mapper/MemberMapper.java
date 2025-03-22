@@ -42,4 +42,14 @@ public interface MemberMapper {
         member.setMemberCategories(memberCategories);
         return member;
     }
+
+    default List<MemberCategoryDto.Response> memberCategoriesToResponseDto(List<MemberCategory> memberCategories) {
+        return memberCategories.stream()
+                .map(mc -> new MemberCategoryDto.Response(
+                        mc.getCategory().getCategoryId(),
+                        mc.getCategory().getCategoryName(),
+                        mc.getPriority()
+                ))
+                .collect(Collectors.toList());
+    }
 }

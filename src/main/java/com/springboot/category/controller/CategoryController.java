@@ -2,6 +2,7 @@ package com.springboot.category.controller;
 
 import com.springboot.category.dto.CategoryDto;
 import com.springboot.category.entity.Category;
+import com.springboot.category.entity.SubCategory;
 import com.springboot.category.mapper.CategoryMapper;
 import com.springboot.category.service.CategoryService;
 import com.springboot.comment.entity.Comment;
@@ -30,7 +31,7 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity getBoards() {
+    public ResponseEntity getCategories() {
         List<Category> categories = categoryService.findCategories();
         List<CategoryDto.ResponseDto> result = mapper.categoryToCategoryResponseDtos(categories);
         return new ResponseEntity(new SingleResponseDto<>(result), HttpStatus.OK);

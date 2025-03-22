@@ -98,7 +98,14 @@ public class MemberService {
 
     public void updateMemberCategories(long memberId, List<Long> categoryIds){
         //수정 필요
-        validateNoDuplicateCategories(categoryIds);
+        //validateNoDuplicateCategories(categoryIds);
+    }
+
+    public List<MemberCategory> findMemberCategroies(long memberId){
+        Member member = findVerifiedMember(memberId);
+        List<MemberCategory> memberCategories = member.getMemberCategories();
+
+        return memberCategories;
     }
 
     public void verifyExistsEmail(String email){
