@@ -30,7 +30,8 @@ public enum ExceptionCode {
     CATEGORY_NOT_FOUND(404,"Category not found"),
     CHAT_NOT_FOUND(404,"ChatRoom not found"),
     MESSAGE_NOT_FOUND(404,"Message nof found"),
-    SUBCATEGORY_NOT_FOUND(404, "서브 카테고리를 찾을 수 없습니다.");
+    SUBCATEGORY_NOT_FOUND(404, "서브 카테고리를 찾을 수 없습니다."),
+    TAG_NOT_FOUND(404, "태그를 찾을 수 없습니다");
 
 
     @Getter
