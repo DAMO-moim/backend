@@ -33,6 +33,9 @@ public class Group {
     @Column(nullable = false)
     private int maxMemberCount;
 
+    @Column(nullable = false)
+    private int recommend = 0;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private GroupGender gender = GroupGender.NONE;

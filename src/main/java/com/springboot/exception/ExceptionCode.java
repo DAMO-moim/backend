@@ -29,7 +29,8 @@ public enum ExceptionCode {
     INVALID_CREDENTIALS(400,"비밀번호 또는 이메일이 틀렸습니다."),
     CATEGORY_NOT_FOUND(404,"Category not found"),
     CHAT_NOT_FOUND(404,"ChatRoom not found"),
-    MESSAGE_NOT_FOUND(404,"Message nof found");
+    MESSAGE_NOT_FOUND(404,"Message nof found"),
+    SUBCATEGORY_NOT_FOUND(404, "서브 카테고리를 찾을 수 없습니다.");
 
 
     @Getter

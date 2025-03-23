@@ -32,7 +32,7 @@ public class SubCategory {
     public void setCategory(Category category) {
         this.category = category;
         if (!category.getSubCategories().contains(this)) {
-            category.setSubCategory(this);
+            category.getSubCategories().add(this);
         }
     }
 

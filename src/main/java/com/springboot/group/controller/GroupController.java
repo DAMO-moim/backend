@@ -3,6 +3,7 @@ package com.springboot.group.controller;
 import com.springboot.dto.MultiResponseDto;
 import com.springboot.dto.SingleResponseDto;
 import com.springboot.group.dto.GroupDto;
+import com.springboot.group.dto.MyGroupResponseDto;
 import com.springboot.group.entity.Group;
 import com.springboot.group.mapper.GroupMapper;
 import com.springboot.group.service.GroupService;
@@ -48,7 +49,7 @@ public class GroupController {
                                     @AuthenticationPrincipal Member authenticatedmember) {
         Group group = groupMapper.groupPostToGroup(groupPostDto);
 
-        Group createGroup = groupService.createGroup(group, authenticatedmember.getMemberId());
+        Group createGroup = groupService.createGroup(group, authenticatedmember.getMemberId(), groupPostDto.getSubCategoryId());
 
         URI location = UriCreator.createUri(GROUP_DEFAULT_URL, createGroup.getGroupId());
 
@@ -134,5 +135,23 @@ public class GroupController {
                                     @AuthenticationPrincipal Member member) {
         groupService.joinGroup(groupId, member.getMemberId());
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "모임 추천", description = "모임을 추천합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "모임 추천 성공"),
+            @ApiResponse(responseCode = "401", description = "내가 속한 모임만 추천할 수 있습니다.")
+    })
+    @PostMapping("/{group-id}/recommend")
+    public ResponseEntity toggleRecommend(@PathVariable("group-id") Long groupId,
+                                     @AuthenticationPrincipal Member member) {
+        groupService.toggleRecommend(groupId, member.getMemberId());
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/my/groups")
+    public ResponseEntity getMyGroups(@AuthenticationPrincipal Member authenticatedMember) {
+        List<MyGroupResponseDto> response = groupService.getMyGroups(authenticatedMember.getMemberId());
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 }
