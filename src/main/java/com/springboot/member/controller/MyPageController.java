@@ -50,6 +50,7 @@ public class MyPageController {
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
+    //내 게시글 조회
     @GetMapping("/boards")
     public ResponseEntity getMyBoards(@Parameter(hidden = true) @AuthenticationPrincipal Member member,
                                       @RequestParam(defaultValue = "ALL") String category,
