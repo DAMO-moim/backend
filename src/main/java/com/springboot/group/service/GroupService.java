@@ -4,16 +4,21 @@ import com.springboot.category.entity.SubCategory;
 import com.springboot.category.repository.SubCategoryRepository;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
+import com.springboot.group.dto.GroupDto;
 import com.springboot.group.dto.MyGroupResponseDto;
 import com.springboot.group.entity.Group;
 import com.springboot.group.entity.GroupMember;
 import com.springboot.group.entity.GroupRecommend;
+import com.springboot.group.entity.GroupTag;
 import com.springboot.group.mapper.GroupMapper;
 import com.springboot.group.repository.GroupMemberRepository;
 import com.springboot.group.repository.GroupRecommendRepository;
 import com.springboot.group.repository.GroupRepository;
 import com.springboot.member.entity.Member;
 import com.springboot.member.service.MemberService;
+import com.springboot.tag.dto.TagNameDto;
+import com.springboot.tag.entity.Tag;
+import com.springboot.tag.repository.TagRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,25 +40,28 @@ public class GroupService {
     private final GroupRecommendRepository groupRecommendRepository;
     private final SubCategoryRepository subCategoryRepository;
     private final GroupMapper groupMapper;
+    private final TagRepository tagRepository;
 
     public GroupService(GroupRepository groupRepository,
                         MemberService memberService,
                         GroupMemberRepository groupMemberRepository,
                         GroupRecommendRepository groupRecommendRepository,
                         SubCategoryRepository subCategoryRepository,
-                        GroupMapper groupMapper) {
+                        GroupMapper groupMapper,
+                        TagRepository tagRepository) {
         this.groupRepository = groupRepository;
         this.memberService = memberService;
         this.groupMemberRepository = groupMemberRepository;
         this.groupRecommendRepository = groupRecommendRepository;
         this.subCategoryRepository = subCategoryRepository;
         this.groupMapper = groupMapper;
+        this.tagRepository = tagRepository;
     }
 
 
     // 모임 생성 서비스 로직 구현
     @Transactional
-    public Group createGroup(Group group, long memberId, long subCategoryId) {
+    public Group createGroup(Group group, long memberId, GroupDto.Post groupPostDto) {
         // (1) 회원이 존재하는지 검증
         Member member = memberService.findVerifiedMember(memberId);
 
@@ -64,7 +72,7 @@ public class GroupService {
         validateMemberCount(group.getMaxMemberCount());
 
         // ✅ SubCategory 조회 후 설정
-        SubCategory subCategory = subCategoryRepository.findById(subCategoryId)
+        SubCategory subCategory = subCategoryRepository.findById(groupPostDto.getSubCategoryId())
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.SUBCATEGORY_NOT_FOUND));
         group.setSubCategory(subCategory); // ✅ 연관관계 설정
 
@@ -77,6 +85,22 @@ public class GroupService {
         groupLeader.setMember(member);
         groupLeader.setGroupRoles(GroupMember.GroupRoles.GROUP_LEADER);
         groupMemberRepository.save(groupLeader);
+
+        // ✅ 태그 연결
+        // ✅ (7) 태그 연결 (여기서 tagName 추출 + 등록)
+        List<String> tagNames = groupPostDto.getTags().stream()
+                .map(TagNameDto::getTagName)
+                .collect(Collectors.toList());
+
+        for (String tagName : tagNames) {
+            Tag tag = tagRepository.findByTagName(tagName)
+                    .orElseThrow(() -> new BusinessLogicException(ExceptionCode.TAG_NOT_FOUND));
+
+            GroupTag groupTag = new GroupTag();
+            groupTag.setGroup(savedGroup);
+            groupTag.setTag(tag);
+            savedGroup.setGroupTag(groupTag); // 양방향 연관관계
+        }
 
         return savedGroup;
     }
