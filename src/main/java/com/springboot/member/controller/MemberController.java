@@ -148,12 +148,5 @@ public class MemberController {
 
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
-    @GetMapping("/mypage")
-    public ResponseEntity getMyPage(@Parameter(hidden = true) @AuthenticationPrincipal Member member){
-        Member findmember = memberService.findVerifiedMember(member.getMemberId());
-        MemberDto.MyPageResponse response = mapper.memberToMyPage(findmember);
-
-        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
-    }
 }
 
