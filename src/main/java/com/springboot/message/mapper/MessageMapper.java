@@ -6,6 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface MessageMapper {
     @Mapping(target = "member.memberId", source = "memberId")
@@ -15,4 +17,6 @@ public interface MessageMapper {
     @Mapping(source = "member.name", target = "writer")
     @Mapping(source = "createdAt", target = "createdAt")
     MessageDto.Response messageToMessageResponse(Message message);
+
+    List<MessageDto.Response> messagesToMessageResponses(List<Message> messages);
 }

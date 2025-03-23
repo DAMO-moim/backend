@@ -9,6 +9,8 @@ import com.springboot.exception.ExceptionCode;
 import com.springboot.member.entity.Member;
 import com.springboot.member.entity.MemberCategory;
 import com.springboot.member.service.MemberService;
+import com.springboot.message.entity.Message;
+import com.springboot.message.service.MessageService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,11 +24,13 @@ import java.util.stream.Collectors;
 public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final CategoryService categoryService;
+    private final MessageService messageService;
     private final MemberService memberService;
 
-    public ChatRoomService(ChatRoomRepository chatRoomRepository, CategoryService categoryService, MemberService memberService) {
+    public ChatRoomService(ChatRoomRepository chatRoomRepository, CategoryService categoryService, MessageService messageService, MemberService memberService) {
         this.chatRoomRepository = chatRoomRepository;
         this.categoryService = categoryService;
+        this.messageService = messageService;
         this.memberService = memberService;
     }
 
@@ -38,8 +42,7 @@ public class ChatRoomService {
         //회원이 가진 카테고리가 맞는지 검증
         validateMemberInChatRoom(findChat.getCategory(), findMember);
 
-        return chatRoomRepository.findById(chatRoomId)
-                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CHAT_NOT_FOUND));
+        return findChat;
     }
 
     //멤버가 카테고리에 포함되어있는지 검증
@@ -70,8 +73,14 @@ public class ChatRoomService {
 
 
     @Transactional(readOnly = true)
-    private ChatRoom findVerifiedChatRoom(long chatRoomId) {
+    public ChatRoom findVerifiedChatRoom(long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CHAT_NOT_FOUND));
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<Message> findRecentMessagesForRoom(Long chatRoomId) {
+        return messageService.findRecentMessages(chatRoomId);
     }
 }

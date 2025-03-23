@@ -7,6 +7,9 @@ import com.springboot.message.repository.MessageRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Service
 @Transactional
 public class MessageService {
@@ -25,5 +28,12 @@ public class MessageService {
     public Message findMessage(long messageId) {
         return messageRepository.findById(messageId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MESSAGE_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public List<Message> findRecentMessages(Long chatRoomId) {
+        LocalDateTime oneDayAgo = LocalDateTime.now().minusDays(1);
+//        return messageRepository.findRecentMessages(chatRoomId, oneDayAgo);
+        return messageRepository.findByChatRoom_ChatRoomIdOrderByCreatedAtAsc(chatRoomId);
     }
 }

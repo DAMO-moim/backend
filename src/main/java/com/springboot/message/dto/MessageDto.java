@@ -25,10 +25,20 @@ public class MessageDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Response {
-        private Long id;               // 메시지의 고유 ID (DB에서 생성됨)
+        private long messageId;               // 메시지의 고유 ID (DB에서 생성됨)
         private String content;        // 메시지 내용
         private String writer;         // 메시지 작성자
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime createdAt; // 메시지 작성 시간
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ChatSocketMessage {
+        private String type; // type 3가지 : CHAT_MESSAGE, SYSTEM_MESSAGE, MEMBER_COUNT
+        private Long chatRoomId;
+        private Object payload;
     }
 }

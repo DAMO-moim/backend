@@ -12,6 +12,6 @@ import java.util.List;
 public interface ChatMapper {
     @Mapping(source = "category.categoryId", target = "categoryId")
     @Mapping(source = "category.categoryName", target = "categoryName")
-    ChatRoomDto.Response chatRoomToChatRoomResponse(ChatRoom chatRoom);
+    ChatRoomDto.Response chatRoomToChatRoomResponseDto(ChatRoom chatRoom);
     List<ChatRoomDto.Response> chatRoomToChatRoomResponseDtos(List<ChatRoom> chatRooms);
 }
