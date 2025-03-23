@@ -126,8 +126,14 @@ public class BoardService {
         memberService.isAuthenticatedMember(board.getMember().getMemberId(), memberId);
     }
 
+    //사용자의 게시글 리스트(모든 카테고리)
     public Page<Board> findBoardsByMember(Member member, Pageable pageable) {
         return boardRepository.findByMember(member, pageable);
+    }
+
+    //사용자의 게시글 리스트(카테고리 별)
+    public Page<Board> findBoardByMemberCategory(Member member, String categoryName, Pageable pageable){
+        return boardRepository.findByMemberAndGroup_SubCategory_Category_CategoryName(member, categoryName, pageable);
     }
 
     //작성자 존재 여부와 작성자가 모임원인지 검증하는 메서드

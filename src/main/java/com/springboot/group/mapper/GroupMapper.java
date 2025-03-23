@@ -28,7 +28,7 @@ public interface GroupMapper {
                 .maxBirth(group.getMaxBirth())
                 .recommend(group.getRecommend())
                 .subCategoryName(group.getSubCategory().getSubCategoryName())
-                // ✅ 멤버 리스트 변환
+                // 멤버 리스트 변환
                 .members(group.getGroupMembers().stream()
                         .map(groupMember -> MemberDto.MemberOfGroupResponse.builder()
                                 .memberId(groupMember.getMember().getMemberId())
@@ -36,7 +36,7 @@ public interface GroupMapper {
                                 .build())
                         .collect(Collectors.toList()))
 
-                // ✅ 태그 리스트 변환
+                // 태그 리스트 변환
                 .tags(group.getGroupTags().stream()
                         .map(groupTag -> GroupTagResponseDto.builder()
                                 .tagId(groupTag.getTag().getTagId())
@@ -48,7 +48,7 @@ public interface GroupMapper {
     }
     default List<GroupDto.Response> groupsToGroupResponses(List<Group> groups) {
         return groups.stream()
-                .map(this::groupToGroupResponse) // ✅ 단일 조회용 매핑 재사용
+                .map(this::groupToGroupResponse) // 단일 조회용 매핑 재사용
                 .collect(Collectors.toList());
     }
     default MyGroupResponseDto.GroupInfo toMyGroupGroupInfo(Group group) {

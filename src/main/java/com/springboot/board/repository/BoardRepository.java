@@ -13,4 +13,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Page<Board> findByBoardStatusNot(Board.BoardStatus boardStatus, Pageable pageable);
 
     Page<Board> findByMember(Member member, Pageable pageable);
+
+    //해당 멤버의 카테고리별 게시글 조회
+    Page<Board> findByMemberAndGroup_SubCategory_Category_CategoryName(
+            Member member, String categoryName, Pageable pageable);
 }
