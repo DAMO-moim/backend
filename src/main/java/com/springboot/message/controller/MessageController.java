@@ -38,11 +38,12 @@ public class MessageController {
         Long memberId = StompHandler.getMemberIdBySessionId(sessionId);
 
         Member member = memberService.findVerifiedMember(memberId);
+        //메세지의 작성자명으로 응답하기 위해 추가
         String writerName = member.getName();
-        //테스트하기위해 ID삽입
+
         messageDto.setChatRoomId(Long.parseLong(chatRoomId));
-        //작성자 정보 저장
-        messageDto.setWriter(writerName);
+        //채팅 작성자 정보 저장
+        messageDto.setWriter(username);
         messageDto.setMemberId(memberId);
 
         // 메시지를 생성하면서 chatRoom을 설정 (DB 저장 전)
@@ -53,7 +54,7 @@ public class MessageController {
 
         // 저장된 메시지를 구독 중인 클라이언트들에게 전송
         MessageDto.Response responseMessage = mapper.messageToMessageResponse(savedMessage);
-        responseMessage.setWriter(username); // 메시지 작성자 정보 추가
+        responseMessage.setWriter(writerName); // 메시지 작성자 정보 추가
 
         // 해당 채팅방을 구독 중인 모든 클라이언트에게 메시지 전송
         messagingTemplate.convertAndSend("/sub/chat/" + chatRoomId, responseMessage);
