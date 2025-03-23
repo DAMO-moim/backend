@@ -43,6 +43,7 @@ public class BoardService {
         isMemberOfGroup(member, group);
 
         board.setMember(member);
+        board.setGroup(group);
         return boardRepository.save(board);
     }
 
