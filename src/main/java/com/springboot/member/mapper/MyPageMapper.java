@@ -16,7 +16,8 @@ public interface MyPageMapper {
                 board.getGroup().getSubCategory().getCategory().getCategoryName(),
                 board.getComments() != null ? board.getComments().size() : 0,
                 board.getCreatedAt().toLocalDate(),
-                board.getGroup() != null ? board.getGroup().getGroupName() : null
+                board.getGroup() != null ? board.getGroup().getGroupName() : null,
+                board.getImage()
         );
     }
 
