@@ -34,7 +34,7 @@ public interface BoardMapper {
                 board.getImage(),
                 board.getMember().getMemberId(),
                 board.getMember().getName(),
-                board.getCreateAt(),
+                board.getCreatedAt(),
                 commentCount
         );
     }

@@ -11,6 +11,7 @@ import com.springboot.member.entity.Member;
 import com.springboot.member.service.MemberService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -121,6 +122,10 @@ public class BoardService {
         memberService.isAuthenticatedMember(board.getMember().getMemberId(), memberId);
     }
 
+    public Page<Board> findBoardsByMember(Member member, Pageable pageable) {
+        return boardRepository.findByMember(member, pageable);
+    }
+
     //작성자 존재 여부와 작성자가 모임원인지 검증하는 메서드
 //    public Board isMemberOfGroup(Member member, long groupId) {
 //        //해당 그룹이 존재하는지 검증
@@ -142,4 +147,5 @@ public class BoardService {
 ////        return board;
 ////    }
 //    }
+
 }
