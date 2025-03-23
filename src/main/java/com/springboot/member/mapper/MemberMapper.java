@@ -20,6 +20,7 @@ public interface MemberMapper {
     MemberDto.Response memberToMemberResponse(Member member);
     List<MemberDto.Response> membersToMemberResponses(List<Member> members);
     Member memberDeleteToMember(MemberDto.Delete requestBody);
+    Member findIdDtoToMember(MemberDto.FindId requestBody);
 
     default Member memberPostToMember(MemberDto.Post requestBody) {
         Member member = new Member();

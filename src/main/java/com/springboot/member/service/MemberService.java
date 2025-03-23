@@ -186,4 +186,11 @@ public class MemberService {
             }
         }
     }
+
+    //아이디를 찾기위한 메서드
+    public String findMemberEmail(Member member){
+        return memberRepository.findByNameAndPhoneNumber(member.getName(), member.getPhoneNumber())
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND))
+                .getEmail();
+    }
 }

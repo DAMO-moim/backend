@@ -7,6 +7,7 @@ import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -33,6 +34,9 @@ public class MemberDto {
         @Schema(description = "사용자 이름", example = "홍성민")
         private String name;
 
+
+        @Pattern(regexp = "^010-\\d{3,4}-\\d{4}$",
+                message = "휴대폰 번호는 010으로 시작하는 11자리 숫자와 '-'로 구성되어야 합니다.")
         @Schema(description = "사용자 전화번호", example = "010-1111-2222")
         private String phoneNumber;
 
@@ -42,21 +46,31 @@ public class MemberDto {
 
     @Getter
     public static class Delete{
+        @NotBlank(message = "이메일은 공백이 아니어야 합니다.")
+        @Email
         private String email;
+        @NotBlank
         private String password;
     }
 
     @Getter
+    public static class FindId{
+        @NotBlank(message = "이름은 공백이 아니어야 합니다.")
+        private String name;
+        @Pattern(regexp = "^010-\\d{3,4}-\\d{4}$",
+                message = "휴대폰 번호는 010으로 시작하는 11자리 숫자와 '-'로 구성되어야 합니다.")
+        private String phoneNumber;
+    }
+
+    @Setter
+    @Getter
     public static class Patch{
-        @Setter
         @Schema(hidden = true)
         private long memberId;
 
-        @Setter
         @Schema(description = "사용자 비밀번호", example = "zizonhuzzang")
         private String password;
 
-        @Setter
         @Schema(description = "사용자 이름", example = "홍성민")
         private String name;
     }
