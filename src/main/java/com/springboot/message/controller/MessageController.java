@@ -26,7 +26,7 @@ public class MessageController {
     private final SimpMessagingTemplate messagingTemplate;
 
     //클라이언트로 메세지 전송 요청을 받으면 클라이언트가 chatRoomID를 가진 채팅방에 메세지를 보낸다.
-    @MessageMapping("/chat/{chatroom-id}/sendMessage") // 메시지 발행 엔드포인트
+    @MessageMapping("/chat/{chatRoomId}/sendMessage") // 메시지 발행 엔드포인트
     public void sendMessage(@DestinationVariable String chatRoomId,
                             MessageDto.Post messageDto,
                             SimpMessageHeaderAccessor headerAccessor){
@@ -39,7 +39,9 @@ public class MessageController {
 
         Member member = memberService.findVerifiedMember(memberId);
         String writerName = member.getName();
-        //채팅 작성자 정보 저장
+        //테스트하기위해 ID삽입
+        messageDto.setChatRoomId(Long.parseLong(chatRoomId));
+        //작성자 정보 저장
         messageDto.setWriter(writerName);
         messageDto.setMemberId(memberId);
 
