@@ -1,10 +1,16 @@
 package com.springboot.group.service;
 
+import com.springboot.category.entity.SubCategory;
+import com.springboot.category.repository.SubCategoryRepository;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
+import com.springboot.group.dto.MyGroupResponseDto;
 import com.springboot.group.entity.Group;
 import com.springboot.group.entity.GroupMember;
+import com.springboot.group.entity.GroupRecommend;
+import com.springboot.group.mapper.GroupMapper;
 import com.springboot.group.repository.GroupMemberRepository;
+import com.springboot.group.repository.GroupRecommendRepository;
 import com.springboot.group.repository.GroupRepository;
 import com.springboot.member.entity.Member;
 import com.springboot.member.service.MemberService;
@@ -15,24 +21,39 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class GroupService {
     private final GroupRepository groupRepository;
     private final MemberService memberService;
     private final GroupMemberRepository groupMemberRepository;
+    private final GroupRecommendRepository groupRecommendRepository;
+    private final SubCategoryRepository subCategoryRepository;
+    private final GroupMapper groupMapper;
 
-    public GroupService(GroupRepository groupRepository, MemberService memberService, GroupMemberRepository groupMemberRepository) {
+    public GroupService(GroupRepository groupRepository,
+                        MemberService memberService,
+                        GroupMemberRepository groupMemberRepository,
+                        GroupRecommendRepository groupRecommendRepository,
+                        SubCategoryRepository subCategoryRepository,
+                        GroupMapper groupMapper) {
         this.groupRepository = groupRepository;
         this.memberService = memberService;
         this.groupMemberRepository = groupMemberRepository;
+        this.groupRecommendRepository = groupRecommendRepository;
+        this.subCategoryRepository = subCategoryRepository;
+        this.groupMapper = groupMapper;
     }
 
 
     // 모임 생성 서비스 로직 구현
     @Transactional
-    public Group createGroup(Group group, long memberId) {
+    public Group createGroup(Group group, long memberId, long subCategoryId) {
         // (1) 회원이 존재하는지 검증
         Member member = memberService.findVerifiedMember(memberId);
 
@@ -41,6 +62,11 @@ public class GroupService {
 
         // (3) 모임 최대, 최소 인원 수 검증
         validateMemberCount(group.getMaxMemberCount());
+
+        // ✅ SubCategory 조회 후 설정
+        SubCategory subCategory = subCategoryRepository.findById(subCategoryId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.SUBCATEGORY_NOT_FOUND));
+        group.setSubCategory(subCategory); // ✅ 연관관계 설정
 
         // (5) 모임 저장
         Group savedGroup = groupRepository.save(group);
@@ -144,6 +170,55 @@ public class GroupService {
 
         groupMemberRepository.save(groupMember);
     }
+
+    @Transactional
+    public void toggleRecommend(Long groupId, Long memberId) {
+        Group group = findVerifiedGroup(groupId);
+        Member member = memberService.findVerifiedMember(memberId);
+
+        // 모임에 속한 멤버만 추천 가능
+        validateGroupMember(group, memberId);
+
+        Optional<GroupRecommend> optionalRecommend = groupRecommendRepository.findByGroupAndMember(group, member);
+
+        if (optionalRecommend.isPresent()) {
+            // 이미 추천한 상태 → 취소
+            groupRecommendRepository.delete(optionalRecommend.get());
+            group.setRecommend(group.getRecommend() - 1);
+        } else {
+            // 추천 추가
+            GroupRecommend recommend = GroupRecommend.builder()
+                    .group(group)
+                    .member(member)
+                    .build();
+            groupRecommendRepository.save(recommend);
+            group.setRecommend(group.getRecommend() + 1);
+        }
+
+        groupRepository.save(group);
+    }
+
+    public List<MyGroupResponseDto> getMyGroups(long memberId) {
+        Member member = memberService.findVerifiedMember(memberId);
+
+        List<GroupMember> groupMemberships = groupMemberRepository.findAllByMember(member);
+
+        // 모임장/모임원으로 나눠서 그룹화
+        Map<GroupMember.GroupRoles, List<Group>> grouped = groupMemberships.stream()
+                .collect(Collectors.groupingBy(
+                        GroupMember::getGroupRoles,
+                        Collectors.mapping(GroupMember::getGroup, Collectors.toList())
+                ));
+
+        List<MyGroupResponseDto> result = new ArrayList<>();
+        grouped.forEach((role, groupList) -> {
+            String roleName = role == GroupMember.GroupRoles.GROUP_LEADER ? "LEADER" : "MEMBER";
+            result.add(groupMapper.toMyGroupResponse(roleName, groupList));
+        });
+
+        return result;
+    }
+
 
     // 모임이 이미 존재하는지 검증하는 메서드
     public void isGroupNameExists(String groupName) {
