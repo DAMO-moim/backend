@@ -62,6 +62,15 @@ public class MemberDto {
         private String phoneNumber;
     }
 
+    @AllArgsConstructor
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @Builder
+    public static class FindIdResponse{
+        private String email;
+    }
+
     @Setter
     @Getter
     public static class Patch{

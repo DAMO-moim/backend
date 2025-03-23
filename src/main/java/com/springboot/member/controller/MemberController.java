@@ -111,23 +111,6 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "이메일을 찾았습니다."),
-            @ApiResponse(responseCode = "404", description = "Member not found")
-    })
-    //아이디 찾기 컨트롤러
-    @PostMapping("/id")
-    public ResponseEntity findIdGetMember(@Valid @RequestBody MemberDto.FindId findIdDto){
-        Member member = mapper.findIdDtoToMember(findIdDto);
-        String email = memberService.findMemberEmail(member);
-
-        return new ResponseEntity<>(new SingleResponseDto<>(email), HttpStatus.OK);
-    }
-
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "해당 회원의 카테고리 수정 완료"),
-            @ApiResponse(responseCode = "400", description = "유효하지 않은 요청입니다.")
-    })
     //사용자의 카테고리 수정
     @PatchMapping("/categories")
     public ResponseEntity patchMemberCategory( @RequestBody @Valid MemberCategoryDto.Patch patchDto,
@@ -151,5 +134,18 @@ public class MemberController {
         List<MemberCategoryDto.Response> responseList = mapper.memberCategoriesToResponseDto(memberCategories);
 
         return new ResponseEntity<>(new SingleResponseDto<>(responseList), HttpStatus.OK);
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "이메일을 찾았습니다."),
+            @ApiResponse(responseCode = "404", description = "Member not found")
+    })
+    //아이디 찾기 핸들러 메서드
+    @PostMapping("/id")
+    public ResponseEntity findIdGetMember(@Valid @RequestBody MemberDto.FindId findIdDto){
+        Member member = memberService.findMemberEmail(mapper.findIdDtoToMember(findIdDto));
+        MemberDto.FindIdResponse response = mapper.memberToFindId(member);
+
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 }
