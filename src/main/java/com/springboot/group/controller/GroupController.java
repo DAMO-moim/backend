@@ -49,7 +49,7 @@ public class GroupController {
                                     @AuthenticationPrincipal Member authenticatedmember) {
         Group group = groupMapper.groupPostToGroup(groupPostDto);
 
-        Group createGroup = groupService.createGroup(group, authenticatedmember.getMemberId(), groupPostDto.getSubCategoryId());
+        Group createGroup = groupService.createGroup(group, authenticatedmember.getMemberId(), groupPostDto);
 
         URI location = UriCreator.createUri(GROUP_DEFAULT_URL, createGroup.getGroupId());
 
