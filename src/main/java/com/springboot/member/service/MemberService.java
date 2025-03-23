@@ -1,7 +1,6 @@
 package com.springboot.member.service;
 
 import com.springboot.auth.utils.AuthorityUtils;
-import com.springboot.category.entity.Category;
 import com.springboot.category.service.CategoryService;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
@@ -124,9 +123,23 @@ public class MemberService {
         memberRepository.save(findMember);
     }
 
-    public void updateMemberCategories(long memberId, List<Long> categoryIds){
-        //수정 필요
-        //validateNoDuplicateCategories(categoryIds);
+    public void updateMemberCategories(long memberId, List<MemberCategory> memberCategories){
+        Member findMember = findVerifiedMember(memberId);
+
+        //회원의 카테고리 목록 비우기
+        //우선순위가 존재하기 때문에 덮어씌우는게 더 효율적
+        findMember.getMemberCategories().clear();
+        memberRepository.flush();
+
+        //새 카테고리 등록
+        for(int i = 0; i< memberCategories.size(); i++){
+            MemberCategory memberCategory = memberCategories.get(i);
+            memberCategory.setMember(findMember);
+            findMember.getMemberCategories().add(memberCategory);
+        }
+        //카테고리를 중복으로 골랐는지 검증
+        validateNoDuplicateCategories(memberCategories);
+        memberRepository.save(findMember);
     }
 
     public List<MemberCategory> findMemberCategroies(long memberId){

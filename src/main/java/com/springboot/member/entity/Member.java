@@ -52,7 +52,7 @@ public class Member extends BaseEntity {
     @Column(length = 20, nullable = false)
     private Gender gender;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberCategory> memberCategories = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)

@@ -53,4 +53,16 @@ public interface MemberMapper {
                 ))
                 .collect(Collectors.toList());
     }
+
+    default MemberCategory dtoToMemberCategory(MemberCategoryDto.Patch.MemberCategoryUpdate dto){
+        Category category = new Category();
+        category.setCategoryId(dto.getCategoryId());
+
+        MemberCategory memberCategory = new MemberCategory();
+        memberCategory.setCategory(category);
+        memberCategory.setPriority(dto.getPriority());
+
+        return memberCategory;
+    }
+    List<MemberCategory> dtoToMemberCategories(List<MemberCategoryDto.Patch.MemberCategoryUpdate> dtoList);
 }
