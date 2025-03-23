@@ -21,6 +21,7 @@ public interface MyPageMapper {
         );
     }
 
+    //본문의 내용이 길어지면 짜름
     default String truncate(String content) {
         return content.length() > 80 ? content.substring(0, 80) + "..." : content;
     }
