@@ -3,6 +3,7 @@ package com.springboot.group.controller;
 import com.springboot.dto.MultiResponseDto;
 import com.springboot.dto.SingleResponseDto;
 import com.springboot.group.dto.GroupDto;
+import com.springboot.group.dto.MyGroupResponseDto;
 import com.springboot.group.entity.Group;
 import com.springboot.group.mapper.GroupMapper;
 import com.springboot.group.service.GroupService;
@@ -48,7 +49,7 @@ public class GroupController {
                                     @AuthenticationPrincipal Member authenticatedmember) {
         Group group = groupMapper.groupPostToGroup(groupPostDto);
 
-        Group createGroup = groupService.createGroup(group, authenticatedmember.getMemberId());
+        Group createGroup = groupService.createGroup(group, authenticatedmember.getMemberId(), groupPostDto.getSubCategoryId());
 
         URI location = UriCreator.createUri(GROUP_DEFAULT_URL, createGroup.getGroupId());
 
@@ -146,5 +147,11 @@ public class GroupController {
                                      @AuthenticationPrincipal Member member) {
         groupService.toggleRecommend(groupId, member.getMemberId());
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/my/groups")
+    public ResponseEntity getMyGroups(@AuthenticationPrincipal Member authenticatedMember) {
+        List<MyGroupResponseDto> response = groupService.getMyGroups(authenticatedMember.getMemberId());
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 }
