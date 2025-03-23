@@ -71,6 +71,17 @@ public class MemberDto {
         private String email;
     }
 
+    @AllArgsConstructor
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @Builder
+    public static class MyPageResponse{
+        private String name;
+        private String email;
+        private String phoneNumber;
+    }
+
     @Setter
     @Getter
     public static class Patch{

@@ -42,6 +42,7 @@ public class MemberDetailsService implements UserDetailsService {
         //엔티티를 임시로 만들어놔서 여기 수정 필요!
         public MemberDetails(Member member) {
             setMemberId(member.getMemberId());
+            setMemberStatus(member.getMemberStatus());
             setRoles(member.getRoles());
             setPassword(member.getPassword());
             setEmail(member.getEmail());

@@ -22,6 +22,7 @@ public interface MemberMapper {
     Member memberDeleteToMember(MemberDto.Delete requestBody);
     Member findIdDtoToMember(MemberDto.FindId requestBody);
     MemberDto.FindIdResponse memberToFindId(Member member);
+    MemberDto.MyPageResponse memberToMyPage(Member member);
 
     default Member memberPostToMember(MemberDto.Post requestBody) {
         Member member = new Member();
