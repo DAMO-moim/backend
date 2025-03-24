@@ -5,6 +5,7 @@ import com.springboot.board.repository.BoardRepository;
 import com.springboot.comment.entity.Comment;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
+import com.springboot.file.Service.StorageService;
 import com.springboot.group.entity.Group;
 import com.springboot.group.entity.GroupMember;
 import com.springboot.group.service.GroupService;
@@ -17,10 +18,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -29,21 +32,37 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final MemberService memberService;
     private final GroupService groupService;
+    private final StorageService storageService;
 
-    public BoardService(BoardRepository boardRepository, MemberService memberService, GroupService groupService) {
+    public BoardService(BoardRepository boardRepository, MemberService memberService, GroupService groupService, StorageService storageService) {
         this.boardRepository = boardRepository;
         this.memberService = memberService;
         this.groupService = groupService;
+        this.storageService = storageService;
     }
 
-    public Board createBoard(Board board, long memberId, long groupId) {
+    public Board createBoard(Board board, long memberId, long groupId, MultipartFile imageFile) {
         Member member = memberService.findVerifiedMember(memberId);
         Group group = groupService.findVerifiedGroup(groupId);
         //해당 모임의 모임원인지 확인한다. (테스트 필요)
         isMemberOfGroup(member, group);
-
         board.setMember(member);
         board.setGroup(group);
+
+        // 파일을 가져왔을때 그 파일이 null이거나 빈 파일 일때 검증해야함
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String uuid = UUID.randomUUID().toString();
+            String pathWithoutExt = "groups/" + group.getGroupId() + uuid;
+            // 이미지가 저장되며 내부적으로 확장자를 붙임
+            String relativePath = storageService.store(imageFile, pathWithoutExt);
+            // 실제 접근가능한 url -> 프론트가 이 링크 사용할 예정
+            String imageUrl = "/images/" + relativePath;
+            // 실제 db에 이미지 경로 저장
+            board.setImage(imageUrl);
+        } else {
+            // 이미지가 없다면 그냥 없음 -> 텍스트만 나가야함
+            board.setImage(null);
+        }
         return boardRepository.save(board);
     }
 
