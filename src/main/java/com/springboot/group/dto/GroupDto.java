@@ -32,15 +32,15 @@ public class GroupDto {
         @Schema(description = "모임 최대 인원 수", example = "20")
         private int maxMemberCount;
 
-        @Schema(description = "성별", example = "무관")
+        @Schema(description = "성별", example = "NONE")
         private Group.GroupGender gender;
 
         @NotNull
-        @Schema(description = "최소년생", example = "1720년생")
+        @Schema(description = "최소년생", example = "1720")
         private String minBirth;
 
         @NotNull
-        @Schema(description = "최대년생", example = "2500년생")
+        @Schema(description = "최대년생", example = "2500")
         private String maxBirth;
 
         @Parameter(description = "서브카테고리 ID", example = "1")
@@ -97,13 +97,13 @@ public class GroupDto {
         @Schema(description = "모임 최대 인원 수", example = "20")
         private Group.GroupGender gender;
 
-        @Schema(description = "최소년생", example = "1750년")
+        @Schema(description = "최소년생", example = "1750")
         private String minBirth;
 
-        @Schema(description = "최대년생", example = "2200년")
+        @Schema(description = "최대년생", example = "2200")
         private String maxBirth;
 
-        @Schema(description = "서브 카테고리 이름", example = "축구, 힙합, 어쩌고")
+        @Schema(description = "서브 카테고리 이름", example = "축구")
         private String subCategoryName;
 
         @Schema(description = "모임 멤버 목록",
