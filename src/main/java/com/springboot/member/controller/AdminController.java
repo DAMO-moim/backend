@@ -3,6 +3,7 @@ package com.springboot.member.controller;
 import com.springboot.board.entity.Board;
 import com.springboot.dto.MultiResponseDto;
 import com.springboot.dto.SingleResponseDto;
+import com.springboot.group.entity.Group;
 import com.springboot.member.dto.AdminDto;
 import com.springboot.member.dto.MyPageDto;
 import com.springboot.member.entity.Member;
@@ -53,6 +54,20 @@ public class AdminController {
         return ResponseEntity.ok(new MultiResponseDto<>(content, boardPage));
     }
     // 특정 회원의 모임 목록 조회
+    @GetMapping("/members/{member-id}/groups")
+    public ResponseEntity getMemberGroups(@PathVariable("member-id") long memberId,
+                                          @Parameter(hidden = true) @AuthenticationPrincipal Member member,
+                                          @Positive @RequestParam int page,
+                                          @Positive @RequestParam int size){
+
+
+        Page<Group> groupPage = adminService.getMemberGroups(
+                memberId, member.getMemberId(),page - 1, size);
+        List<AdminDto.GroupsResponse> content = groupPage.getContent().stream()
+                .map(mapper::groupToGroupsRepsonse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(new MultiResponseDto<>(content, groupPage));
+    }
 
     // 특정 회원의 댓글 목록 조회
 

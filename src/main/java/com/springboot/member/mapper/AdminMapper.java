@@ -1,6 +1,7 @@
 package com.springboot.member.mapper;
 
 import com.springboot.board.entity.Board;
+import com.springboot.group.entity.Group;
 import com.springboot.member.dto.AdminDto;
 import com.springboot.member.entity.Member;
 import org.mapstruct.Mapper;
@@ -20,6 +21,14 @@ public interface AdminMapper {
                 board.getCreatedAt().toLocalDate(),
                 board.getGroup() != null ? board.getGroup().getGroupName() : null,
                 board.getImage()
+        );
+    }
+
+    default AdminDto.GroupsResponse groupToGroupsRepsonse(Group group){
+        return new AdminDto.GroupsResponse(
+                group.getGroupId(),
+                group.getImage(),
+                group.getGroupName()
         );
     }
 

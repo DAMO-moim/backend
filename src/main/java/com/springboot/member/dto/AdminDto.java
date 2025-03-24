@@ -38,4 +38,12 @@ public class AdminDto {
         private String groupName;
         private String Image;
     }
+
+    @AllArgsConstructor
+    @Getter
+    public static class GroupsResponse{
+        private long groupId;
+        private String image;
+        private String groupName;
+    }
 }

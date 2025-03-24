@@ -1,5 +1,6 @@
 package com.springboot.group.service;
 
+import com.springboot.board.entity.Board;
 import com.springboot.category.entity.Category;
 import com.springboot.category.entity.SubCategory;
 import com.springboot.category.repository.SubCategoryRepository;
@@ -368,6 +369,11 @@ public class GroupService {
 
         GroupMember newLeader = members.get(0);
         newLeader.setGroupRoles(GroupMember.GroupRoles.GROUP_LEADER);
+    }
+
+    //사용자의 모임 리스트
+    public Page<Group> findGroupsByMember(Member member, Pageable pageable) {
+        return groupRepository.findAllByMember(member, pageable);
     }
 
 }
