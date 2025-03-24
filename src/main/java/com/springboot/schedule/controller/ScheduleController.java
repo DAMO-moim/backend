@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Positive;
 
+// 틀 구현
 @RestController
 @RequestMapping("/groups")
 @Validated
