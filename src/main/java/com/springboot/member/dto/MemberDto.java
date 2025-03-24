@@ -77,9 +77,13 @@ public class MemberDto {
     @NoArgsConstructor
     @Builder
     public static class MyPageResponse{
+        @Schema(description = "사용자 이름", example = "홍성민")
         private String name;
+        @Schema(description = "사용자 이메일", example = "example@gmail.com")
         private String email;
+        @Schema(description = "사용자 전화번호", example = "010-1111-2222")
         private String phoneNumber;
+        @Schema(description = "사용자 프로필 이미지", example = "/profile")
         private String image;
     }
 
@@ -107,6 +111,7 @@ public class MemberDto {
         @Schema(description = "사용자 이메일", example = "example@gmail.com")
         private String email;
 
+        @Schema(description = "사용자 프로필 이미지", example = "/profile")
         private String image;
 
         @Schema(description = "사용자 이름", example = "홍성민")
