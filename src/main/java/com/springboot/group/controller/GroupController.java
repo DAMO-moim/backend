@@ -154,4 +154,17 @@ public class GroupController {
         List<MyGroupResponseDto> response = groupService.getMyGroups(authenticatedMember.getMemberId());
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
+
+    @Operation(summary = "모임 탈퇴", description = "회원이 모임을 탈퇴합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "모임 탈퇴 성공"),
+            @ApiResponse(responseCode = "401", description = "권한 없음"),
+            @ApiResponse(responseCode = "404", description = "모임 또는 회원 정보 없음")
+    })
+    @DeleteMapping("/{group-id}/leave")
+    public ResponseEntity leaveGroup(@PathVariable("group-id") long groupId,
+                                           @AuthenticationPrincipal Member authenticatedMember) {
+        groupService.leaveGroup(groupId, authenticatedMember.getMemberId());
+        return ResponseEntity.ok().build();
+    }
 }
