@@ -17,24 +17,26 @@ public class ChatRoomSessionTracker {
     private final Set<String> joinedRooms = ConcurrentHashMap.newKeySet();
 
     //새로운 구독이 발생하면 호출
-    public void addSession(String roomId, String sessionId, String username) {
+    public boolean addSession(String roomId, String sessionId, String username) {
         String key = sessionId + ":" + roomId;
         if (!joinedRooms.add(key)) {
             // 이미 같은 세션이 같은 방에 구독한 경우니까 무시한다.
-            return;
+            return false;
         }
         //해당 채팅방에 세션 등록
         Set<String> sessions = roomSessions.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet());
         sessions.add(sessionId);
         //세션에 사용자 이메일 매핑
         sessionToUsername.put(sessionId, username);
+        return true;
     }
 
     // 세션이 끊기거나, 채팅방에서 퇴장했을때 호출
-    public void removeSession(String roomId, String sessionId) {
+    public boolean removeSession(String roomId, String sessionId) {
         Set<String> sessions = roomSessions.get(roomId);
+        boolean removed = false;
         if (sessions != null) {
-            sessions.remove(sessionId); //세션 제거
+            removed = sessions.remove(sessionId); //세션 제거
             if (sessions.isEmpty()) {
                 roomSessions.remove(roomId); //세션이 없으면 방 제거(세션 추척을 없앤다는 의미)
             }
@@ -42,6 +44,7 @@ public class ChatRoomSessionTracker {
         // 사용자 정보, 중복 추적을 제거한다
         sessionToUsername.remove(sessionId);
         joinedRooms.remove(sessionId + ":" + roomId);
+        return removed;
     }
 
     //현재 채팅방 접속 인원 수 반환

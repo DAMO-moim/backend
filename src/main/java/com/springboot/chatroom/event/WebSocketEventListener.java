@@ -43,7 +43,10 @@ public class WebSocketEventListener {
             String name = member.getName();
 
             //세션과 채팅방 연결을 추척
-            sessionTracker.addSession(chatRoomId, sessionId, username);
+            boolean added = sessionTracker.addSession(chatRoomId, sessionId, username);
+            if(!added){ //이미 구독한 경우 메세지 전송하지 않는다.
+                return;
+            }
 
             // 인원 수 갱신 브로드캐스트
             // 현재 채팅방 인원 수 가져오기

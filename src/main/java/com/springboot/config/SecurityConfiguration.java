@@ -79,7 +79,8 @@ public class SecurityConfiguration {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
+        //configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:3000"));
         //전체 요청 -> 특정 요청 Arrays.asList("http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "PATCH", "DELETE"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -87,6 +88,7 @@ public class SecurityConfiguration {
         //Cache-Control, Content-Language ,Content-Type, Expires, Last-Modified, Pragma
         configuration.setAllowedHeaders(Arrays.asList("RefreshToken", "Authorization", "Cache-Control", "Content-Type"));
         configuration.setExposedHeaders(Arrays.asList("Authorization", "RefreshToken"));
+        configuration.setAllowCredentials(true);
         //모든 URL에 지금까지 구성한 CORS 정책을 적용.
         source.registerCorsConfiguration("/**", configuration);
         return source;
