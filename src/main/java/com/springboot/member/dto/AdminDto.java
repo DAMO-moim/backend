@@ -46,4 +46,13 @@ public class AdminDto {
         private String image;
         private String groupName;
     }
+
+    @AllArgsConstructor
+    @Getter
+    public static class CommentsResponse{
+        private long commentId;
+        private String postTitle;
+        private String content;
+        private String groupName;
+    }
 }
