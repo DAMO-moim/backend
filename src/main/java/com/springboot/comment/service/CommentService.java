@@ -6,10 +6,12 @@ import com.springboot.comment.entity.Comment;
 import com.springboot.comment.repository.CommentRepository;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
+import com.springboot.group.entity.Group;
 import com.springboot.member.entity.Member;
 import com.springboot.member.service.MemberService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -83,5 +85,10 @@ public class CommentService {
         Optional<Comment> commentOptional = commentRepository.findById(commentId);
         return commentOptional.orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
+    }
+
+    //사용자의 모임 리스트
+    public Page<Comment> findCommentsByMember(Member member, Pageable pageable) {
+        return commentRepository.findByMember(member, pageable);
     }
 }
