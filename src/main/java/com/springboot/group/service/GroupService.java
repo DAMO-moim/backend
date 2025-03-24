@@ -87,8 +87,18 @@ public class GroupService {
         // 카테고리별 생성 제한 검증
         validateGroupCreationLimitPerCategory(member, category.getCategoryId());
 
+        //이미지는 반드시 있어야 한다.
+        if (image == null || image.isEmpty()) {
+            throw new BusinessLogicException(ExceptionCode.IMAGE_REQUIRED);
+        }
         // (5) 모임 저장
         Group savedGroup = groupRepository.save(group);
+
+        // 이미지 저장
+        String pathWithoutExt = "groups/" + group.getGroupId() + "/profile"; // 혹은 groupId 이후 재지정
+        String relativePath = storageService.store(image, pathWithoutExt);
+        String imageUrl = "/images/" + relativePath;
+        group.setImage(imageUrl);
 
         // (6) 모임장(`GroupMember`) 정보 저장
         GroupMember groupLeader = new GroupMember();
@@ -116,10 +126,16 @@ public class GroupService {
         return savedGroup;
     }
 
-    public Group updateGroup(Group group, long memberId) {
+    public Group updateGroup(Group group, long memberId, MultipartFile image) {
         // (1) 수정할 모임 조회
         Group existingGroup = groupRepository.findById(group.getGroupId())
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.GROUP_NOT_FOUND));
+
+        // 이미지 저장
+        String pathWithoutExt = "groups/" + existingGroup.getGroupId() + "/profile"; // 혹은 groupId 이후 재지정
+        String relativePath = storageService.store(image, pathWithoutExt);
+        String imageUrl = "/images/" + relativePath;
+        group.setImage(imageUrl);
 
         // (2) 모임장 검증 (메서드 활용)
         validateGroupLeader(existingGroup, memberId);

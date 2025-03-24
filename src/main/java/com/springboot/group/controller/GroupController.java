@@ -66,13 +66,14 @@ public class GroupController {
     })
     @PatchMapping("/{group-id}")
     public ResponseEntity patchGroup(@PathVariable("group-id") @Positive long groupId,
-                                     @RequestBody @Valid GroupDto.Patch groupPatchDto,
+                                     @RequestPart @Valid GroupDto.Patch groupPatchDto,
+                                     @RequestPart(required = false) MultipartFile groupImage,
                                      @AuthenticationPrincipal Member authenticatedmember) {
         groupPatchDto.setGroupId(groupId);
 
         Group group = groupMapper.groupPatchToGroup(groupPatchDto);
 
-        Group updateGroup = groupService.updateGroup(group, authenticatedmember.getMemberId());
+        Group updateGroup = groupService.updateGroup(group, authenticatedmember.getMemberId(), groupImage);
 
         GroupDto.Response groupResponse = groupMapper.groupToGroupResponse(updateGroup);
 
