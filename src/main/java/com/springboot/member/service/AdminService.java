@@ -2,6 +2,8 @@ package com.springboot.member.service;
 
 import com.springboot.board.entity.Board;
 import com.springboot.board.service.BoardService;
+import com.springboot.comment.entity.Comment;
+import com.springboot.comment.service.CommentService;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
 import com.springboot.group.entity.Group;
@@ -21,11 +23,13 @@ public class AdminService {
     private final MemberService memberService;
     private final BoardService boardService;
     private final GroupService groupService;
+    private final CommentService commentService;
 
-    public AdminService(MemberService memberService, BoardService boardService, GroupService groupService) {
+    public AdminService(MemberService memberService, BoardService boardService, GroupService groupService, CommentService commentService) {
         this.memberService = memberService;
         this.boardService = boardService;
         this.groupService = groupService;
+        this.commentService = commentService;
     }
 
     //관리자 특정 회원 조회
@@ -61,4 +65,14 @@ public class AdminService {
         return groupService.findGroupsByMember(findMember, pageable);
     }
     //관리자 특정 회원의 댓글 조회
+    public Page<Comment> getMemberComment(long memberId, long adminId, int page, int size){
+        //관리자가 아니라면 예외를 던진다.
+        if(!memberService.isAdmin(adminId)){
+            throw new BusinessLogicException(ExceptionCode.ACCESS_DENIED);
+        }
+        Member findMember = memberService.findVerifiedMember(memberId);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        return commentService.findCommentsByMember(findMember, pageable);
+    }
 }
