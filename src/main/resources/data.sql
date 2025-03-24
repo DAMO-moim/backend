@@ -82,17 +82,17 @@ INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUE
 INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (20, '그외', 2);
 
 INSERT INTO category (category_id, category_name) VALUES (3, '음악');
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (7, 'K-POP', 3);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (8, '클래식', 3);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (9, '재즈', 3);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (21, 'K-POP', 3);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (22, '클래식', 3);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (23, '재즈', 3);
 
 INSERT INTO category (category_id, category_name) VALUES (4, '게임/오락');
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (10, 'RPG', 4);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (11, 'AOS', 4);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (12, '기타', 4);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (24, 'RPG', 4);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (25, 'AOS', 4);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (26, '기타', 4);
 
 INSERT INTO category (category_id, category_name) VALUES (5, '반려동물');
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (13, '강아지', 5);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (27, '강아지', 5);
 
 INSERT INTO category (category_id, category_name) VALUES (6, '문화/공연');
 INSERT INTO category (category_id, category_name) VALUES (7, '영화');
@@ -102,6 +102,8 @@ INSERT INTO category (category_id, category_name) VALUES (10, '자기개발');
 INSERT INTO category (category_id, category_name) VALUES (11, '독서');
 INSERT INTO category (category_id, category_name) VALUES (12, '공예');
 INSERT INTO category (category_id, category_name) VALUES (13, '주류');
+INSERT INTO category (category_id, category_name) VALUES (14, '사교');
+INSERT INTO category (category_id, category_name) VALUES (15, '춤');
 
 INSERT INTO chat_room (chat_room_id, category_id) VALUES
 (1, 1),
