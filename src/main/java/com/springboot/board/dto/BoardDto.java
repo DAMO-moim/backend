@@ -60,6 +60,9 @@ public class BoardDto {
         @Schema(description = "작성자", example = "작성자명")
         private String memberName;
 
+        @Schema(description = "작성자 프로필 사진", example = "작성자 프로필 사진")
+        private String memberProfile;
+
         @Schema(description = "작성 일자", example = "2025-03-21")
         private LocalDateTime createdAt;
 
