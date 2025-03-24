@@ -68,6 +68,9 @@ public class ScheduleDto {
     @AllArgsConstructor
     @Builder
     public static class Patch {
+        @Setter
+        private Long scheduleId;
+
         @Schema(description = "일정 이름", example = "스케줄명")
         private String scheduleName;
 
