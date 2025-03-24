@@ -54,4 +54,5 @@ springdoc:
     display-request-duration: true
     try-it-out-enabled: true
 file:
-  upload-dir: src/main/resources/localStorage
+  upload-dir: src/main/resources/fileImage
+  default-image: src/main/resources/fileImage/noImage.png
