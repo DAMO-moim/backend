@@ -4,6 +4,7 @@ import com.springboot.category.entity.SubCategory;
 import com.springboot.category.repository.SubCategoryRepository;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
+import com.springboot.file.Service.StorageService;
 import com.springboot.group.dto.MyGroupResponseDto;
 import com.springboot.group.entity.Group;
 import com.springboot.group.entity.GroupMember;
@@ -35,19 +36,23 @@ public class GroupService {
     private final GroupRecommendRepository groupRecommendRepository;
     private final SubCategoryRepository subCategoryRepository;
     private final GroupMapper groupMapper;
+    private final StorageService storageService;
+
 
     public GroupService(GroupRepository groupRepository,
                         MemberService memberService,
                         GroupMemberRepository groupMemberRepository,
                         GroupRecommendRepository groupRecommendRepository,
                         SubCategoryRepository subCategoryRepository,
-                        GroupMapper groupMapper) {
+                        GroupMapper groupMapper,
+                        StorageService storageService) {
         this.groupRepository = groupRepository;
         this.memberService = memberService;
         this.groupMemberRepository = groupMemberRepository;
         this.groupRecommendRepository = groupRecommendRepository;
         this.subCategoryRepository = subCategoryRepository;
         this.groupMapper = groupMapper;
+        this.storageService = storageService;
     }
 
 

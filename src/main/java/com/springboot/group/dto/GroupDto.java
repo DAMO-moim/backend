@@ -74,6 +74,9 @@ public class GroupDto {
         @Parameter(description = "그룹 ID", example = "1")
         private Long groupId;
 
+        @Schema(description = "모임 프로필 이미지", example = "/group/profile")
+        private String image;
+
         @Schema(description = "모임명", example = "바둑 아마추어 5단이상 노장모임")
         private String name;
 
