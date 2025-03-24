@@ -1,16 +1,21 @@
 package com.springboot.member.service;
 
 import com.springboot.auth.utils.AuthorityUtils;
+import com.springboot.board.entity.Board;
+import com.springboot.board.service.BoardService;
 import com.springboot.category.service.CategoryService;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
 import com.springboot.file.Service.StorageService;
+import com.springboot.member.dto.AdminDto;
+import com.springboot.member.dto.MyPageDto;
 import com.springboot.member.entity.Member;
 import com.springboot.member.entity.MemberCategory;
 import com.springboot.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -219,16 +224,5 @@ public class MemberService {
             // 이미지가 없다면 기본 이미지로 삽입
             findMember.setImage(defaultImagePath);
         }
-    }
-
-    //관리자 특정 회원 조회
-    public Member adminFindMembers(long memberId, long adminId){
-        //관리자가 아니라면 예외를 던진다.
-        if(!isAdmin(adminId)){
-            throw new BusinessLogicException(ExceptionCode.ACCESS_DENIED);
-        }
-        Member findMember = findVerifiedMember(memberId);
-
-        return findMember;
     }
 }

@@ -9,7 +9,7 @@ public class MyPageDto {
     @Getter
     @AllArgsConstructor
     public static class BoardsResponse{
-        private Long boardId;
+        private long boardId;
         private String title;
         private String contentPreview;
         private String category;

@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.LocalDate;
+
 public class AdminDto {
     @AllArgsConstructor
     @Getter
@@ -22,5 +24,18 @@ public class AdminDto {
 
         @Schema(description = "사용자 성별", example = "Girl")
         private Member.Gender gender;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public static class BoardsResponse{
+        private long boardId;
+        private String title;
+        private String contentPreview;
+        private String category;
+        private int commentCount;
+        private LocalDate createdAt;
+        private String groupName;
+        private String Image;
     }
 }
