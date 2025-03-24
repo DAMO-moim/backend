@@ -23,46 +23,47 @@ public class FileSystemStorageService implements StorageService{
     }
 
     @Override
-    public String store(MultipartFile file, String fileName) {
+    public String store(MultipartFile file, String fileNameWithoutExt) {
         try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file");
             }
             // 확장자 확인 검증
             String originalFileName = file.getOriginalFilename();
-            if(!isAllowedExtension(originalFileName)){
-                throw new StorageException("File type not allowed: " + originalFileName);
+            String extension = getFileExtension(originalFileName);
+
+            if(!isAllowedExtension(extension)){
+                throw new StorageException("File type not allowed: " + extension);
             }
 
-            String extent = getFileExtension(originalFileName);
+            String fullRelativePath = fileNameWithoutExt + "." + extension;
+            Path destinationFile = this.rootLocation.resolve(fullRelativePath)
+                    .normalize().toAbsolutePath();
+//            Path destinationFile = this.rootLocation.resolve(
+//                    Paths.get(newFileName)).normalize().toAbsolutePath();
 
-            String newFileName = fileName + "." + extent;
-
-            Path destinationFile = this.rootLocation.resolve(
-                    Paths.get(newFileName)).normalize().toAbsolutePath();
-            if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
+            //equals는 서로 다르다고 판단하므로 startWith() 사용
+            if (!destinationFile.startsWith(this.rootLocation.toAbsolutePath())) {
                 throw new StorageException("Cannot upload file outside current directory");
             }
+            Files.createDirectories(destinationFile.getParent());
             try (InputStream inputStream = file.getInputStream()) {
                 log.info("# store coffee image!!");
                 Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
             }
 
-            return newFileName;
+            return fullRelativePath;
         } catch (IOException e) {
             throw new StorageException("Failed to upload file.", e);
         }
     }
     private String getFileExtension(String fileName){
-        int lastIndexOfDot = fileName.lastIndexOf(".");
-        if(lastIndexOfDot == -1){
-            return ""; // 확장자 없을 때
-        }
-        return fileName.substring(lastIndexOfDot + 1);
+        int lastDot = fileName.lastIndexOf(".");
+        if (lastDot == -1) return "";
+        return fileName.substring(lastDot + 1).toLowerCase();
     }
 
-    private boolean isAllowedExtension(String fileName){
-        String extension = getFileExtension(fileName);
+    private boolean isAllowedExtension(String extension) {
         return Arrays.stream(ALLOWED_TYPES)
                 .anyMatch(ext -> ext.equalsIgnoreCase(extension));
     }
