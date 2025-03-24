@@ -2,12 +2,8 @@ package com.springboot.group.dto;
 
 import com.springboot.group.entity.Group;
 import com.springboot.member.dto.MemberDto;
-import com.springboot.member.entity.Member;
 import com.springboot.schedule.entity.Schedule;
-import com.springboot.tag.dto.GroupTagResponseDto;
 import com.springboot.tag.dto.TagNameDto;
-import com.springboot.tag.dto.TagResponseDto;
-import com.springboot.tag.entity.Tag;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;

@@ -11,7 +11,10 @@ import com.springboot.member.entity.Member;
 import com.springboot.member.mapper.AdminMapper;
 import com.springboot.member.service.AdminService;
 import com.springboot.member.service.MemberService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -30,6 +33,11 @@ public class AdminController {
     private final AdminService adminService;
     private final AdminMapper mapper;
 
+    @Operation(summary = "특정 회원 상세 정보 조회(관리자)", description = "관리자페이지에서 특정 회원 정보를 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "특정 회원 정보 조회완료"),
+            @ApiResponse(responseCode = "404", description = "member not found")
+    })
     // 특정 회원 상세 정보 (관리자용)
     @GetMapping("/members/{member-id}")
     public ResponseEntity getMemberDetail(@PathVariable("member-id") long memberId,
@@ -40,6 +48,12 @@ public class AdminController {
         return new ResponseEntity<>(new SingleResponseDto<>(response),HttpStatus.OK);
     }
 
+    @Operation(summary = "특정 회원의 게시글 목록 조회(관리자)", description = "관리자페이지에서 특정 회원의 게시글 목록 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "특정 회원의 게시글 목록 조회완료"),
+            @ApiResponse(responseCode = "404", description = "board not found"),
+            @ApiResponse(responseCode = "404", description = "member not found")
+    })
     // 특정 회원의 게시글 목록 조회
     @GetMapping("/members/{member-id}/boards")
     public ResponseEntity getMemberBoards(@PathVariable("member-id") long memberId,
@@ -54,6 +68,13 @@ public class AdminController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(new MultiResponseDto<>(content, boardPage));
     }
+
+    @Operation(summary = "특정 회원의 모임 목록 조회(관리자)", description = "관리자페이지에서 특정 회원의 모임 목록 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "특정 회원의 모임 목록 조회완료"),
+            @ApiResponse(responseCode = "404", description = "group not found"),
+            @ApiResponse(responseCode = "404", description = "member not found")
+    })
     // 특정 회원의 모임 목록 조회
     @GetMapping("/members/{member-id}/groups")
     public ResponseEntity getMemberGroups(@PathVariable("member-id") long memberId,
@@ -70,6 +91,12 @@ public class AdminController {
         return ResponseEntity.ok(new MultiResponseDto<>(content, groupPage));
     }
 
+    @Operation(summary = "특정 회원의 댓글 목록 조회(관리자)", description = "관리자페이지에서 특정 회원의 댓글 목록 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "특정 회원의 댓글 목록 조회완료"),
+            @ApiResponse(responseCode = "404", description = "group not found"),
+            @ApiResponse(responseCode = "404", description = "member not found")
+    })
     // 특정 회원의 댓글 목록 조회
     @GetMapping("/members/{member-id}/comments")
     public ResponseEntity getMemberComments(@PathVariable("member-id") long memberId,
