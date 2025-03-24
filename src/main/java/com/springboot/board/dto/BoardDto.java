@@ -20,8 +20,6 @@ public class BoardDto {
         @Schema(description = "게시글 본문", example = "본문 이야")
         @NotBlank(message = "내용은 최소한 1글자라도 있어야 합니다.")
         private String content;
-
-       // private String image
     }
 
     @Getter
