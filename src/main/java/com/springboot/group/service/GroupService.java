@@ -6,6 +6,7 @@ import com.springboot.category.repository.SubCategoryRepository;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
 import com.springboot.group.dto.GroupDto;
+import com.springboot.file.Service.StorageService;
 import com.springboot.group.dto.MyGroupResponseDto;
 import com.springboot.group.entity.Group;
 import com.springboot.group.entity.GroupMember;
@@ -26,6 +27,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,6 +41,7 @@ public class GroupService {
     private final SubCategoryRepository subCategoryRepository;
     private final GroupMapper groupMapper;
     private final TagRepository tagRepository;
+    private final StorageService storageService;
 
     public GroupService(GroupRepository groupRepository,
                         MemberService memberService,
@@ -46,7 +49,8 @@ public class GroupService {
                         GroupRecommendRepository groupRecommendRepository,
                         SubCategoryRepository subCategoryRepository,
                         GroupMapper groupMapper,
-                        TagRepository tagRepository) {
+                        TagRepository tagRepository,
+                        StorageService storageService) {
         this.groupRepository = groupRepository;
         this.memberService = memberService;
         this.groupMemberRepository = groupMemberRepository;
@@ -54,12 +58,13 @@ public class GroupService {
         this.subCategoryRepository = subCategoryRepository;
         this.groupMapper = groupMapper;
         this.tagRepository = tagRepository;
+        this.storageService = storageService;
     }
 
 
     // 모임 생성 서비스 로직 구현
     @Transactional
-    public Group createGroup(Group group, long memberId, GroupDto.Post groupPostDto) {
+    public Group createGroup(Group group, long memberId, GroupDto.Post groupPostDto, MultipartFile image) {
         // (1) 회원이 존재하는지 검증
         Member member = memberService.findVerifiedMember(memberId);
 

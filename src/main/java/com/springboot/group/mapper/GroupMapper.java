@@ -21,6 +21,7 @@ public interface GroupMapper {
         GroupDto.Response.ResponseBuilder builder = GroupDto.Response.builder()
                 .categoryId(group.getSubCategory().getCategory().getCategoryId())
                 .groupId(group.getGroupId())
+                .image(group.getImage())
                 .name(group.getGroupName())
                 .introduction(group.getIntroduction())
                 .maxMemberCount(group.getMaxMemberCount())

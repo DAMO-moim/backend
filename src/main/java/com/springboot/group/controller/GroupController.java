@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -45,11 +46,12 @@ public class GroupController {
             @ApiResponse(responseCode = "400", description = "요청이 잘못되었음")
     })
     @PostMapping
-    public ResponseEntity postGroup(@RequestBody @Valid GroupDto.Post groupPostDto,
-                                    @AuthenticationPrincipal Member authenticatedmember) {
+    public ResponseEntity postGroup(@RequestPart @Valid GroupDto.Post groupPostDto,
+                                    @AuthenticationPrincipal Member authenticatedmember,
+                                    @RequestPart(required = false) MultipartFile groupImage) {
         Group group = groupMapper.groupPostToGroup(groupPostDto);
 
-        Group createGroup = groupService.createGroup(group, authenticatedmember.getMemberId(), groupPostDto);
+        Group createGroup = groupService.createGroup(group, authenticatedmember.getMemberId(), groupPostDto, groupImage);
 
         URI location = UriCreator.createUri(GROUP_DEFAULT_URL, createGroup.getGroupId());
 
