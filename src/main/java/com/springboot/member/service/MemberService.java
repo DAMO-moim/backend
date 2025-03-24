@@ -223,7 +223,10 @@ public class MemberService {
 
     //관리자 특정 회원 조회
     public Member adminFindMembers(long memberId, long adminId){
-        isAdmin(adminId);
+        //관리자가 아니라면 예외를 던진다.
+        if(!isAdmin(adminId)){
+            throw new BusinessLogicException(ExceptionCode.ACCESS_DENIED);
+        }
         Member findMember = findVerifiedMember(memberId);
 
         return findMember;
