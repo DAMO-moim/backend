@@ -67,7 +67,7 @@ public class BoardService {
     }
 
     @Transactional
-    public Board updateBoard(Board board, long memberId, long groupId) {
+    public Board updateBoard(Board board, long memberId, long groupId, MultipartFile imageFile) {
         Member member = memberService.findVerifiedMember(memberId);
         Group group = groupService.findVerifiedGroup(groupId);
 
@@ -87,6 +87,22 @@ public class BoardService {
         Optional.ofNullable(board.getContent())
                 .ifPresent(content -> findBoard.setContent(content));
 
+        if (imageFile != null && !imageFile.isEmpty()) {
+            // 기존 이미지 삭제 (기본이미지 제외)
+            String prevImage = findBoard.getImage();
+            //만약 이미지가 있을경우(NULL 아니면) 저장소에서 이미지 삭제
+            if (prevImage != null) {
+                storageService.delete(prevImage.replace("/images/", ""));
+            }
+
+            // 새 이미지 저장
+            String uuid = UUID.randomUUID().toString();
+            String pathWithoutExt = "groups/" + group.getGroupId() + "/" + uuid;
+            String relativePath = storageService.store(imageFile, pathWithoutExt);
+            String imageUrl = "/images/" + relativePath;
+
+            findBoard.setImage(imageUrl);
+        }
         return boardRepository.save(findBoard);
     }
 

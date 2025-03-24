@@ -61,10 +61,11 @@ public class BoardController {
     @PatchMapping("/{board-id}")
     public ResponseEntity patchBoard(@PathVariable("board-id") @Positive long boardId,
                                      @PathVariable("group-id") Long groupId,
-                                     @Valid @RequestBody BoardDto.Patch boardPatchDto,
+                                     @Valid @RequestPart BoardDto.Patch boardPatchDto,
+                                     @RequestPart(required = false) MultipartFile boardImage,
                                      @Parameter(hidden = true) @AuthenticationPrincipal Member member){
         boardPatchDto.setBoardId(boardId);
-        Board board = boardService.updateBoard(mapper.boardPatchDtoToBoard(boardPatchDto), member.getMemberId(),groupId);
+        Board board = boardService.updateBoard(mapper.boardPatchDtoToBoard(boardPatchDto), member.getMemberId(),groupId, boardImage);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
