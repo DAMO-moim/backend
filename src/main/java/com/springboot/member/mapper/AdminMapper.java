@@ -1,6 +1,7 @@
 package com.springboot.member.mapper;
 
 import com.springboot.board.entity.Board;
+import com.springboot.comment.entity.Comment;
 import com.springboot.group.entity.Group;
 import com.springboot.member.dto.AdminDto;
 import com.springboot.member.entity.Member;
@@ -31,6 +32,16 @@ public interface AdminMapper {
                 group.getGroupName()
         );
     }
+
+    default AdminDto.CommentsResponse commentToCommentsRepsonse(Comment comment){
+        return new AdminDto.CommentsResponse(
+                comment.getCommentId(),
+                comment.getBoard().getGroup().getGroupName(),
+                comment.getBoard().getTitle(),
+                comment.getContent()
+        );
+    }
+
 
     //본문의 내용이 길어지면 짜름
     default String truncate(String content) {

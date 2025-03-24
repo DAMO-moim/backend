@@ -51,8 +51,8 @@ public class AdminDto {
     @Getter
     public static class CommentsResponse{
         private long commentId;
+        private String groupName;
         private String postTitle;
         private String content;
-        private String groupName;
     }
 }
