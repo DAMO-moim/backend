@@ -67,4 +67,20 @@ public class FileSystemStorageService implements StorageService{
         return Arrays.stream(ALLOWED_TYPES)
                 .anyMatch(ext -> ext.equalsIgnoreCase(extension));
     }
+
+    @Override
+    public void delete(String relativePath) {
+        try {
+            Path filePath = this.rootLocation.resolve(relativePath).normalize().toAbsolutePath();
+
+            // 보안 체크 -> 루트 디렉토리 내에 있는지 확인한다.
+            if (!filePath.startsWith(this.rootLocation.toAbsolutePath())) {
+                throw new StorageException("Cannot delete file outside current directory");
+            }
+
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            throw new StorageException("Failed to delete file", e);
+        }
+    }
 }
