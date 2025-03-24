@@ -9,7 +9,10 @@ import com.springboot.comment.entity.Comment;
 import com.springboot.dto.MultiResponseDto;
 import com.springboot.dto.SingleResponseDto;
 import com.springboot.member.entity.Member;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +33,11 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+    @Operation(summary = "카테고리 목록 전체 조회", description = "회원가입시 조회될 카테고리 목록 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "카테고리 목록 조회 완료"),
+            @ApiResponse(responseCode = "404", description = "category not found"),
+    })
     @GetMapping
     public ResponseEntity getCategories() {
         List<Category> categories = categoryService.findCategories();
