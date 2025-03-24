@@ -12,7 +12,10 @@ import com.springboot.member.mapper.MemberMapper;
 import com.springboot.member.mapper.MyPageMapper;
 import com.springboot.member.service.MemberService;
 import com.springboot.member.service.MyPageService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +45,11 @@ public class MyPageController {
         this.myPageService = myPageService;
     }
 
+    @Operation(summary = "마이페이지(내 정보 조회)", description = "마이페이지에 필요한 내 정보만 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "마이페이지 내 정보 조회 완료"),
+            @ApiResponse(responseCode = "404", description = "Member not found")
+    })
     @GetMapping
     public ResponseEntity getMyPage(@Parameter(hidden = true) @AuthenticationPrincipal Member member){
         Member findmember = memberService.findVerifiedMember(member.getMemberId());
@@ -50,6 +58,12 @@ public class MyPageController {
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
+    @Operation(summary = "마이페이지(내 게시글 조회)", description = "마이페이지에서 내 게시글 조회를 눌렀을 경우 내 게시글 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "마이페이지 내 게시글 조회 완료"),
+            @ApiResponse(responseCode = "404", description = "board not found"),
+            @ApiResponse(responseCode = "404", description = "member not found")
+    })
     //내 게시글 조회
     @GetMapping("/boards")
     public ResponseEntity getMyBoards(@Parameter(hidden = true) @AuthenticationPrincipal Member member,
