@@ -19,12 +19,18 @@ import java.util.Map;
 public class GroupDto {
     @Getter
     public static class Post {
-        @NotBlank(message = "모임명은 공백이 아니어야 합니다.")
         @Schema(description = "모임명", example = "바둑 아마추어 5단이상 노장모임")
+        @NotBlank(message = "모임명은 공백이 아니어야 합니다.")
+        @Size(min = 1, max = 20, message = "모임명은 1자 이상 20자 이내여야 합니다.")
+        @Pattern(
+                regexp = "^[가-힣a-zA-Z0-9 ]+$",
+                message = "모임명에는 특수문자를 사용할 수 없습니다."
+        )
         private String groupName;
 
-        @NotBlank(message = "모임소개는 공백이 아니어야 합니다.")
         @Schema(description = "모임소개", example = "아마추어 5단 이상의 노인네 모임입니다.")
+        @NotBlank(message = "모임소개는 공백이 아니어야 합니다.")
+        @Size(min = 10, max = 100, message = "모임 소개는 10자 이상 100자 이내여야 합니다.")
         private String introduction;
 
         @Min(value = 2, message = "모임 인원은 최소 2명 이상이어야 합니다.")
@@ -51,13 +57,17 @@ public class GroupDto {
     }
 
     @Getter
+    @Setter
     public static class Patch {
-        @Setter
         private Long groupId;
-        @Setter
-        @Schema(description = "모임내용", example = "아마추어 5단 이상의 노인네 모임입니다.")
+
+        @Schema(description = "모임소개", example = "아마추어 5단 이상의 노인네 모임입니다.")
+        @NotBlank(message = "모임소개는 공백이 아니어야 합니다.")
+        @Size(min = 10, max = 100, message = "모임 소개는 10자 이상 100자 이내여야 합니다.")
         private String introduction;
-        @Setter
+
+        @Min(value = 2, message = "모임 인원은 최소 2명 이상이어야 합니다.")
+        @Max(value = 100, message = "모임 인원은 최대 100명까지만 가능합니다.")
         @Schema(description = "모임 최대 인원 수", example = "20")
         private int maxMemberCount;
     }
