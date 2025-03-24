@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,10 +17,16 @@ public class BoardDto {
     public static class Post {
         @Schema(description = "게시글 제목", example = "제목이야")
         @NotBlank(message = "제목은 공백이 아니어야 합니다.")
+        @Size(min = 1, max = 20, message = "제목은 1자 이상 20자 이내여야 합니다.")
+        @Pattern(
+                regexp = "^(?!\\s)(?!.*\\s{2,}).*$",
+                message = "제목은 공백으로 시작하거나 연속된 공백이 포함될 수 없습니다."
+        )
         private String title;
 
         @Schema(description = "게시글 본문", example = "본문 이야")
-        @NotBlank(message = "내용은 최소한 1글자라도 있어야 합니다.")
+        @NotBlank(message = "내용은 공백이 아니어야 합니다.")
+        @Size(min = 1, max = 500, message = "본문은 1자 이상 500자 이내여야 합니다.")
         private String content;
     }
 
@@ -30,10 +38,16 @@ public class BoardDto {
 
         @Schema(description = "게시글 제목", example = "수정된 제목이야")
         @NotBlank(message = "제목은 공백이 아니어야 합니다.")
+        @Size(min = 1, max = 20, message = "제목은 1자 이상 20자 이내여야 합니다.")
+        @Pattern(
+                regexp = "^(?!\\s)(?!.*\\s{2,}).*$",
+                message = "제목은 공백으로 시작하거나 연속된 공백이 포함될 수 없습니다."
+        )
         private String title;
 
         @Schema(description = "게시글 본문", example = "수정된 본문 이야")
         @NotBlank(message = "내용은 최소한 1글자라도 있어야 합니다.")
+        @Size(min = 1, max = 500, message = "본문은 1자 이상 500자 이내여야 합니다.")
         private String content;
     }
 
