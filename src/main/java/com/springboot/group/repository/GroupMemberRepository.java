@@ -13,4 +13,7 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> 
     boolean existsByGroupAndMember_MemberId(Group group, long memberId);
     void deleteAllByGroup(Group group);
     List<GroupMember> findAllByMember(Member member);
+    long countByMember(Member member);
+    List<GroupMember> findByMemberAndGroupRoles(Member member, GroupMember.GroupRoles groupRoles);
+
 }
