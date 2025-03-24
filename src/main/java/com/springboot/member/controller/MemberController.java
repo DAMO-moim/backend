@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -149,10 +150,13 @@ public class MemberController {
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
-//    //프로필 이미지 저장 메서드
-//    @PatchMapping("/image")
-//    public ResponseEntity fileUpload(@AuthenticationPrincipal Member member){
-//
-//    }
+    //프로필 이미지 저장(수정) 메서드
+    @PatchMapping("/image")
+    public ResponseEntity fileUpload(@RequestPart(required = false)MultipartFile profileImage,
+                                     @AuthenticationPrincipal Member member){
+
+        memberService.uploadImage(member, profileImage);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
 
