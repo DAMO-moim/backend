@@ -52,7 +52,7 @@ public class BoardService {
         // 파일을 가져왔을때 그 파일이 null이거나 빈 파일 일때 검증해야함
         if (imageFile != null && !imageFile.isEmpty()) {
             String uuid = UUID.randomUUID().toString();
-            String pathWithoutExt = "groups/" + group.getGroupId() + uuid;
+            String pathWithoutExt = "groups/" + group.getGroupId() + "/" + uuid;
             // 이미지가 저장되며 내부적으로 확장자를 붙임
             String relativePath = storageService.store(imageFile, pathWithoutExt);
             // 실제 접근가능한 url -> 프론트가 이 링크 사용할 예정
