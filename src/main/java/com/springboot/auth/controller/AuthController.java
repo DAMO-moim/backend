@@ -1,23 +1,34 @@
 package com.springboot.auth.controller;
 
+import com.springboot.auth.jwt.JwtTokenizer;
 import com.springboot.auth.service.AuthService;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
+import com.springboot.member.entity.Member;
+import com.springboot.member.repository.MemberRepository;
+import com.springboot.member.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 // 로그아웃을 하기 위한 컨트롤러 계층 구현
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
     private final AuthService authService;
+    private final JwtTokenizer jwtTokenizer;
+    private final MemberRepository memberRepository;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, JwtTokenizer jwtTokenizer, MemberRepository memberRepository) {
         this.authService = authService;
+        this.jwtTokenizer = jwtTokenizer;
+        this.memberRepository = memberRepository;
     }
 
     @PostMapping("/logout") // "/auth/logout" 경로로 POST 요청을 처리하는 메서드로 지정합니다.
@@ -34,5 +45,45 @@ public class AuthController {
 
         //로그아웃이 실패하면 예외를 던진다.
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/token/refresh")
+    public ResponseEntity<?> refreshAccessToken(@RequestHeader("Refresh") String refreshHeader) {
+        // 1. "Bearer " 제거
+        String refreshToken = refreshHeader.replace("Bearer ", "");
+
+        // 2. Refresh Token 유효성 검증
+        if (!jwtTokenizer.validateToken(refreshToken)) {
+            throw new BusinessLogicException(ExceptionCode.INVALID_REFRESH_TOKEN);
+        }
+
+        // 3. 사용자 식별 정보 추출
+        String email = jwtTokenizer.getClaims(refreshToken,
+                        jwtTokenizer.encodedBase64SecretKey(jwtTokenizer.getSecretKey()))
+                .getBody()
+                .getSubject();
+
+        // 4. 사용자 조회
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+
+        // 5. 새 Access Token 생성
+        Map<String, Object> claims = Map.of(
+                "memberId", member.getMemberId(),
+                "username", member.getEmail(),
+                "roles", member.getRoles()
+        );
+
+        String newAccessToken = jwtTokenizer.generateAccessToken(
+                claims,
+                member.getEmail(),
+                jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes()),
+                jwtTokenizer.encodedBase64SecretKey(jwtTokenizer.getSecretKey())
+        );
+
+        // 6. 응답 헤더로 새 토큰 전달
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + newAccessToken)
+                .build();
     }
 }
