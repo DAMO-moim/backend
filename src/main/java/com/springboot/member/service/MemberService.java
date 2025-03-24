@@ -220,4 +220,12 @@ public class MemberService {
             findMember.setImage(defaultImagePath);
         }
     }
+
+    //관리자 특정 회원 조회
+    public Member adminFindMembers(long memberId, long adminId){
+        isAdmin(adminId);
+        Member findMember = findVerifiedMember(memberId);
+
+        return findMember;
+    }
 }
