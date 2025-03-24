@@ -3,9 +3,11 @@ package com.springboot.group.mapper;
 import com.springboot.group.dto.GroupDto;
 import com.springboot.group.dto.MyGroupResponseDto;
 import com.springboot.group.entity.Group;
+import com.springboot.group.entity.GroupTag;
 import com.springboot.member.dto.MemberDto;
 import com.springboot.tag.dto.GroupTagResponseDto;
 import com.springboot.tag.dto.TagResponseDto;
+import com.springboot.tag.entity.Tag;
 import org.mapstruct.Mapper;
 
 import java.util.List;
@@ -36,13 +38,15 @@ public interface GroupMapper {
                                 .build())
                         .collect(Collectors.toList()))
 
-                // 태그 리스트 변환
-                .tags(group.getGroupTags().stream()
-                        .map(groupTag -> GroupTagResponseDto.builder()
-                                .tagId(groupTag.getTag().getTagId())
-                                .tagName(groupTag.getTag().getTagName())
-                                .build())
-                        .collect(Collectors.toList()));
+                // ✅ 태그 리스트 변환
+                .tags(
+                        group.getGroupTags().stream()
+                                .map(GroupTag::getTag)
+                                .collect(Collectors.groupingBy(
+                                        Tag::getTagType,
+                                        Collectors.mapping(Tag::getTagName, Collectors.toList())
+                                ))
+                );
 
                 return builder.build();
     }

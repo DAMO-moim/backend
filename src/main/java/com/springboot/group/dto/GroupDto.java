@@ -5,6 +5,7 @@ import com.springboot.member.dto.MemberDto;
 import com.springboot.member.entity.Member;
 import com.springboot.schedule.entity.Schedule;
 import com.springboot.tag.dto.GroupTagResponseDto;
+import com.springboot.tag.dto.TagNameDto;
 import com.springboot.tag.dto.TagResponseDto;
 import com.springboot.tag.entity.Tag;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,6 +14,7 @@ import lombok.*;
 
 import javax.validation.constraints.*;
 import java.util.List;
+import java.util.Map;
 
 public class GroupDto {
     @Getter
@@ -44,8 +46,8 @@ public class GroupDto {
         @Parameter(description = "서브카테고리 ID", example = "1")
         private Long subCategoryId;
 
-        @Schema(description = "태그들 ID 목록", example = "[{\"tagId\": 1}, {\"tagId\": 2}]")
-        private List<Tag> groupTags;
+        @Schema(description = "태그들 이름 목록", example = "[{\"tagName\": \"INFP\"}, {\"tagName\": \"화목\"}]")
+        private List<TagNameDto> tags;
     }
 
     @Getter
@@ -107,7 +109,7 @@ public class GroupDto {
         private List<MemberDto.MemberOfGroupResponse> members;
 
         @Schema(description = "태그들 ID 목록", example = "[{\"tagId\": 1}, {\"tagId\": 2}]")
-        private List<GroupTagResponseDto> tags;
+        private Map<String, List<String>> tags;
 
         @Schema(description = "모임 일정 목록",
                 example = "[{\"groupScheduleId\": 1, \"startschedule\": \"2025.03.16 10:00\", \"endschedule\": \"2025.03.16 10:00\", " +

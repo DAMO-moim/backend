@@ -1,19 +1,25 @@
 package com.springboot.group.service;
 
+import com.springboot.category.entity.Category;
 import com.springboot.category.entity.SubCategory;
 import com.springboot.category.repository.SubCategoryRepository;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
+import com.springboot.group.dto.GroupDto;
 import com.springboot.group.dto.MyGroupResponseDto;
 import com.springboot.group.entity.Group;
 import com.springboot.group.entity.GroupMember;
 import com.springboot.group.entity.GroupRecommend;
+import com.springboot.group.entity.GroupTag;
 import com.springboot.group.mapper.GroupMapper;
 import com.springboot.group.repository.GroupMemberRepository;
 import com.springboot.group.repository.GroupRecommendRepository;
 import com.springboot.group.repository.GroupRepository;
 import com.springboot.member.entity.Member;
 import com.springboot.member.service.MemberService;
+import com.springboot.tag.dto.TagNameDto;
+import com.springboot.tag.entity.Tag;
+import com.springboot.tag.repository.TagRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,10 +27,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,27 +38,33 @@ public class GroupService {
     private final GroupRecommendRepository groupRecommendRepository;
     private final SubCategoryRepository subCategoryRepository;
     private final GroupMapper groupMapper;
+    private final TagRepository tagRepository;
 
     public GroupService(GroupRepository groupRepository,
                         MemberService memberService,
                         GroupMemberRepository groupMemberRepository,
                         GroupRecommendRepository groupRecommendRepository,
                         SubCategoryRepository subCategoryRepository,
-                        GroupMapper groupMapper) {
+                        GroupMapper groupMapper,
+                        TagRepository tagRepository) {
         this.groupRepository = groupRepository;
         this.memberService = memberService;
         this.groupMemberRepository = groupMemberRepository;
         this.groupRecommendRepository = groupRecommendRepository;
         this.subCategoryRepository = subCategoryRepository;
         this.groupMapper = groupMapper;
+        this.tagRepository = tagRepository;
     }
 
 
     // 모임 생성 서비스 로직 구현
     @Transactional
-    public Group createGroup(Group group, long memberId, long subCategoryId) {
+    public Group createGroup(Group group, long memberId, GroupDto.Post groupPostDto) {
         // (1) 회원이 존재하는지 검증
         Member member = memberService.findVerifiedMember(memberId);
+
+        // 모임 가입한 갯수 검증
+        validateGroupJoinLimit(member);
 
         // (2) 동일한 모임명이 이미 존재하는지 검증
         isGroupNameExists(group.getGroupName());
@@ -64,9 +73,14 @@ public class GroupService {
         validateMemberCount(group.getMaxMemberCount());
 
         // ✅ SubCategory 조회 후 설정
-        SubCategory subCategory = subCategoryRepository.findById(subCategoryId)
+        SubCategory subCategory = subCategoryRepository.findById(groupPostDto.getSubCategoryId())
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.SUBCATEGORY_NOT_FOUND));
         group.setSubCategory(subCategory); // ✅ 연관관계 설정
+
+        Category category = subCategory.getCategory();
+
+        // 카테고리별 생성 제한 검증
+        validateGroupCreationLimitPerCategory(member, category.getCategoryId());
 
         // (5) 모임 저장
         Group savedGroup = groupRepository.save(group);
@@ -77,6 +91,22 @@ public class GroupService {
         groupLeader.setMember(member);
         groupLeader.setGroupRoles(GroupMember.GroupRoles.GROUP_LEADER);
         groupMemberRepository.save(groupLeader);
+
+        // ✅ 태그 연결
+        // ✅ (7) 태그 연결 (여기서 tagName 추출 + 등록)
+        List<String> tagNames = groupPostDto.getTags().stream()
+                .map(TagNameDto::getTagName)
+                .collect(Collectors.toList());
+
+        for (String tagName : tagNames) {
+            Tag tag = tagRepository.findByTagName(tagName)
+                    .orElseThrow(() -> new BusinessLogicException(ExceptionCode.TAG_NOT_FOUND));
+
+            GroupTag groupTag = new GroupTag();
+            groupTag.setGroup(savedGroup);
+            groupTag.setTag(tag);
+            savedGroup.setGroupTag(groupTag); // 양방향 연관관계
+        }
 
         return savedGroup;
     }
@@ -151,6 +181,9 @@ public class GroupService {
         // (2) 회원 존재 확인
         Member member = memberService.findVerifiedMember(memberId);
 
+        // 모임 가입한 갯수 검증
+        validateGroupJoinLimit(member);
+
         // (3) 이미 가입한 회원인지 확인
         boolean alreadyExists = groupMemberRepository.existsByGroupAndMember_MemberId(group, memberId);
         if (alreadyExists) {
@@ -219,6 +252,25 @@ public class GroupService {
         return result;
     }
 
+    @Transactional
+    public void leaveGroup(long groupId, long memberId) {
+        Group group = findVerifiedGroup(groupId);
+        Member member = memberService.findVerifiedMember(memberId);
+
+        GroupMember groupMember = groupMemberRepository.findByGroupAndMember_MemberId(group, member.getMemberId())
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND_IN_GROUP));
+
+        if (groupMember.getGroupRoles() == GroupMember.GroupRoles.GROUP_LEADER) {
+            delegateGroupLeader(group, groupMember);
+        }
+
+        // ✅ 양방향 연관관계 제거
+        group.getGroupMembers().remove(groupMember);
+        member.getGroupMembers().remove(groupMember);
+
+        groupMemberRepository.delete(groupMember); // 🔥 이제 정확히 삭제됨
+    }
+
 
     // 모임이 이미 존재하는지 검증하는 메서드
     public void isGroupNameExists(String groupName) {
@@ -255,6 +307,46 @@ public class GroupService {
         if (!isMember) {
             throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_IN_GROUP);
         }
+    }
+
+    // 각 카테고리 별 모임 생성 제한(3개) 메서드
+    private void validateGroupCreationLimitPerCategory(Member member, Long categoryId) {
+        List<GroupMember> groupLeaders = groupMemberRepository.findByMemberAndGroupRoles(member, GroupMember.GroupRoles.GROUP_LEADER);
+
+        long countInCategory = groupLeaders.stream()
+                .map(GroupMember::getGroup)
+                .map(Group::getSubCategory)
+                .map(SubCategory::getCategory)
+                .filter(category -> category.getCategoryId().equals(categoryId))
+                .count();
+
+        if (countInCategory >= 3) {
+            throw new BusinessLogicException(ExceptionCode.EXCEED_CATEGORY_GROUP_CREATION_LIMIT);
+        }
+    }
+
+    // 모임 가입 제한(10개) 메서드
+    private void validateGroupJoinLimit(Member member) {
+        long joinedCount = groupMemberRepository.countByMember(member);
+        if (joinedCount >= 10) {
+            throw new BusinessLogicException(ExceptionCode.EXCEED_GROUP_JOIN_LIMIT);
+        }
+    }
+
+    // 모임장 위임 로직
+    private void delegateGroupLeader(Group group, GroupMember leavingMember) {
+        List<GroupMember> members = group.getGroupMembers().stream()
+                .filter(m -> !m.equals(leavingMember)) // 탈퇴 대상은 제외
+                .filter(m -> m.getGroupRoles() == GroupMember.GroupRoles.GROUP_MEMBER)
+                .sorted(Comparator.comparing(GroupMember::getCreatedAt))
+                .collect(Collectors.toList());
+
+        if (members.isEmpty()) {
+            throw new BusinessLogicException(ExceptionCode.NO_MEMBER_TO_DELEGATE);
+        }
+
+        GroupMember newLeader = members.get(0);
+        newLeader.setGroupRoles(GroupMember.GroupRoles.GROUP_LEADER);
     }
 
 }

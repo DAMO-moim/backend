@@ -59,7 +59,7 @@ public class Group {
     @OneToMany(mappedBy = "group", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<GroupMember> groupMembers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     private List<GroupTag> groupTags = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)

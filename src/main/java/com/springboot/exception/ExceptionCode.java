@@ -30,7 +30,13 @@ public enum ExceptionCode {
     CATEGORY_NOT_FOUND(404,"Category not found"),
     CHAT_NOT_FOUND(404,"ChatRoom not found"),
     MESSAGE_NOT_FOUND(404,"Message nof found"),
-    SUBCATEGORY_NOT_FOUND(404, "서브 카테고리를 찾을 수 없습니다.");
+    SUBCATEGORY_NOT_FOUND(404, "서브 카테고리를 찾을 수 없습니다."),
+    TAG_NOT_FOUND(404, "태그를 찾을 수 없습니다"),
+    EXCEED_GROUP_CREATION_LIMIT(400, "최대 3개의 모임까지 생성할 수 있습니다."),
+    EXCEED_CATEGORY_GROUP_CREATION_LIMIT(400, "해당 카테고리에서는 최대 3개의 모임까지만 생성할 수 있습니다."),
+    EXCEED_GROUP_JOIN_LIMIT(400, "최대 10개의 모임까지 가입할 수 있습니다."),
+    NO_MEMBER_TO_DELEGATE(409, "모임에 위임할 수 있는 다른 멤버가 존재하지 않습니다.");
+
 
 
     @Getter
