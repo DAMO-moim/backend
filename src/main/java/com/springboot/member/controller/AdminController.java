@@ -1,6 +1,7 @@
 package com.springboot.member.controller;
 
 import com.springboot.board.entity.Board;
+import com.springboot.comment.entity.Comment;
 import com.springboot.dto.MultiResponseDto;
 import com.springboot.dto.SingleResponseDto;
 import com.springboot.group.entity.Group;
@@ -70,5 +71,16 @@ public class AdminController {
     }
 
     // 특정 회원의 댓글 목록 조회
-
+    @GetMapping("/members/{member-id}/comments")
+    public ResponseEntity getMemberComments(@PathVariable("member-id") long memberId,
+                                            @Parameter(hidden = true) @AuthenticationPrincipal Member member,
+                                            @Positive @RequestParam int page,
+                                            @Positive @RequestParam int size){
+        Page<Comment> commentPage = adminService.getMemberComments(
+                memberId, member.getMemberId(),page - 1, size);
+        List<AdminDto.CommentsResponse> content = commentPage.getContent().stream()
+                .map(mapper::commentToCommentsRepsonse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(new MultiResponseDto<>(content, commentPage));
+    }
 }
