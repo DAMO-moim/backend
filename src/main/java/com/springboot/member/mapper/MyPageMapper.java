@@ -13,11 +13,11 @@ public interface MyPageMapper {
                 board.getBoardId(),
                 board.getTitle(),
                 truncate(board.getContent()),
-                //board.getCategory().name(),
-                null,
+                board.getGroup().getSubCategory().getCategory().getCategoryName(),
                 board.getComments() != null ? board.getComments().size() : 0,
                 board.getCreatedAt().toLocalDate(),
-                board.getGroup() != null ? board.getGroup().getGroupName() : null
+                board.getGroup() != null ? board.getGroup().getGroupName() : null,
+                board.getImage()
         );
     }
 

@@ -16,5 +16,6 @@ public class MyPageDto {
         private int commentCount;
         private LocalDate createdAt;
         private String groupName;
+        private String Image;
     }
 }

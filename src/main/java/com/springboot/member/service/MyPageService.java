@@ -33,8 +33,7 @@ public class MyPageService {
         if(category.equalsIgnoreCase("ALL")){
             boards = boardService.findBoardsByMember(findMember, pageable);
         }else{
-            return null;
-            //boards = boardService.findBoardsByMemberAndCategory(findMember, category, pageable);
+            boards = boardService.findBoardByMemberCategory(findMember, category, pageable);
         }
 
         return boards.map(myPageMapper::boardToBoardsResponse);

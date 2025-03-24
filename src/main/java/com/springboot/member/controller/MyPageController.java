@@ -50,11 +50,12 @@ public class MyPageController {
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
+    //내 게시글 조회
     @GetMapping("/boards")
     public ResponseEntity getMyBoards(@Parameter(hidden = true) @AuthenticationPrincipal Member member,
                                       @RequestParam(defaultValue = "ALL") String category,
                                       @Positive @RequestParam int page,
-                                      @Positive @RequestParam int size){
+                                      @Positive @RequestParam int size) {
         Page<MyPageDto.BoardsResponse> boardPage = myPageService.getMyBoards(
                 member.getMemberId(), category, page - 1, size);
         List<MyPageDto.BoardsResponse> content = boardPage.getContent();

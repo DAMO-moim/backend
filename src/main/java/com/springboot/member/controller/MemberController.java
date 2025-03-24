@@ -148,5 +148,11 @@ public class MemberController {
 
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
+
+//    //프로필 이미지 저장 메서드
+//    @PatchMapping("/image")
+//    public ResponseEntity fileUpload(@AuthenticationPrincipal Member member){
+//
+//    }
 }
 
