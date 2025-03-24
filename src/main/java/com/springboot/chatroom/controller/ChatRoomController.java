@@ -9,7 +9,10 @@ import com.springboot.member.entity.Member;
 import com.springboot.message.dto.MessageDto;
 import com.springboot.message.entity.Message;
 import com.springboot.message.mapper.MessageMapper;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,7 +26,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/chatrooms") // ✅ 모든 엔드포인트의 기본 URL
+@RequestMapping("/chatrooms")
 public class ChatRoomController {
     private final ChatRoomService chatRoomService;
     private final ChatMapper mapper;
@@ -35,6 +38,11 @@ public class ChatRoomController {
         this.messageMapper = messageMapper;
     }
 
+    @Operation(summary = "채팅방 조회(접속)", description = "채팅방 접속")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "채팅방 접속 완료"),
+            @ApiResponse(responseCode = "404", description = "chatroom not found"),
+    })
     //하나의 카테고리 채팅방 조회
     @GetMapping({"/{chatroom-id}"})
     public ResponseEntity getChatRoom(@PathVariable("chatroom-id") long chatRoomId,
@@ -56,6 +64,11 @@ public class ChatRoomController {
         return new ResponseEntity(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
+    @Operation(summary = "내 카테고리별 채팅방 목록 조회", description = "내 카테고리별 채팅방 목록 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "채팅방 목록 조회 완료"),
+            @ApiResponse(responseCode = "404", description = "chatroom not found"),
+    })
     //회원의 카테고리별 채팅방 목록 조회
     @GetMapping
     public ResponseEntity getChatRooms(@Schema(hidden = true) @AuthenticationPrincipal Member member){
