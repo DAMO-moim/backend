@@ -4,9 +4,11 @@ import com.springboot.auth.utils.AuthorityUtils;
 import com.springboot.category.service.CategoryService;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
+import com.springboot.file.Service.StorageService;
 import com.springboot.member.entity.Member;
 import com.springboot.member.entity.MemberCategory;
 import com.springboot.member.repository.MemberRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -15,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.plaf.PanelUI;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -28,12 +32,19 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final AuthorityUtils authorityUtils;
     private final CategoryService categoryService;
+    private final StorageService storageService;
+    private final String defaultImagePath;
 
-    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, AuthorityUtils authorityUtils, CategoryService categoryService) {
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder,
+                         AuthorityUtils authorityUtils, CategoryService categoryService,
+                         StorageService storageService,
+                         @Value("${file.default-image}") String defaultImagePath) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityUtils = authorityUtils;
         this.categoryService = categoryService;
+        this.storageService = storageService;
+        this.defaultImagePath = defaultImagePath;
     }
 
     public Member createMember(Member member){
@@ -57,8 +68,8 @@ public class MemberService {
         //권한 목록 저장
         List<String> roles = authorityUtils.createAuthorities(member.getEmail());
         member.setRoles(roles);
-
-
+        //회원가입이 완료되면 프로필이미지 기본이미지로 생성
+        member.setImage(defaultImagePath);
         return memberRepository.save(member);
     }
 
@@ -191,5 +202,21 @@ public class MemberService {
     public Member findMemberEmail(Member member){
         return memberRepository.findByNameAndPhoneNumber(member.getName(), member.getPhoneNumber())
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+    }
+
+    //이미지 등록
+    public void uploadImage(Member member, MultipartFile imageFile){
+        Member findMember = findVerifiedMember(member.getMemberId());
+
+        // 파일을 가져왔을때 그 파일이 null이거나 빈 파일 일때 검증해야함
+        if (imageFile != null && !imageFile.isEmpty()) {
+            //findMember.setImage(imageFile.getOriginalFilename());
+            String fileName = findMember.getMemberId() + "_" + System.currentTimeMillis();
+            storageService.store(imageFile, fileName);
+            findMember.setImage(fileName);
+        } else {
+            findMember.setImage(defaultImagePath);
+        }
+
     }
 }
