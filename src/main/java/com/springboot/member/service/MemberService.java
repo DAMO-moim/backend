@@ -20,10 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.swing.plaf.PanelUI;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Transactional
 @Service
@@ -210,13 +207,13 @@ public class MemberService {
 
         // 파일을 가져왔을때 그 파일이 null이거나 빈 파일 일때 검증해야함
         if (imageFile != null && !imageFile.isEmpty()) {
-            //findMember.setImage(imageFile.getOriginalFilename());
-            String fileName = findMember.getMemberId() + "_" + System.currentTimeMillis();
-            storageService.store(imageFile, fileName);
-            findMember.setImage(fileName);
+            String uuid = UUID.randomUUID().toString();
+            String pathWithoutExt = "members/" + findMember.getMemberId() + "/" + uuid;
+            String relativePath = storageService.store(imageFile, pathWithoutExt);
+            String imageUrl = "/images/" + relativePath;
+            findMember.setImage(imageUrl);
         } else {
             findMember.setImage(defaultImagePath);
         }
-
     }
 }
