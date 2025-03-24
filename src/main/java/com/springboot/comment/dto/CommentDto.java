@@ -5,12 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 public class CommentDto {
     @Getter
     public static class Post{
         @Schema(description = "댓글 내용", example = "본문이에용")
+        @NotBlank(message = "댓글은 공백이어서는 안됩니다.")
+        @Size(min = 1, max = 50, message = "본문은 1~50자 이내이어야 합니다." )
         private String content;
     }
 
@@ -21,6 +25,8 @@ public class CommentDto {
         private long commentId;
 
         @Schema(description = "댓글 내용", example = "본문이에용")
+        @NotBlank(message = "댓글은 공백이어서는 안됩니다.")
+        @Size(min = 1, max = 50, message = "본문은 1~50자 이내이어야 합니다." )
         private String content;
     }
 
