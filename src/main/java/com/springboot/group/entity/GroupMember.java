@@ -1,5 +1,6 @@
 package com.springboot.group.entity;
 
+import com.springboot.audit.BaseEntity;
 import com.springboot.board.entity.Board;
 import com.springboot.member.entity.Member;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Entity
-public class GroupMember {
+public class GroupMember extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberGroupId;
