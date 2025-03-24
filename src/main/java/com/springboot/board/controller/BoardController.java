@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,10 +44,11 @@ public class BoardController {
     })
 
     @PostMapping
-    public ResponseEntity postBoard(@Valid @RequestBody BoardDto.Post boardPostDto,
-                                       @PathVariable("group-id") Long groupId,
-                                       @Parameter(hidden = true) @AuthenticationPrincipal Member member) {
-        Board board = boardService.createBoard(mapper.boardPostDtoToBoard(boardPostDto), member.getMemberId(), groupId);
+    public ResponseEntity postBoard(@Valid @RequestPart BoardDto.Post boardPostDto,
+                                    @RequestPart(required = false) MultipartFile boardImage,
+                                    @PathVariable("group-id") Long groupId,
+                                    @Parameter(hidden = true) @AuthenticationPrincipal Member member) {
+        Board board = boardService.createBoard(mapper.boardPostDtoToBoard(boardPostDto), member.getMemberId(), groupId, boardImage);
 
         return new ResponseEntity<>(new SingleResponseDto<>(mapper.boardToBoardResponseDto(board)), HttpStatus.CREATED);
     }
