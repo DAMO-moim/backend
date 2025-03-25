@@ -2,6 +2,7 @@ package com.springboot.group.dto;
 
 import com.springboot.group.entity.Group;
 import com.springboot.member.dto.MemberDto;
+import com.springboot.schedule.dto.ScheduleDto;
 import com.springboot.schedule.entity.Schedule;
 import com.springboot.tag.dto.TagNameDto;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -129,6 +130,6 @@ public class GroupDto {
                         "\"participants\": [{\"memberId\": 2, \"name\": \"김철수\", \"Image\": \"https://example.com/profiles/bob.jpg\"}, " +
                         "{\"memberId\": 3, \"name\": \"박영희\", \"Image\": \"https://example.com/profiles/eve.jpg\"}], " +
                         "\"groupSchedulestatus\": \"종료상태\", \"address\": \"이천시 중리동 cgv\", \"subaddress\": \"5층\"}]")
-        private List<Schedule> schedules;
+        private List<ScheduleDto.ScheduleOfGroupResponse> schedules;
     }
 }

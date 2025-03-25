@@ -1,25 +1,23 @@
 package com.springboot.schedule.dto;
 
+import com.springboot.member.dto.MemberDto;
 import com.springboot.schedule.entity.Schedule;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.Column;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
-//@Getter
-//@Setter
-//@NoArgsConstructor
-//@AllArgsConstructor
-//@Builder
 public class ScheduleDto {
-
     @Getter
     @Setter
     @NoArgsConstructor
@@ -104,29 +102,41 @@ public class ScheduleDto {
     public static class Response {
         private Long groupScheduleId;
 
+        private String scheduleName; // 일정 이름
+
+        private String scheduleContent; // 일정 소개글
+
+        private LocalDateTime startSchedule; // 시작 일자, 시간
+
+        private LocalDateTime endSchedule; // 종료 일자, 시간
+
+        private String address; // 주소
+
+        private String subAddress; // 상세주소
+
+        private int maxMemberCount; // 참여 최대 가능 인원
+
+        private int memberCount; // 참여 인원 수
+    }
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class ScheduleOfGroupResponse {
+        private long scheduleId;
         private String scheduleName;
-        private String scheduleContent;
+        private LocalDate startDate;
+        private LocalTime startTime;
 
-        private LocalDateTime startSchedule;
-        private LocalDateTime endSchedule;
-
-        private List<ParticipantInfo> participants;
-
+        private LocalDate endDate;
+        private LocalTime endTime;
         private String address;
         private String subAddress;
-
-        private int maxMemberCount;
-        private int memberCount;
-
-        @Getter
-        @Setter
-        @NoArgsConstructor
-        @AllArgsConstructor
-        @Builder
-        public static class ParticipantInfo {
-            private Long memberId;
-            private String image;
-        }
+        private Schedule.ScheduleStatus scheduleStatus;
+        private Schedule.ScheduleState state;
+        private List<MemberDto.MemberOfGroupResponse> members;
     }
 }
+
 

@@ -7,6 +7,7 @@ import com.springboot.group.entity.Group;
 import com.springboot.group.entity.GroupMember;
 import com.springboot.group.entity.GroupTag;
 import com.springboot.member.dto.MemberDto;
+import com.springboot.schedule.dto.ScheduleDto;
 import com.springboot.tag.dto.GroupTagResponseDto;
 import com.springboot.tag.dto.TagResponseDto;
 import com.springboot.tag.entity.Tag;
@@ -37,10 +38,32 @@ public interface GroupMapper {
                 .members(group.getGroupMembers().stream()
                         .map(groupMember -> MemberDto.MemberOfGroupResponse.builder()
                                 .memberId(groupMember.getMember().getMemberId())
-                                .name(groupMember.getMember().getName())
+                                .image(groupMember.getMember().getImage())
+                                //.name(groupMember.getMember().getName())
                                 .build())
-                        .collect(Collectors.toList()))
-
+                        .collect(Collectors.toList())
+                )
+                .schedules(group.getSchedules().stream()
+                        .map(schedule -> ScheduleDto.ScheduleOfGroupResponse.builder()
+                                .scheduleId(schedule.getScheduleId())
+                                .scheduleName(schedule.getScheduleName())
+                                .startDate(schedule.getStartSchedule().toLocalDate())
+                                .startTime(schedule.getStartSchedule().toLocalTime())
+                                .endDate(schedule.getEndSchedule().toLocalDate())
+                                .endTime(schedule.getEndSchedule().toLocalTime())
+                                .address(schedule.getAddress())
+                                .subAddress(schedule.getSubAddress())
+                                .scheduleStatus(schedule.getScheduleStatus())
+                                .state(schedule.getScheduleState())
+                                .members(schedule.getMemberSchedules().stream()
+                                        .map(memberSchedule -> MemberDto.MemberOfGroupResponse.builder()
+                                                .memberId(memberSchedule.getMember().getMemberId())
+                                                .image(memberSchedule.getMember().getImage())
+                                                .build())
+                                        .collect(Collectors.toList()))
+                                .build())
+                        .collect(Collectors.toList())
+                )
                 // ✅ 태그 리스트 변환
                 .tags(
                         group.getGroupTags().stream()
@@ -50,7 +73,6 @@ public interface GroupMapper {
                                         Collectors.mapping(Tag::getTagName, Collectors.toList())
                                 ))
                 );
-
                 return builder.build();
     }
     default List<GroupDto.Response> groupsToGroupResponses(List<Group> groups) {
