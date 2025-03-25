@@ -144,6 +144,8 @@ public class GroupService {
 
         // (3) 모임 최대/최소 인원 수 검증 (2~100명)
         if (group.getMaxMemberCount() > 0) {
+            // 현재 가입된 인원보다 작게 수정 못하도록 검증
+            validateMaxMemberCountUpdate(existingGroup, group.getMaxMemberCount());
             validateMemberCount(group.getMaxMemberCount());
             existingGroup.setMaxMemberCount(group.getMaxMemberCount());
         }
@@ -156,6 +158,7 @@ public class GroupService {
         // (5) 변경된 모임 정보 저장
         return groupRepository.save(existingGroup);
     }
+
     public Group findGroup(long groupId, long memberId) {
         // (1) 모임 존재 여부 확인
         Group group = groupRepository.findById(groupId)
@@ -397,5 +400,14 @@ public class GroupService {
         GroupMember newLeader = members.get(0);
         newLeader.setGroupRoles(GroupMember.GroupRoles.GROUP_LEADER);
     }
+
+    // 현재 가입한 인원보다 작은 최대 인원으로 수정하는 거 막는 검증 메서드
+    public void validateMaxMemberCountUpdate(Group group, int newMaxCount) {
+        int currentMemberCount = group.getGroupMembers().size();
+        if (newMaxCount < currentMemberCount) {
+            throw new BusinessLogicException(ExceptionCode.INVALID_GROUP_CAPACITY_UPDATE);
+        }
+    }
+
 
 }
