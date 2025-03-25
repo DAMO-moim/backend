@@ -56,4 +56,18 @@ public class ScheduleParticipationController {
         scheduleService.joinCancelSchedule(member.getMemberId(), scheduleId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+//    //내가 참여하고있는 모임일정 리스트
+//    @GetMapping("/{schedule-id}/participation")
+//    public ResponseEntity getParticipatedSchedules(@PathVariable("schedule-id") long scheduleId,
+//                                                   @Parameter(hidden = true) @AuthenticationPrincipal Member member) {
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
+//
+//    //해당 일정에 참여예정인 모임일정 리스트
+//    @GetMapping("/{schedule-id}/participation")
+//    public ResponseEntity getParticipationSchedule1(@PathVariable("schedule-id") long scheduleId,
+//                                                   @Parameter(hidden = true) @AuthenticationPrincipal Member member) {
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 }
