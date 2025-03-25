@@ -19,6 +19,7 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> 
     long countByMember(Member member);
     List<GroupMember> findByMemberAndGroupRoles(Member member, GroupMember.GroupRoles groupRoles);
 
+    Page<GroupMember> findByMemberAndGroupRoles(Member member, GroupMember.GroupRoles groupRoles, Pageable pageable);
 
     //특정 회원의 카테고리별 그룹조회
     @Query("SELECT gm FROM GroupMember gm " + "WHERE gm.member = :member " +
