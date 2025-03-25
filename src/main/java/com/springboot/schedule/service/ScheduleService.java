@@ -185,6 +185,38 @@ public class ScheduleService {
         schedule.setMemberSchedule(memberSchedule);
     }
 
+    //모임 일정 취소
+    public void joinCancelSchedule(long memberId, long scheduleId){
+        // 회원 검증
+        Member member = memberService.findVerifiedMember(memberId);
+
+        // 해당 모임 일정이 있는지 검증
+        Schedule schedule = findVerifiedSchedule(scheduleId);
+
+        // 모임 검증 ( 해당 모임 일정의 모임이 실존하는지 )
+        Group group = groupService.findVerifiedGroup(schedule.getGroup().getGroupId());
+
+        // 해당 모임에 가입된 회원인지 검증(가입되지 않았을 경우 예외처리)
+        if (!groupService.verifyGroupMember(member, group)) {
+            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND_IN_GROUP);
+        }
+
+        Optional<MemberSchedule> optional = memberScheduleRepository.findByMemberAndSchedule(member, schedule);
+        if (optional.isEmpty()) {
+            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_JOINED_SCHEDULE);
+        }
+
+        // 위에서 찾은 MemberSchedule 객체를 가져온다.
+        MemberSchedule memberSchedule = optional.get();
+
+        // 연관관계 양방향 제거
+        schedule.getMemberSchedules().remove(memberSchedule);
+        member.getMemberSchedules().remove(memberSchedule);
+
+        // DB에서 삭제
+        memberScheduleRepository.delete(memberSchedule);
+    }
+
     public boolean verifyMemberSchedule(Member member, Schedule schedule){
         return memberScheduleRepository.existsByScheduleAndMember(schedule, member);
     }
