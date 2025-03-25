@@ -11,6 +11,7 @@ import com.springboot.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@Tag(name = "공용 컨트롤러", description = "로그인, 로그아웃, 토큰 재발급 컨트롤러")
 // 로그아웃을 하기 위한 컨트롤러 계층 구현
 @RestController
 @RequestMapping("/auth")

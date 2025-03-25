@@ -9,6 +9,7 @@ import com.springboot.dto.SingleResponseDto;
 import com.springboot.member.entity.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
+@Tag(name = "게시판 컨트롤러", description = "게시판 관련 컨트롤러")
 @RestController
 @RequestMapping("/groups/{group-id}/boards")
 @Validated
