@@ -34,4 +34,29 @@ public class MyPageDto {
         @Schema(description = "게시글 이미지 주소", example = "/image/uuid")
         private String Image;
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class GroupsResponse{
+        @Schema(description = "모임 ID", example = "1")
+        private long groupId;
+
+        @Schema(description = "모임명", example = "바둑 아마추어 5단이상 노장모임")
+        private String groupName;
+
+        @Schema(description = "모임소개", example = "바둑 아마추어 5단이상 노장모임")
+        private String introduction;
+
+        @Schema(description = "모임 인원 수", example = "17")
+        private int memberCount;
+
+        @Schema(description = "모임 최대 인원 수", example = "20")
+        private int maxMemberCount;
+
+        @Schema(description = "모임 프로필 이미지 주소", example = "/image/uuid")
+        private String Image;
+
+        @Schema(description = "해당 모임의 모임장 여부", example = "true")
+        private boolean isLeader;
+    }
 }
