@@ -333,6 +333,14 @@ public class GroupService {
 
     // 각 카테고리 별 모임 생성 제한(3개) 메서드
     private void validateGroupCreationLimitPerCategory(Member member, Long categoryId) {
+        // 1. 해당 멤버가 카테고리를 가지고 있는지 검증
+        boolean isInterestedCategory = member.getMemberCategories().stream()
+                .anyMatch(mc -> mc.getCategory().getCategoryId().equals(categoryId));
+
+        if (!isInterestedCategory) {
+            throw new BusinessLogicException(ExceptionCode.NOT_INTERESTED_CATEGORY);
+        }
+
         List<GroupMember> groupLeaders = groupMemberRepository.findByMemberAndGroupRoles(member, GroupMember.GroupRoles.GROUP_LEADER);
 
         long countInCategory = groupLeaders.stream()
