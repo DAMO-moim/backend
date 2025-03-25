@@ -41,10 +41,8 @@ public enum ExceptionCode {
     SCHEDULE_START_AFTER_END(400, "일정 시작 시간은 종료 시간보다 빨라야 합니다."),
     RECURRING_SCHEDULE_TOO_SHORT(400, "정기 일정은 최소 7일 이상의 기간이어야 합니다."),
     INVALID_SCHEDULE_CAPACITY(400,"일정 인원 수는 1명 이상이고 모임 최대 인원 이하이어야 합니다."),
-    INVALID_SCHEDULE_DAYOFWEEK(400, "정기 일정에는 최소 1일 이상의 요일이 지정되어야 합니다."),
-    INVALID_SCHEDULE_COUNT(400,"참여 인원수는 최대 인원수보다 낮을 수 없습니다."),
-    INVALID_GROUP_CAPACITY_UPDATE(400, "현재 가입된 인원보다 작은 최대 인원으로 수정할 수 없습니다.");
-
+    INVALID_SCHEDULE_COUNT(400,"일정 최대 인원 수는 현재 참여중인 인원수보다 낮을 수 없습니다."),
+    INVALID_SCHEDULE_DAYOFWEEK(400, "정기 일정에는 최소 1일 이상의 요일이 지정되어야 합니다.");
 
 
 
