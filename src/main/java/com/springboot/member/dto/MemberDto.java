@@ -23,7 +23,7 @@ public class MemberDto {
         @NotBlank(message = "비밀번호는 공백이 아니어야 합니다.")
         @Pattern(regexp = "^(?=(?:.*[A-Za-z]){6,})(?=.*\\d)(?=(?:[^%$#@!]*[%$#@!]){2,})[A-Za-z\\d%$#@!]{8,20}$",
                 message = "비밀번호는 8~20자 영문(최소 6자), 숫자, 특수문자(%,$,#,@,!) 2자 이상을 조합해야 합니다.")
-        @Schema(description = "사용자 비밀번호", example = "zizonhuzzang")
+        @Schema(description = "사용자 비밀번호", example = "zizonhuzzang!@")
         private String password;
 
         @Schema(description = "사용자 성별", example = "MAN")
@@ -50,9 +50,14 @@ public class MemberDto {
 
     @Getter
     public static class Delete{
+        @Schema(description = "사용자 이메일", example = "example@gmail.com")
         @NotBlank(message = "이메일은 공백이 아니어야 합니다.")
         @Email
         private String email;
+
+        @Schema(description = "사용자 비밀번호", example = "zizonhuzzang!@")
+        @Pattern(regexp = "^(?!\\s)(?!.*\\s{2,})(?!.*[~!@#$%^&*()_+=|<>?:{}\\[\\]\"';,.\\\\/`])[^\\s]{1,8}(?<!\\s)$",
+                message = "닉네임은 공백 없이 8자 이내, 특수문자를 포함하지 않아야 합니다.")
         @NotBlank
         private String password;
     }
@@ -62,6 +67,7 @@ public class MemberDto {
         @Schema(description = "사용자 이름", example = "홍성민")
         @NotBlank(message = "이름은 공백이 아니어야 합니다.")
         private String name;
+
         @Schema(description = "사용자 전화번호", example = "010-1111-2222")
         @Pattern(regexp = "^010-\\d{3,4}-\\d{4}$",
                 message = "휴대폰 번호는 010으로 시작하는 11자리 숫자와 '-'로 구성되어야 합니다.")
@@ -85,10 +91,13 @@ public class MemberDto {
     public static class MyPageResponse{
         @Schema(description = "사용자 이름", example = "홍성민")
         private String name;
+
         @Schema(description = "사용자 이메일", example = "example@gmail.com")
         private String email;
+
         @Schema(description = "사용자 전화번호", example = "010-1111-2222")
         private String phoneNumber;
+
         @Schema(description = "사용자 프로필 이미지", example = "/profile")
         private String image;
     }
@@ -118,6 +127,7 @@ public class MemberDto {
     @NoArgsConstructor
     @Builder
     public static class Response {
+        @Schema(description = "사용자 ID", example = "1")
         private long memberId;
 
         @Schema(description = "사용자 이메일", example = "example@gmail.com")
@@ -149,6 +159,7 @@ public class MemberDto {
     @NoArgsConstructor
     @Builder
     public static class MemberOfGroupResponse {
+        @Schema(description = "사용자 ID", example = "1")
         private long memberId;
         @Schema(description = "사용자 이름", example = "홍성민")
         private String name;

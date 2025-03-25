@@ -21,9 +21,11 @@ public class MemberCategoryDto {
 
         @Getter
         public static class MemberCategoryUpdate {
+            @Schema(description = "카테고리 ID", example = "1")
             private long categoryId;
 
             @Size(min = 1, max = 3)
+            @Schema(description = "우선순위", example = "1")
             private int priority;
         }
     }
@@ -31,8 +33,11 @@ public class MemberCategoryDto {
     @AllArgsConstructor
     @Getter
     public static class Response{
+        @Schema(description = "카테고리 ID", example = "1")
         private long categoryId;
+        @Schema(description = "카테고리 명", example = "스포츠")
         private String categoryName;
+        @Schema(description = "우선순위", example = "1")
         private int priority;
     }
 
