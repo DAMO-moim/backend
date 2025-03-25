@@ -393,9 +393,16 @@ public class GroupService {
         if (members.isEmpty()) {
             throw new BusinessLogicException(ExceptionCode.NO_MEMBER_TO_DELEGATE);
         }
-
         GroupMember newLeader = members.get(0);
         newLeader.setGroupRoles(GroupMember.GroupRoles.GROUP_LEADER);
     }
 
+
+    // 현재 가입한 인원보다 작은 최대 인원으로 수정하는 거 막는 검증 메서드
+    public void validateMaxMemberCountUpdate(Group group, int newMaxCount) {
+        int currentMemberCount = group.getGroupMembers().size();
+        if (newMaxCount < currentMemberCount) {
+            throw new BusinessLogicException(ExceptionCode.INVALID_GROUP_CAPACITY_UPDATE);
+        }
+    }
 }
