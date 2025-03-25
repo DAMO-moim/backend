@@ -45,6 +45,7 @@ public class MyPageController {
         this.myPageService = myPageService;
     }
 
+    //내 정보 조회
     @Operation(summary = "마이페이지(내 정보 조회)", description = "마이페이지에 필요한 내 정보만 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "마이페이지 내 정보 조회 완료"),
@@ -58,13 +59,13 @@ public class MyPageController {
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
+    //내 게시글 조회
     @Operation(summary = "마이페이지(내 게시글 조회)", description = "마이페이지에서 내 게시글 조회를 눌렀을 경우 내 게시글 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "마이페이지 내 게시글 조회 완료"),
             @ApiResponse(responseCode = "404", description = "board not found"),
             @ApiResponse(responseCode = "404", description = "member not found")
     })
-    //내 게시글 조회
     @GetMapping("/boards")
     public ResponseEntity getMyBoards(@Parameter(hidden = true) @AuthenticationPrincipal Member member,
                                       @RequestParam(defaultValue = "ALL") String category,
@@ -75,5 +76,25 @@ public class MyPageController {
         List<MyPageDto.BoardsResponse> content = boardPage.getContent();
 
         return ResponseEntity.ok(new MultiResponseDto<>(content, boardPage));
+    }
+
+    //내 모임 조회
+    @Operation(summary = "마이페이지(내 모임 조회)", description = "마이페이지에서 내 모임 조회를 눌렀을 경우 내 모임 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "마이페이지 내 모임 조회 완료"),
+            @ApiResponse(responseCode = "404", description = "board not found"),
+            @ApiResponse(responseCode = "404", description = "member not found")
+    })
+    @GetMapping("/groups")
+    public ResponseEntity getMyGroups(@Parameter(hidden = true) @AuthenticationPrincipal Member member,
+                                      @RequestParam(defaultValue = "ALL") String category,
+                                      @RequestParam(defaultValue = "false") boolean leaderOnly, //true면 모임장인거만 보여야함
+                                      @Positive @RequestParam int page,
+                                      @Positive @RequestParam int size) {
+        Page<MyPageDto.GroupsResponse> groupPage = myPageService.getMyGroups(
+                member.getMemberId(), category, leaderOnly, page - 1 , size);
+        List<MyPageDto.GroupsResponse> content = groupPage.getContent();
+
+        return ResponseEntity.ok(new MultiResponseDto<>(content, groupPage));
     }
 }

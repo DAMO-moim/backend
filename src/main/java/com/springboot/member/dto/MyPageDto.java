@@ -40,7 +40,6 @@ public class MyPageDto {
     public static class GroupsResponse{
         @Schema(description = "모임 ID", example = "1")
         private long groupId;
-
         @Schema(description = "모임명", example = "바둑 아마추어 5단이상 노장모임")
         private String groupName;
 
@@ -56,7 +55,7 @@ public class MyPageDto {
         @Schema(description = "모임 프로필 이미지 주소", example = "/image/uuid")
         private String Image;
 
-        @Schema(description = "해당 모임의 모임장 여부", example = "true")
-        private boolean isLeader;
+        @Schema(description = "해당 모임의 모임장 여부", example = "Group_Leader")
+        private String role;
     }
 }
