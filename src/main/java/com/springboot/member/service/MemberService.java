@@ -54,6 +54,7 @@ public class MemberService {
         verifyExistsEmail(member.getEmail());
 
         //중복 이름 여부 확인
+        verifyExistsName(member.getName());
 
         //카테고리 존재 여부 확인
         member.getMemberCategories().stream()
@@ -110,6 +111,9 @@ public class MemberService {
         Optional.ofNullable(member.getName())
                 .ifPresent(name -> findMember.setName(name));
 
+        //중복 이름 여부 확인
+        verifyExistsName(findMember.getName());
+
         return memberRepository.save(findMember);
     }
 
@@ -160,6 +164,7 @@ public class MemberService {
         memberRepository.save(findMember);
     }
 
+    //멤버의 카테고리 가져오는 메서드
     public List<MemberCategory> findMemberCategroies(long memberId){
         Member member = findVerifiedMember(memberId);
         List<MemberCategory> memberCategories = member.getMemberCategories();
@@ -167,6 +172,7 @@ public class MemberService {
         return memberCategories;
     }
 
+    //이메일 중복 여부 확인 메서드
     public void verifyExistsEmail(String email){
         Optional<Member> member = memberRepository.findByEmail(email);
 
@@ -174,6 +180,15 @@ public class MemberService {
             throw new BusinessLogicException(ExceptionCode.MEMBER_EXISTS);
     }
 
+    //닉네임 중복 여부 확인 메서드
+    public void verifyExistsName(String name){
+        Optional<Member> member = memberRepository.findByName(name);
+
+        if(member.isPresent())
+            throw new BusinessLogicException(ExceptionCode.MEMBER_NAME_EXISTS);
+    }
+
+    //회원가입한 회원인지 확인하는 메서드
     public Member findVerifiedMember(long memberId){
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Member member = optionalMember.orElseThrow(()->
