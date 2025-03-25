@@ -17,6 +17,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@Transactional
 @Service
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
@@ -123,8 +124,18 @@ public class ScheduleService {
         return null;
     }
 
-    public Schedule deleteSchedule(long memberId, long groupId, long scheduleId) {
-        return null;
+    public void deleteSchedule(long memberId, long groupId, long scheduleId) {
+        // 회원 검증
+        Member member = memberService.findVerifiedMember(memberId);
+
+        // 모임 검증
+        Group group = groupService.findVerifiedGroup(groupId);
+
+        // 모임장 여부 확인
+        groupService.validateGroupLeader(group, memberId);
+
+        // 스케줄 존재 여부 확인
+        Schedule schedule = findVerifiedMember(scheduleId);
     }
 
     // 시작 시간이 현재보다 이전인지 검증

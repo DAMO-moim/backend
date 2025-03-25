@@ -416,7 +416,7 @@ public class GroupService {
         if (newMaxCount < currentMemberCount) {
             throw new BusinessLogicException(ExceptionCode.INVALID_GROUP_CAPACITY_UPDATE);
         }
-
+    }
     //사용자의 모임 리스트
     @Transactional(readOnly = true)
     public Page<Group> findGroupsByMember(Member member, Pageable pageable) {

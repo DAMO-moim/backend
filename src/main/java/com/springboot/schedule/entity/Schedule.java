@@ -59,6 +59,10 @@ public class Schedule {
     @Enumerated(EnumType.STRING)
     private ScheduleStatus scheduleStatus = ScheduleStatus.SINGLE;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ScheduleState scheduleState = ScheduleState.SCHEDULE_ACTIVE;
+
     public enum ScheduleStatus {
         SINGLE("단일 일정"),
         CONTINUOUS("연속 일정"),
@@ -69,6 +73,18 @@ public class Schedule {
 
         ScheduleStatus(String status) {
             this.status = status;
+        }
+    }
+
+    public enum ScheduleState {
+        SCHEDULE_ACTIVE("진행중"),     // 일정이 현재 진행 중
+        SCHEDULE_COMPLETED("종료");     // 종료된 일정
+
+        @Getter
+        private String state;
+
+        ScheduleState(String state) {
+            this.state = state;
         }
     }
 
