@@ -37,7 +37,8 @@ public enum ExceptionCode {
     EXCEED_GROUP_JOIN_LIMIT(400, "최대 10개의 모임까지 가입할 수 있습니다."),
     NO_MEMBER_TO_DELEGATE(409, "모임에 위임할 수 있는 다른 멤버가 존재하지 않습니다."),
     IMAGE_REQUIRED(400, "아직 이미지를 업로드 하지 않았습니다."),
-    INVALID_REFRESH_TOKEN(400, "유효하지 않은 리플래시 토큰입니다.");
+    INVALID_REFRESH_TOKEN(400, "유효하지 않은 리플래시 토큰입니다."),
+    NOT_INTERESTED_CATEGORY(400, "해당 카테고리에 속하지 않습니다.");
 
 
 
