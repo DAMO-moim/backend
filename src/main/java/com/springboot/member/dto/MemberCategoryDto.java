@@ -11,6 +11,7 @@ import java.util.List;
 public class MemberCategoryDto {
     @Getter
     public static class Post{
+        @Schema(description = "카테고리 ID", example = "1")
         private long categoryId;
     }
 
@@ -40,5 +41,4 @@ public class MemberCategoryDto {
         @Schema(description = "우선순위", example = "1")
         private int priority;
     }
-
 }

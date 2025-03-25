@@ -23,7 +23,7 @@ public class MemberDto {
         @NotBlank(message = "비밀번호는 공백이 아니어야 합니다.")
         @Pattern(regexp = "^(?=(?:.*[A-Za-z]){6,})(?=.*\\d)(?=(?:[^%$#@!]*[%$#@!]){2,})[A-Za-z\\d%$#@!]{8,20}$",
                 message = "비밀번호는 8~20자 영문(최소 6자), 숫자, 특수문자(%,$,#,@,!) 2자 이상을 조합해야 합니다.")
-        @Schema(description = "사용자 비밀번호", example = "zizonhuzzang!@")
+        @Schema(description = "사용자 비밀번호", example = "zizonhuzzang123!@")
         private String password;
 
         @Schema(description = "사용자 성별", example = "MAN")
@@ -55,7 +55,7 @@ public class MemberDto {
         @Email
         private String email;
 
-        @Schema(description = "사용자 비밀번호", example = "zizonhuzzang!@")
+        @Schema(description = "사용자 비밀번호", example = "zizonhuzzang123!@")
         @Pattern(regexp = "^(?!\\s)(?!.*\\s{2,})(?!.*[~!@#$%^&*()_+=|<>?:{}\\[\\]\"';,.\\\\/`])[^\\s]{1,8}(?<!\\s)$",
                 message = "닉네임은 공백 없이 8자 이내, 특수문자를 포함하지 않아야 합니다.")
         @NotBlank
@@ -111,7 +111,7 @@ public class MemberDto {
         @NotBlank(message = "비밀번호는 공백이 아니어야 합니다.")
         @Pattern(regexp = "^(?=(?:.*[A-Za-z]){6,})(?=.*\\d)(?=(?:[^%$#@!]*[%$#@!]){2,})[A-Za-z\\d%$#@!]{8,20}$",
                 message = "비밀번호는 8~20자 영문(최소 6자), 숫자, 특수문자(%,$,#,@,!) 2자 이상을 조합해야 합니다.")
-        @Schema(description = "사용자 비밀번호", example = "zizonhuzzang")
+        @Schema(description = "사용자 비밀번호", example = "zizonhuzzang123!@")
         private String password;
 
         @NotBlank(message = "닉네임은 공백이 아니어야 합니다.")
