@@ -161,7 +161,9 @@ public class MemberDto {
     public static class MemberOfGroupResponse {
         @Schema(description = "사용자 ID", example = "1")
         private long memberId;
-        @Schema(description = "사용자 이름", example = "홍성민")
-        private String name;
+        @Schema(description = "사용자 프로필 이미지", example = "/profile")
+        private String image;
+//        @Schema(description = "사용자 이름", example = "홍성민")
+//        private String name;
     }
 }
