@@ -63,6 +63,11 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(summary = "액세스 토큰 재발급(자동로그인)", description = "만료된 액세스 토큰을 재발급 합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "액세스 재발급 완료"),
+            @ApiResponse(responseCode = "401", description = "만료된 리플래시 토큰입니다.")
+    })
     @PostMapping("/token/refresh")
     public ResponseEntity<?> refreshAccessToken(@RequestHeader("Refresh") String refreshHeader) {
         // 1. "Bearer " 제거
