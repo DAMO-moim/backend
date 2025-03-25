@@ -100,13 +100,13 @@ public class GroupDto {
         @Schema(description = "모임 최대 인원 수", example = "20")
         private int maxMemberCount;
 
-        @Schema(description = "모임 최대 인원 수", example = "20")
+        @Schema(description = "성별조건", example = "MAN")
         private Group.GroupGender gender;
 
-        @Schema(description = "최소년생", example = "1750")
+        @Schema(description = "최소년생 조건", example = "1990")
         private String minBirth;
 
-        @Schema(description = "최대년생", example = "2200")
+        @Schema(description = "최대년생 조건", example = "2010")
         private String maxBirth;
 
         @Schema(description = "서브 카테고리 이름", example = "바둑")
