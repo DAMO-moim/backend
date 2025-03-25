@@ -349,7 +349,7 @@ public class GroupService {
         }
     }
 
-    // 주어진 회원이 해당 모임의 모임장(GroupLeader)인지 검증
+    // 주어진 회원이 해당 모임의 모임장(GroupLeader)인지 검증 -> 너무 재사용성이 없음 isGroupLeader 리팩토링 예정
     public void validateGroupLeader(Group group, long memberId) {
         GroupMember groupMember = groupMemberRepository.findByGroupAndMember_MemberId(group, memberId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND_IN_GROUP));
@@ -365,6 +365,13 @@ public class GroupService {
         if (!isMember) {
             throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_IN_GROUP);
         }
+    }
+
+    // 주어진 회원이 해당 모임의 모임장인지 검증
+    public boolean isGroupLeader(Group group, long memberId) {
+        return groupMemberRepository.findByGroupAndMember_MemberId(group, memberId)
+                .map(gm -> gm.getGroupRoles() == GroupMember.GroupRoles.GROUP_LEADER)
+                .orElse(false);
     }
 
     // 각 카테고리 별 모임 생성 제한(3개) 메서드
