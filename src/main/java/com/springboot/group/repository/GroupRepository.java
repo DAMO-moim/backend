@@ -11,7 +11,12 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 public interface GroupRepository extends JpaRepository<Group, Long> {
-    Optional<Group> findByGroupName(String groupName);
+    //Optional<Group> findByGroupName(String groupName);
+    //대소문자까지 구분해서 모임명 중복을 방지
+    @Query("SELECT COUNT(g) > 0 FROM Group g " +
+            "WHERE LOWER(REPLACE(g.groupName, ' ', '')) = LOWER(REPLACE(:groupName, ' ', ''))")
+    boolean existsByNormalizedGroupName(@Param("groupName") String groupName);
+
     @Query("SELECT g FROM Group g JOIN g.groupMembers gm WHERE gm.member.memberId = :memberId")
     Page<Group> findAllByMemberId(@Param("memberId") long memberId, Pageable pageable);
 
