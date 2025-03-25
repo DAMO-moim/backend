@@ -53,17 +53,22 @@ public class MemberService {
         //중복 이메일 여부 확인
         verifyExistsEmail(member.getEmail());
 
+        //중복 이름 여부 확인
+
         //카테고리 존재 여부 확인
         member.getMemberCategories().stream()
                 .forEach(memberCategory ->
                         categoryService.findVerifiedCategory(memberCategory.getCategory().getCategoryId()));
         List<MemberCategory> memberCategories = member.getMemberCategories();
+
         //카테고리 중복 체크
         validateNoDuplicateCategories(memberCategories);
+
         //카테고리 우선순위 부여
         for(int i = 0; i < memberCategories.size(); i++){
             memberCategories.get(i).setPriority(i+1);
         }
+
         String encryptedPassword = passwordEncoder.encode(member.getPassword());
         member.setPassword(encryptedPassword);
 

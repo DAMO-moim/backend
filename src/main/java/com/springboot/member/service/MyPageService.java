@@ -54,12 +54,12 @@ public class MyPageService {
                 Page<GroupMember> groupMembers = groupService.findGroupsByRole(
                         findMember, GroupMember.GroupRoles.GROUP_LEADER, pageable);
                 return groupMembers.map(gm ->
-                        myPageMapper.groupToGroupsResponse(gm.getGroup(), true));
+                        myPageMapper.groupToGroupsResponse(gm.getGroup(), findMember));
             } else {
                 // 전체 모임
                 Page<Group> groups = groupService.findGroupsByMember(findMember, pageable);
                 return groups.map(group ->
-                        myPageMapper.groupToGroupsResponse(group, false));
+                        myPageMapper.groupToGroupsResponse(group, findMember));
             }
         } else {
             if (leaderOnly) {
@@ -67,13 +67,13 @@ public class MyPageService {
                 Page<GroupMember> groupMembers = groupService.findGroupsByCategoryAndRole(
                         findMember, category, GroupMember.GroupRoles.GROUP_LEADER, pageable);
                 return groupMembers.map(gm ->
-                        myPageMapper.groupToGroupsResponse(gm.getGroup(), true));
+                        myPageMapper.groupToGroupsResponse(gm.getGroup(), findMember));
             } else {
                 // 특정 카테고리 + 내가 속한 모든 모임
                 Page<GroupMember> groupMembers = groupService.findGroupsByCategory(findMember, category, pageable);
                 return groupMembers.map(gm ->
                         myPageMapper.groupToGroupsResponse(gm.getGroup(),
-                                gm.getGroupRoles() == GroupMember.GroupRoles.GROUP_LEADER));
+                                findMember));
             }
         }
     }
