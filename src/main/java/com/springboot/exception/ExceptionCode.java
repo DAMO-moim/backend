@@ -36,7 +36,12 @@ public enum ExceptionCode {
     EXCEED_CATEGORY_GROUP_CREATION_LIMIT(400, "해당 카테고리에서는 최대 3개의 모임까지만 생성할 수 있습니다."),
     EXCEED_GROUP_JOIN_LIMIT(400, "최대 10개의 모임까지 가입할 수 있습니다."),
     NO_MEMBER_TO_DELEGATE(409, "모임에 위임할 수 있는 다른 멤버가 존재하지 않습니다."),
-    IMAGE_REQUIRED(400, "아직 이미지를 업로드 하지 않았습니다.");
+    IMAGE_REQUIRED(400, "아직 이미지를 업로드 하지 않았습니다."),
+    SCHEDULE_START_TIME_PAST(400, "일정 시작 시간은 현재 시간 이후여야 합니다."),
+    SCHEDULE_START_AFTER_END(400, "일정 시작 시간은 종료 시간보다 빨라야 합니다."),
+    RECURRING_SCHEDULE_TOO_SHORT(400, "정기 일정은 최소 7일 이상의 기간이어야 합니다."),
+    INVALID_SCHEDULE_CAPACITY(400,"일정 인원 수는 1명 이상이고 모임 최대 인원 이하이어야 합니다."),
+    INVALID_SCHEDULE_DAYOFWEEK(400, "정기 일정에는 최소 1일 이상의 요일이 지정되어야 합니다.");
 
 
 
