@@ -174,6 +174,12 @@ public class GroupController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "특정 모임의 회원 리스트 조회", description = "특정 모임에 가입한 회원들을 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "조회 성공"),
+            @ApiResponse(responseCode = "401", description = "모임원만 조회할 수 있습니다."),
+            @ApiResponse(responseCode = "404", description = "회원 정보를 찾을 수 없다.")
+    })
     @GetMapping("/{group-id}/memberlist")
     public ResponseEntity memberListGroup(@PathVariable("group-id") long groupId,
                                           @AuthenticationPrincipal Member authenticattedMember,
