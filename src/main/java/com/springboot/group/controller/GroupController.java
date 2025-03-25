@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -50,7 +51,7 @@ public class GroupController {
             @ApiResponse(responseCode = "401", description = "권한 없음"),
             @ApiResponse(responseCode = "400", description = "요청이 잘못되었음")
     })
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity postGroup(@RequestPart @Valid GroupDto.Post groupPostDto,
                                     @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember,
                                     @RequestPart(required = false) MultipartFile groupImage) {

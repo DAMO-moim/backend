@@ -47,8 +47,8 @@ public class GroupDto {
         @Schema(description = "최대년생", example = "2500")
         private String maxBirth;
 
-        @Parameter(description = "서브카테고리 ID", example = "1")
-        private Long subCategoryId;
+        @Schema(description = "서브카테고리 ID", example = "1")
+        private long subCategoryId;
 
         @Schema(description = "태그들 이름 목록", example = "[{\"tagName\": \"INFP\"}, {\"tagName\": \"화목\"}]")
         private List<TagNameDto> tags;

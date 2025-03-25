@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -45,7 +46,7 @@ public class BoardController {
             @ApiResponse(responseCode = "400", description = "Board Validation failed")
     })
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity postBoard(@Valid @RequestPart BoardDto.Post boardPostDto,
                                     @RequestPart(required = false) MultipartFile boardImage,
                                     @PathVariable("group-id") Long groupId,
