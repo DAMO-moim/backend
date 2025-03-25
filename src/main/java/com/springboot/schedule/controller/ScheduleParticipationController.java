@@ -42,6 +42,12 @@ public class ScheduleParticipationController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(summary = "모임 일정 취소", description = "참여했던 모임 일정을 취소합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "모임 일정 참여 취소 성공"),
+            @ApiResponse(responseCode = "404", description = "가입되지 않은 회원입니다."),
+            @ApiResponse(responseCode = "400", description = "참여중이 아닌 회원입니다.")
+    })
     @DeleteMapping("/{schedule-id}/participation")
     public ResponseEntity deleteParticipationSchedule(@PathVariable("schedule-id") long scheduleId,
                                                       @Parameter(hidden = true) @AuthenticationPrincipal Member member) {

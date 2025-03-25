@@ -66,7 +66,7 @@ public class ScheduleDto {
     @AllArgsConstructor
     @Builder
     public static class Patch {
-        @Setter
+        @Schema(description = "스케줄 ID", example = "1")
         private Long scheduleId;
 
         @Schema(description = "일정 이름", example = "스케줄명")
@@ -124,17 +124,32 @@ public class ScheduleDto {
     @AllArgsConstructor
     @Builder
     public static class ScheduleOfGroupResponse {
+        @Schema(description = "일정 ID", example = "1")
         private long scheduleId;
+        @Schema(description = "일정 이름", example = "스케줄명")
         private String scheduleName;
-        private LocalDate startDate;
-        private LocalTime startTime;
 
+       @Schema(description = "일정 시작 기간", example = "2025.03.24")
+        private LocalDate startDate;
+        @Schema(description = "일정 시작 시간", example = "12:00")
+        private LocalTime startTime;
+        @Schema(description = "일정 끝 기간", example = "2025.03.29")
         private LocalDate endDate;
+        @Schema(description = "일정 끝 시간", example = "16:00")
         private LocalTime endTime;
+
+        @Schema(description = "주소", example = "서울시 강남구 중앙학원")
         private String address;
+        @Schema(description = "상세 주소", example = "101동 101호")
         private String subAddress;
+
+        @Schema(description = "일정 설정 상태", example = "단기 일정")
         private Schedule.ScheduleStatus scheduleStatus;
+        @Schema(description = "일정 상태", example = "등록중")
         private Schedule.ScheduleState state;
+        @Schema(description = "모임 멤버 목록",
+                example = "[{\"memberId\": 1, \"name\": \"홍길동\", \"Image\": \"https://example.com/profiles/alice.jpg\"}, " +
+                        "{\"memberId\": 2, \"name\": \"김철수\", \"Image\": \"https://example.com/profiles/bob.jpg\"}]")
         private List<MemberDto.MemberOfGroupResponse> members;
     }
 }
