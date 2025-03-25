@@ -294,10 +294,12 @@ public class GroupService {
     }
 
 
-    // 모임이 이미 존재하는지 검증하는 메서드
+    // 모임명이 이미 존재하는지 검증하는 메서드
     public void isGroupNameExists(String groupName) {
-        Optional<Group> group = groupRepository.findByGroupName(groupName);
-        if (group.isPresent())
+        // 공백 제거 (모든 공백 제거: 중간, 앞뒤 포함)
+        String normalizedName = groupName.replaceAll("\\s+", "");
+
+        if (groupRepository.existsByNormalizedGroupName(groupName))
             throw new BusinessLogicException(ExceptionCode.GROUP_EXISTS);
     }
     // 모임ID를 기준으로 모임 조회 후 있다면 그 모임을 가져오는 메서드
