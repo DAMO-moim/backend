@@ -45,6 +45,7 @@ public class ScheduleParticipationController {
     @DeleteMapping("/{schedule-id}/participation")
     public ResponseEntity deleteParticipationSchedule(@PathVariable("schedule-id") long scheduleId,
                                                       @Parameter(hidden = true) @AuthenticationPrincipal Member member) {
+        scheduleService.joinCancelSchedule(member.getMemberId(), scheduleId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
