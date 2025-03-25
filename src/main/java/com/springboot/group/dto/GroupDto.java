@@ -17,6 +17,7 @@ public class GroupDto {
     public static class Post {
         @Schema(description = "모임명", example = "바둑 아마추어 5단이상 노장모임")
         @NotBlank(message = "모임명은 공백이 아니어야 합니다.")
+        @Pattern(regexp = "^(?!\\s).*?(?<!\\s)$", message = "모임명은 앞뒤 공백이 없어야 합니다.")
         @Size(min = 1, max = 20, message = "모임명은 1자 이상 20자 이내여야 합니다.")
         @Pattern(
                 regexp = "^[가-힣a-zA-Z0-9 ]+$",
