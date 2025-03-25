@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -33,23 +34,35 @@ public class Schedule {
     private LocalDateTime endSchedule;
 
     @Column(nullable = false)
-    private String scheduleAddress;
+    private String address;
 
     @Column(nullable = false)
-    private String scheduleSubAddress;
+    private String subAddress;
+
+    @Column(nullable = false)
+    private int maxMemberCount;
 
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;
 
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "schedule_days_of_week", joinColumns = @JoinColumn(name = "schedule_id"))
+    @Column(name = "day_of_week")
+    @Enumerated(EnumType.STRING)
+    private List<DayOfWeek> daysOfWeek;
+
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.PERSIST)
     private List<MemberSchedule> memberSchedules;
 
-    private ScheduleStatus scheduleStatus = ScheduleStatus.SCHEDULE_YES;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ScheduleStatus scheduleStatus = ScheduleStatus.SINGLE;
 
     public enum ScheduleStatus {
-        SCHEDULE_YES("참여 가능 상태"),
-        SCHEDULE_NO("참여 불가 상태");
+        SINGLE("단일 일정"),
+        CONTINUOUS("연속 일정"),
+        RECURRING("정기 일정");
 
         @Getter
         private String status;

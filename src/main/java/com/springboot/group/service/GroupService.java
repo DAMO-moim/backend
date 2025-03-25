@@ -8,6 +8,7 @@ import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
 import com.springboot.group.dto.GroupDto;
 import com.springboot.file.Service.StorageService;
+import com.springboot.group.dto.GroupMemberResponseDto;
 import com.springboot.group.dto.MyGroupResponseDto;
 import com.springboot.group.entity.Group;
 import com.springboot.group.entity.GroupMember;
@@ -32,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class GroupService {
@@ -143,6 +145,8 @@ public class GroupService {
 
         // (3) 모임 최대/최소 인원 수 검증 (2~100명)
         if (group.getMaxMemberCount() > 0) {
+            // 현재 가입된 인원보다 작게 수정 못하도록 검증
+            validateMaxMemberCountUpdate(existingGroup, group.getMaxMemberCount());
             validateMemberCount(group.getMaxMemberCount());
             existingGroup.setMaxMemberCount(group.getMaxMemberCount());
         }
@@ -293,6 +297,32 @@ public class GroupService {
         groupMemberRepository.delete(groupMember); // 🔥 이제 정확히 삭제됨
     }
 
+    @Transactional(readOnly = true)
+    public List<GroupMemberResponseDto> memberListGroup(long groupId, long memberId, String keyword) {
+        // (1) 모임 & 회원 검증
+        Group group = findVerifiedGroup(groupId);
+        memberService.findVerifiedMember(memberId);
+
+        // (2) 그룹 멤버 스트림 가져오기
+        Stream<GroupMember> stream = group.getGroupMembers().stream();
+
+        // (3) 키워드가 있을 경우 이름 필터 (대소문자 무시)
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            String processedKeyword = keyword.trim().toLowerCase();
+            stream = stream.filter(gm ->
+                    gm.getMember().getName().toLowerCase().contains(processedKeyword)
+            );
+        }
+
+        // (4) 변환 후 리스트 반환
+        return stream.map(gm -> GroupMemberResponseDto.builder()
+                        .memberId(gm.getMember().getMemberId())
+                        .name(gm.getMember().getName())
+                        .image(gm.getMember().getImage()) // 이미지 필드가 있다고 가정
+                        .build())
+                .collect(Collectors.toList());
+    }
+
 
     // 모임명이 이미 존재하는지 검증하는 메서드
     public void isGroupNameExists(String groupName) {
@@ -376,10 +406,16 @@ public class GroupService {
         if (members.isEmpty()) {
             throw new BusinessLogicException(ExceptionCode.NO_MEMBER_TO_DELEGATE);
         }
-
         GroupMember newLeader = members.get(0);
         newLeader.setGroupRoles(GroupMember.GroupRoles.GROUP_LEADER);
     }
+
+    // 현재 가입한 인원보다 작은 최대 인원으로 수정하는 거 막는 검증 메서드
+    public void validateMaxMemberCountUpdate(Group group, int newMaxCount) {
+        int currentMemberCount = group.getGroupMembers().size();
+        if (newMaxCount < currentMemberCount) {
+            throw new BusinessLogicException(ExceptionCode.INVALID_GROUP_CAPACITY_UPDATE);
+        }
 
     //사용자의 모임 리스트
     @Transactional(readOnly = true)

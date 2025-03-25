@@ -38,6 +38,13 @@ public enum ExceptionCode {
     EXCEED_GROUP_JOIN_LIMIT(400, "최대 10개의 모임까지 가입할 수 있습니다."),
     NO_MEMBER_TO_DELEGATE(409, "모임에 위임할 수 있는 다른 멤버가 존재하지 않습니다."),
     IMAGE_REQUIRED(400, "아직 이미지를 업로드 하지 않았습니다."),
+    SCHEDULE_START_TIME_PAST(400, "일정 시작 시간은 현재 시간 이후여야 합니다."),
+    SCHEDULE_START_AFTER_END(400, "일정 시작 시간은 종료 시간보다 빨라야 합니다."),
+    RECURRING_SCHEDULE_TOO_SHORT(400, "정기 일정은 최소 7일 이상의 기간이어야 합니다."),
+    INVALID_SCHEDULE_CAPACITY(400,"일정 인원 수는 1명 이상이고 모임 최대 인원 이하이어야 합니다."),
+    INVALID_SCHEDULE_COUNT(400,"일정 최대 인원 수는 현재 참여중인 인원수보다 낮을 수 없습니다."),
+    INVALID_SCHEDULE_DAYOFWEEK(400, "정기 일정에는 최소 1일 이상의 요일이 지정되어야 합니다."),
+    INVALID_GROUP_CAPACITY_UPDATE(400, "현재 가입된 인원보다 작은 최대 인원으로 수정할 수 없습니다.");
     INVALID_REFRESH_TOKEN(400, "유효하지 않은 리플래시 토큰입니다."),
     NOT_INTERESTED_CATEGORY(400, "해당 카테고리에 속하지 않습니다.");
 

@@ -3,8 +3,10 @@ package com.springboot.group.controller;
 import com.springboot.dto.MultiResponseDto;
 import com.springboot.dto.SingleResponseDto;
 import com.springboot.group.dto.GroupDto;
+import com.springboot.group.dto.GroupMemberResponseDto;
 import com.springboot.group.dto.MyGroupResponseDto;
 import com.springboot.group.entity.Group;
+import com.springboot.group.entity.GroupMember;
 import com.springboot.group.mapper.GroupMapper;
 import com.springboot.group.service.GroupService;
 import com.springboot.member.entity.Member;
@@ -170,5 +172,13 @@ public class GroupController {
                                      @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedMember) {
         groupService.leaveGroup(groupId, authenticatedMember.getMemberId());
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{group-id}/memberlist")
+    public ResponseEntity memberListGroup(@PathVariable("group-id") long groupId,
+                                          @AuthenticationPrincipal Member authenticattedMember,
+                                          @RequestParam(value = "keyword", required = false) String keyword) {
+        List<GroupMemberResponseDto> response  = groupService.memberListGroup(groupId, authenticattedMember.getMemberId(), keyword);
+        return ResponseEntity.ok(new SingleResponseDto<>(response));
     }
 }
