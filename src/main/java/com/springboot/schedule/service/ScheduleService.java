@@ -32,9 +32,16 @@ public class ScheduleService {
         // ✅ (2) 모임장 여부 확인
         groupService.validateGroupLeader(group, memberId);
 
+        // 시작 시간이 현재보다 이전인지 검증
         validateNotPastStartTime(schedule.getStartSchedule());
+
+        // 시작 시간이 종료 시간보다 이후인지 검증
         validateStartBeforeEnd(schedule.getStartSchedule(), schedule.getEndSchedule());
+
+        // 일정 최대 인원 수가 1 이상이고, 모임 최대 인원 이하인지 검증
         validateScheduleCapacity(schedule.getMaxMemberCount(), group.getMaxMemberCount());
+
+        // 정기 일정일 경우, 최소 7일 이상의 기간인지 검증
         validateRecurringScheduleLength(schedule);
 
         // ✅ (3) 일정 상태별 처리
