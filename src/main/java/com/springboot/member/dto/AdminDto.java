@@ -11,6 +11,7 @@ public class AdminDto {
     @AllArgsConstructor
     @Getter
     public static class MemberResponse{
+        @Schema(description = "사용자 ID", example = "1")
         private long memberId;
 
         @Schema(description = "사용자 이메일", example = "example@gmail.com")

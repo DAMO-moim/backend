@@ -80,6 +80,7 @@ public class MemberDto {
     @NoArgsConstructor
     @Builder
     public static class FindIdResponse{
+        @Schema(description = "이메일", example = "email1@google.com")
         private String email;
     }
 
