@@ -1,8 +1,10 @@
 package com.springboot.group.mapper;
 
 import com.springboot.group.dto.GroupDto;
+import com.springboot.group.dto.GroupMemberResponseDto;
 import com.springboot.group.dto.MyGroupResponseDto;
 import com.springboot.group.entity.Group;
+import com.springboot.group.entity.GroupMember;
 import com.springboot.group.entity.GroupTag;
 import com.springboot.member.dto.MemberDto;
 import com.springboot.tag.dto.GroupTagResponseDto;
@@ -77,4 +79,19 @@ public interface GroupMapper {
                 .groups(groupInfos)
                 .build();
     }
+
+    default GroupMemberResponseDto groupMemberToResponse(GroupMember groupMember) {
+        return GroupMemberResponseDto.builder()
+                .memberId(groupMember.getMember().getMemberId())
+                .name(groupMember.getMember().getName())
+                .image(groupMember.getMember().getImage())  // image 필드 있는 경우
+                .build();
+    }
+
+    default List<GroupMemberResponseDto> groupMembersToResponses(List<GroupMember> groupMembers) {
+        return groupMembers.stream()
+                .map(this::groupMemberToResponse)
+                .collect(Collectors.toList());
+    }
+
 }
