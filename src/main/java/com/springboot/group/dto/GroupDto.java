@@ -82,7 +82,7 @@ public class GroupDto {
         @Parameter(description = "그룹 ID", example = "1")
         private Long groupId;
 
-        @Schema(description = "모임 프로필 이미지", example = "/group/profile")
+        @Schema(description = "모임 프로필 이미지", example = "/image/profile")
         private String image;
 
         @Schema(description = "모임명", example = "바둑 아마추어 5단이상 노장모임")
@@ -109,7 +109,7 @@ public class GroupDto {
         @Schema(description = "최대년생", example = "2200")
         private String maxBirth;
 
-        @Schema(description = "서브 카테고리 이름", example = "축구")
+        @Schema(description = "서브 카테고리 이름", example = "바둑")
         private String subCategoryName;
 
         @Schema(description = "모임 멤버 목록",
