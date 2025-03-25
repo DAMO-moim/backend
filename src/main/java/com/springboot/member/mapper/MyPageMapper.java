@@ -1,6 +1,7 @@
 package com.springboot.member.mapper;
 
 import com.springboot.board.entity.Board;
+import com.springboot.group.entity.Group;
 import com.springboot.member.dto.MyPageDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -24,5 +25,17 @@ public interface MyPageMapper {
     //본문의 내용이 길어지면 짜름
     default String truncate(String content) {
         return content.length() > 80 ? content.substring(0, 80) + "..." : content;
+    }
+
+    default MyPageDto.GroupsResponse groupToGroupsResponse(Group group, boolean isLeader){
+        return new MyPageDto.GroupsResponse(
+                group.getGroupId(),
+                group.getGroupName(),
+                group.getIntroduction(),
+                group.getGroupMembers().size(),
+                group.getMaxMemberCount(),
+                group.getImage(),
+                isLeader
+        );
     }
 }
