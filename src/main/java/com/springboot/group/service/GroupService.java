@@ -7,6 +7,7 @@ import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
 import com.springboot.group.dto.GroupDto;
 import com.springboot.file.Service.StorageService;
+import com.springboot.group.dto.GroupMemberResponseDto;
 import com.springboot.group.dto.MyGroupResponseDto;
 import com.springboot.group.entity.Group;
 import com.springboot.group.entity.GroupMember;
@@ -31,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class GroupService {
@@ -290,6 +292,32 @@ public class GroupService {
         member.getGroupMembers().remove(groupMember);
 
         groupMemberRepository.delete(groupMember); // 🔥 이제 정확히 삭제됨
+    }
+
+    @Transactional(readOnly = true)
+    public List<GroupMemberResponseDto> memberListGroup(long groupId, long memberId, String keyword) {
+        // (1) 모임 & 회원 검증
+        Group group = findVerifiedGroup(groupId);
+        memberService.findVerifiedMember(memberId);
+
+        // (2) 그룹 멤버 스트림 가져오기
+        Stream<GroupMember> stream = group.getGroupMembers().stream();
+
+        // (3) 키워드가 있을 경우 이름 필터 (대소문자 무시)
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            String processedKeyword = keyword.trim().toLowerCase();
+            stream = stream.filter(gm ->
+                    gm.getMember().getName().toLowerCase().contains(processedKeyword)
+            );
+        }
+
+        // (4) 변환 후 리스트 반환
+        return stream.map(gm -> GroupMemberResponseDto.builder()
+                        .memberId(gm.getMember().getMemberId())
+                        .name(gm.getMember().getName())
+                        .image(gm.getMember().getImage()) // 이미지 필드가 있다고 가정
+                        .build())
+                .collect(Collectors.toList());
     }
 
 
