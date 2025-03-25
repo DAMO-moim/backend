@@ -75,6 +75,11 @@ public class ScheduleService {
         // 모임 일정 검증
         Schedule findSchedule = findVerifiedMember(schedule.getScheduleId());
 
+        // 모임 일정이 등록중 상태인지 검증 ( 종료 상태면 수정이 안되어야 한다. )
+        if(findSchedule.getScheduleState().equals(Schedule.ScheduleState.SCHEDULE_COMPLETED)){
+            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+        }
+
         Optional.ofNullable(schedule.getScheduleName())
                 .ifPresent(name -> findSchedule.setScheduleName(name));
         Optional.ofNullable(schedule.getScheduleContent())
