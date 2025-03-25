@@ -13,11 +13,11 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+//@Getter
+//@Setter
+//@NoArgsConstructor
+//@AllArgsConstructor
+//@Builder
 public class ScheduleDto {
 
     @Getter
@@ -35,7 +35,7 @@ public class ScheduleDto {
 
         @NotNull
         @Schema(description = "당일 일정", example = "SINGLE")
-        private Schedule.ScheduleStatus status; // SINGLE, CONTINUOUS, RECURRING
+        private Schedule.ScheduleStatus scheduleStatus; // SINGLE, CONTINUOUS, RECURRING
 
         @NotNull
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
