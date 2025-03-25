@@ -49,7 +49,8 @@ public enum ExceptionCode {
     NOT_INTERESTED_CATEGORY(400, "해당 카테고리에 속하지 않습니다."),
     SCHEDULE_ALREADY_COMPLETED(400, "이 모임일정은 이미 종료되었습니다."),
     MEMBER_ALREADY_JOINED_SCHEDULE(400, "이미 해당 일정에 참여하고 있는 회원입니다."),
-    MEMBER_NOT_JOINED_SCHEDULE(400, "해당 일정에 참여하지 않은 회원입니다.");
+    MEMBER_NOT_JOINED_SCHEDULE(400, "해당 일정에 참여하지 않은 회원입니다."),
+    LEADER_CANNOT_CANCEL_SCHEDULE(400, "모임장은 일정을 취소할 수 없습니다.");
 
 
 

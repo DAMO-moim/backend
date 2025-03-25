@@ -196,6 +196,11 @@ public class ScheduleService {
         // 모임 검증 ( 해당 모임 일정의 모임이 실존하는지 )
         Group group = groupService.findVerifiedGroup(schedule.getGroup().getGroupId());
 
+        // 만약 모임장이라면 취소할 수 없어야 한다. (모임장이면 예외처리)
+        if(groupService.isGroupLeader(group, member.getMemberId())){
+            throw new BusinessLogicException(ExceptionCode.LEADER_CANNOT_CANCEL_SCHEDULE);
+        }
+
         // 해당 모임에 가입된 회원인지 검증(가입되지 않았을 경우 예외처리)
         if (!groupService.verifyGroupMember(member, group)) {
             throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND_IN_GROUP);
