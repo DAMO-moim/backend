@@ -12,6 +12,7 @@ import com.springboot.auth.utils.MemberDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -65,6 +66,37 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
                         .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        //Admin
+                        .antMatchers("/admin/**").hasRole("ADMIN")
+                        //Memeber
+                        .antMatchers(HttpMethod.POST, "/members").permitAll()
+                        .antMatchers(HttpMethod.GET, "/members").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.GET,"/members/**").hasAnyRole("USER", "ADMIN")
+                        .antMatchers(HttpMethod.PATCH, "/members/**").hasRole("USER")
+                        .antMatchers(HttpMethod.DELETE, "/members").hasAnyRole("USER")
+                        .antMatchers(HttpMethod.DELETE, "/members/**").hasAnyRole("USER", "ADMIN")
+                        //Group
+                        .antMatchers(HttpMethod.POST, "/groups").hasRole("USER")
+                        .antMatchers(HttpMethod.GET, "/groups").hasRole("USER")
+                        .antMatchers(HttpMethod.GET,"/groups/**").hasAnyRole("USER", "ADMIN")
+                        .antMatchers(HttpMethod.PATCH, "/groups/**").hasRole("USER")
+                        .antMatchers(HttpMethod.DELETE, "/groups/").hasAnyRole("USER")
+                        .antMatchers(HttpMethod.DELETE, "/groups/**").hasAnyRole("USER", "ADMIN")
+                        //Board
+                        .antMatchers(HttpMethod.POST, "/boards").hasRole("USER")
+                        .antMatchers(HttpMethod.GET, "/boards").hasRole("USER")
+                        .antMatchers(HttpMethod.GET,"/boards/**").hasAnyRole("USER", "ADMIN")
+                        .antMatchers(HttpMethod.PATCH, "/boards/**").hasRole("USER")
+                        .antMatchers(HttpMethod.DELETE, "/boards/**").hasAnyRole("USER", "ADMIN")
+                        //Comment
+                        .antMatchers(HttpMethod.POST, "/comments").hasRole("USER")
+                        .antMatchers(HttpMethod.GET, "/boards").hasRole("USER")
+                        .antMatchers(HttpMethod.GET,"/boards/**").hasAnyRole("USER", "ADMIN")
+                        .antMatchers(HttpMethod.PATCH, "/boards/**").hasRole("USER")
+                        .antMatchers(HttpMethod.DELETE, "/boards/**").hasAnyRole("USER", "ADMIN")
+                        //My
+                        .antMatchers("/mypage").hasRole("USER")
+                        .antMatchers("/mypage/**").hasRole("USER")
                         .anyRequest().permitAll()
                 );
         return http.build();
@@ -75,13 +107,15 @@ public class SecurityConfiguration {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-    // (8)
+    // CorsConfigurationSource : CORS 정책 설정
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        //configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:3000"));
+        // 모든 출처에서 통신 허용
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        //configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:3000"));
         //전체 요청 -> 특정 요청 Arrays.asList("http://localhost:3000"));
+        // 지정한 HTTP Method 에 대한 통신 허용
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "PATCH", "DELETE"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         //클라이언트에서 해당 헤더를 사용할 수 있도록 설정한다. ( 설정하지 않으면 아래 헤더만 받음 )

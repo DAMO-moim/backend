@@ -12,6 +12,7 @@ import com.springboot.group.service.GroupService;
 import com.springboot.member.entity.Member;
 import com.springboot.utils.UriCreator;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.data.domain.Page;
@@ -49,7 +50,7 @@ public class GroupController {
     })
     @PostMapping
     public ResponseEntity postGroup(@RequestPart @Valid GroupDto.Post groupPostDto,
-                                    @AuthenticationPrincipal Member authenticatedmember,
+                                    @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember,
                                     @RequestPart(required = false) MultipartFile groupImage) {
         Group group = groupMapper.groupPostToGroup(groupPostDto);
 
@@ -70,7 +71,7 @@ public class GroupController {
     public ResponseEntity patchGroup(@PathVariable("group-id") @Positive long groupId,
                                      @RequestPart @Valid GroupDto.Patch groupPatchDto,
                                      @RequestPart(required = false) MultipartFile groupImage,
-                                     @AuthenticationPrincipal Member authenticatedmember) {
+                                     @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember) {
         groupPatchDto.setGroupId(groupId);
 
         Group group = groupMapper.groupPatchToGroup(groupPatchDto);
@@ -90,7 +91,7 @@ public class GroupController {
     })
     @GetMapping("/{group-id}")
     public ResponseEntity getGroup(@PathVariable("group-id") @Positive long groupId,
-                                   @AuthenticationPrincipal Member authenticatedmember) {
+                                   @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember) {
 
         Group group = groupService.findGroup(groupId, authenticatedmember.getMemberId());
 
@@ -107,7 +108,7 @@ public class GroupController {
     @GetMapping
     public ResponseEntity getGroups(@RequestParam @Positive int page,
                                     @RequestParam @Positive int size,
-                                    @AuthenticationPrincipal Member authenticatedmember) {
+                                    @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember) {
         Page<Group> groupPage = groupService.findGroups(page - 1, size, authenticatedmember.getMemberId());
         List<Group> groups = groupPage.getContent();
 
@@ -124,7 +125,7 @@ public class GroupController {
     })
     @DeleteMapping("/{group-id}")
     public ResponseEntity deleteGroup(@PathVariable("group-id") long groupId,
-                                      @AuthenticationPrincipal Member authenticatedmember) {
+                                      @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember) {
         groupService.deleteGroup(groupId, authenticatedmember.getMemberId());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -137,7 +138,7 @@ public class GroupController {
     })
     @PostMapping("/{group-id}/join")
     public ResponseEntity joinGroup(@PathVariable("group-id") long groupId,
-                                    @AuthenticationPrincipal Member member) {
+                                    @Parameter(hidden = true) @AuthenticationPrincipal Member member) {
         groupService.joinGroup(groupId, member.getMemberId());
         return ResponseEntity.ok().build();
     }
@@ -149,13 +150,13 @@ public class GroupController {
     })
     @PostMapping("/{group-id}/recommend")
     public ResponseEntity toggleRecommend(@PathVariable("group-id") Long groupId,
-                                     @AuthenticationPrincipal Member member) {
+                                          @Parameter(hidden = true) @AuthenticationPrincipal Member member) {
         groupService.toggleRecommend(groupId, member.getMemberId());
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/my/groups")
-    public ResponseEntity getMyGroups(@AuthenticationPrincipal Member authenticatedMember) {
+    public ResponseEntity getMyGroups(@Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedMember) {
         List<MyGroupResponseDto> response = groupService.getMyGroups(authenticatedMember.getMemberId());
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
@@ -168,7 +169,7 @@ public class GroupController {
     })
     @DeleteMapping("/{group-id}/leave")
     public ResponseEntity leaveGroup(@PathVariable("group-id") long groupId,
-                                           @AuthenticationPrincipal Member authenticatedMember) {
+                                     @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedMember) {
         groupService.leaveGroup(groupId, authenticatedMember.getMemberId());
         return ResponseEntity.ok().build();
     }

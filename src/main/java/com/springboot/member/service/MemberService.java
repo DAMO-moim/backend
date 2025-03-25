@@ -1,16 +1,21 @@
 package com.springboot.member.service;
 
 import com.springboot.auth.utils.AuthorityUtils;
+import com.springboot.board.entity.Board;
+import com.springboot.board.service.BoardService;
 import com.springboot.category.service.CategoryService;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
 import com.springboot.file.Service.StorageService;
+import com.springboot.member.dto.AdminDto;
+import com.springboot.member.dto.MyPageDto;
 import com.springboot.member.entity.Member;
 import com.springboot.member.entity.MemberCategory;
 import com.springboot.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -48,17 +53,23 @@ public class MemberService {
         //중복 이메일 여부 확인
         verifyExistsEmail(member.getEmail());
 
+        //중복 이름 여부 확인
+        verifyExistsName(member.getName());
+
         //카테고리 존재 여부 확인
         member.getMemberCategories().stream()
                 .forEach(memberCategory ->
                         categoryService.findVerifiedCategory(memberCategory.getCategory().getCategoryId()));
         List<MemberCategory> memberCategories = member.getMemberCategories();
+
         //카테고리 중복 체크
         validateNoDuplicateCategories(memberCategories);
+
         //카테고리 우선순위 부여
         for(int i = 0; i < memberCategories.size(); i++){
             memberCategories.get(i).setPriority(i+1);
         }
+
         String encryptedPassword = passwordEncoder.encode(member.getPassword());
         member.setPassword(encryptedPassword);
 
@@ -99,6 +110,9 @@ public class MemberService {
         //null처리를 위해서 Optional를 사용한다.
         Optional.ofNullable(member.getName())
                 .ifPresent(name -> findMember.setName(name));
+
+        //중복 이름 여부 확인
+        verifyExistsName(findMember.getName());
 
         return memberRepository.save(findMember);
     }
@@ -150,6 +164,7 @@ public class MemberService {
         memberRepository.save(findMember);
     }
 
+    //멤버의 카테고리 가져오는 메서드
     public List<MemberCategory> findMemberCategroies(long memberId){
         Member member = findVerifiedMember(memberId);
         List<MemberCategory> memberCategories = member.getMemberCategories();
@@ -157,6 +172,7 @@ public class MemberService {
         return memberCategories;
     }
 
+    //이메일 중복 여부 확인 메서드
     public void verifyExistsEmail(String email){
         Optional<Member> member = memberRepository.findByEmail(email);
 
@@ -164,6 +180,15 @@ public class MemberService {
             throw new BusinessLogicException(ExceptionCode.MEMBER_EXISTS);
     }
 
+    //닉네임 중복 여부 확인 메서드
+    public void verifyExistsName(String name){
+        Optional<Member> member = memberRepository.findByName(name);
+
+        if(member.isPresent())
+            throw new BusinessLogicException(ExceptionCode.MEMBER_NAME_EXISTS);
+    }
+
+    //회원가입한 회원인지 확인하는 메서드
     public Member findVerifiedMember(long memberId){
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Member member = optionalMember.orElseThrow(()->

@@ -12,7 +12,10 @@ import com.springboot.member.mapper.MemberMapper;
 import com.springboot.member.mapper.MyPageMapper;
 import com.springboot.member.service.MemberService;
 import com.springboot.member.service.MyPageService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +45,12 @@ public class MyPageController {
         this.myPageService = myPageService;
     }
 
+    //내 정보 조회
+    @Operation(summary = "마이페이지(내 정보 조회)", description = "마이페이지에 필요한 내 정보만 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "마이페이지 내 정보 조회 완료"),
+            @ApiResponse(responseCode = "404", description = "Member not found")
+    })
     @GetMapping
     public ResponseEntity getMyPage(@Parameter(hidden = true) @AuthenticationPrincipal Member member){
         Member findmember = memberService.findVerifiedMember(member.getMemberId());
@@ -51,6 +60,12 @@ public class MyPageController {
     }
 
     //내 게시글 조회
+    @Operation(summary = "마이페이지(내 게시글 조회)", description = "마이페이지에서 내 게시글 조회를 눌렀을 경우 내 게시글 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "마이페이지 내 게시글 조회 완료"),
+            @ApiResponse(responseCode = "404", description = "board not found"),
+            @ApiResponse(responseCode = "404", description = "member not found")
+    })
     @GetMapping("/boards")
     public ResponseEntity getMyBoards(@Parameter(hidden = true) @AuthenticationPrincipal Member member,
                                       @RequestParam(defaultValue = "ALL") String category,
@@ -61,5 +76,25 @@ public class MyPageController {
         List<MyPageDto.BoardsResponse> content = boardPage.getContent();
 
         return ResponseEntity.ok(new MultiResponseDto<>(content, boardPage));
+    }
+
+    //내 모임 조회
+    @Operation(summary = "마이페이지(내 모임 조회)", description = "마이페이지에서 내 모임 조회를 눌렀을 경우 내 모임 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "마이페이지 내 모임 조회 완료"),
+            @ApiResponse(responseCode = "404", description = "board not found"),
+            @ApiResponse(responseCode = "404", description = "member not found")
+    })
+    @GetMapping("/groups")
+    public ResponseEntity getMyGroups(@Parameter(hidden = true) @AuthenticationPrincipal Member member,
+                                      @RequestParam(defaultValue = "ALL") String category,
+                                      @RequestParam(defaultValue = "false") boolean leaderOnly, //true면 모임장인거만 보여야함
+                                      @Positive @RequestParam int page,
+                                      @Positive @RequestParam int size) {
+        Page<MyPageDto.GroupsResponse> groupPage = myPageService.getMyGroups(
+                member.getMemberId(), category, leaderOnly, page - 1 , size);
+        List<MyPageDto.GroupsResponse> content = groupPage.getContent();
+
+        return ResponseEntity.ok(new MultiResponseDto<>(content, groupPage));
     }
 }

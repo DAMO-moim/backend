@@ -9,6 +9,7 @@ import com.springboot.member.entity.MemberCategory;
 import com.springboot.member.mapper.MemberMapper;
 import com.springboot.member.service.MemberService;
 import com.springboot.utils.UriCreator;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -38,6 +39,7 @@ public class MemberController {
         this.mapper = mapper;
     }
 
+    @Operation(summary = "회원 가입", description = "회원 가입을 진행합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "회원 등록 완료"),
             @ApiResponse(responseCode = "404", description = "Member not found")
@@ -51,6 +53,8 @@ public class MemberController {
 
         return ResponseEntity.created(location).build();
     }
+
+    @Operation(summary = "회원 수정", description = "회원 정보를 수정합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 수정 완료"),
             @ApiResponse(responseCode = "404", description = "Member not found")
@@ -64,7 +68,7 @@ public class MemberController {
         return new ResponseEntity<>(new SingleResponseDto<>(mapper.memberToMemberResponse(member)), HttpStatus.OK);
     }
 
-
+    @Operation(summary = "회원 조회", description = "회원 정보를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 조회 완료"),
             @ApiResponse(responseCode = "404", description = "Member not found")
@@ -75,6 +79,11 @@ public class MemberController {
         return new ResponseEntity<>(new SingleResponseDto<>(mapper.memberToMemberResponse(member)), HttpStatus.OK);
     }
 
+    @Operation(summary = "회원 목록 조회", description = "회원 전체 목록을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원 조회 완료"),
+            @ApiResponse(responseCode = "404", description = "Member not found")
+    })
     @GetMapping
     public ResponseEntity getMembers(@Positive @RequestParam int page,
                                      @Positive @RequestParam int size,
@@ -86,6 +95,7 @@ public class MemberController {
                         (mapper.membersToMemberResponses(members),memberPage),HttpStatus.OK);
     }
 
+    @Operation(summary = "회원 탈퇴(자신)", description = "자신(회원)이 탈퇴 합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "회원 삭제 완료"),
             @ApiResponse(responseCode = "404", description = "Member not found")
@@ -99,6 +109,7 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @Operation(summary = "회원 탈퇴(관리자)", description = "관리자가 회원을 탈퇴 시킵니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "회원 삭제 완료"),
             @ApiResponse(responseCode = "404", description = "Member not found")
@@ -112,6 +123,11 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @Operation(summary = "자신의 카테고리 수정", description = "자신의 카테고리 정보를 수정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "카테고리 수정 완료"),
+            @ApiResponse(responseCode = "404", description = "Member not found")
+    })
     //사용자의 카테고리 수정
     @PatchMapping("/categories")
     public ResponseEntity patchMemberCategory( @RequestBody @Valid MemberCategoryDto.Patch patchDto,
@@ -122,6 +138,7 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(summary = "자신의 카테고리 조회", description = "자신의 카테고리 정보를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "해당 회원의 카테고리 조회 완료"),
             @ApiResponse(responseCode = "404", description = "Member not found"),
@@ -137,6 +154,7 @@ public class MemberController {
         return new ResponseEntity<>(new SingleResponseDto<>(responseList), HttpStatus.OK);
     }
 
+    @Operation(summary = "아이디(이메일) 찾기", description = "잃어버린 이메일을 찾습니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이메일을 찾았습니다."),
             @ApiResponse(responseCode = "404", description = "Member not found")
@@ -150,9 +168,14 @@ public class MemberController {
         return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
+    @Operation(summary = "프로필 이미지 등록(수정)", description = "자신의 프로필 이미지를 등록합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "프로필 이미지 등록(수정)완료"),
+            @ApiResponse(responseCode = "404", description = "Member not found")
+    })
     //프로필 이미지 저장(수정) 메서드
     @PatchMapping("/image")
-    public ResponseEntity fileUpload(@RequestPart(required = false)MultipartFile profileImage,
+    public ResponseEntity fileUpload(@Parameter(hidden = true) @RequestPart(required = false)MultipartFile profileImage,
                                      @AuthenticationPrincipal Member member){
 
         memberService.uploadImage(member, profileImage);

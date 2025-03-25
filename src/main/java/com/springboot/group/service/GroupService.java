@@ -1,5 +1,6 @@
 package com.springboot.group.service;
 
+import com.springboot.board.entity.Board;
 import com.springboot.category.entity.Category;
 import com.springboot.category.entity.SubCategory;
 import com.springboot.category.repository.SubCategoryRepository;
@@ -323,10 +324,12 @@ public class GroupService {
     }
 
 
-    // 모임이 이미 존재하는지 검증하는 메서드
+    // 모임명이 이미 존재하는지 검증하는 메서드
     public void isGroupNameExists(String groupName) {
-        Optional<Group> group = groupRepository.findByGroupName(groupName);
-        if (group.isPresent())
+        // 공백 제거 (모든 공백 제거: 중간, 앞뒤 포함)
+        String normalizedName = groupName.replaceAll("\\s+", "");
+
+        if (groupRepository.existsByNormalizedGroupName(groupName))
             throw new BusinessLogicException(ExceptionCode.GROUP_EXISTS);
     }
     // 모임ID를 기준으로 모임 조회 후 있다면 그 모임을 가져오는 메서드
@@ -362,6 +365,14 @@ public class GroupService {
 
     // 각 카테고리 별 모임 생성 제한(3개) 메서드
     private void validateGroupCreationLimitPerCategory(Member member, Long categoryId) {
+        // 1. 해당 멤버가 카테고리를 가지고 있는지 검증
+        boolean isInterestedCategory = member.getMemberCategories().stream()
+                .anyMatch(mc -> mc.getCategory().getCategoryId().equals(categoryId));
+
+        if (!isInterestedCategory) {
+            throw new BusinessLogicException(ExceptionCode.NOT_INTERESTED_CATEGORY);
+        }
+
         List<GroupMember> groupLeaders = groupMemberRepository.findByMemberAndGroupRoles(member, GroupMember.GroupRoles.GROUP_LEADER);
 
         long countInCategory = groupLeaders.stream()
@@ -405,5 +416,27 @@ public class GroupService {
         if (newMaxCount < currentMemberCount) {
             throw new BusinessLogicException(ExceptionCode.INVALID_GROUP_CAPACITY_UPDATE);
         }
+
+    //사용자의 모임 리스트
+    @Transactional(readOnly = true)
+    public Page<Group> findGroupsByMember(Member member, Pageable pageable) {
+        return groupRepository.findAllByMember(member, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<GroupMember> findGroupsByRole(Member member, GroupMember.GroupRoles role, Pageable pageable) {
+        return groupMemberRepository.findByMemberAndGroupRoles(member, role, pageable);
+    }
+
+    //사용자의 카테고리별 모임 리스트
+    @Transactional(readOnly = true)
+    public Page<GroupMember> findGroupsByCategory(Member member, String categoryName, Pageable pageable) {
+        return groupMemberRepository.findAllByMemberAndCategoryName(member, categoryName, pageable);
+    }
+
+    //사용자의 카테고리별 모임 리스트(모임장여부)
+    @Transactional(readOnly = true)
+    public Page<GroupMember> findGroupsByCategoryAndRole(Member member, String categoryName, GroupMember.GroupRoles roles, Pageable pageable){
+        return groupMemberRepository.findByMemberAndCategoryNameAndGroupRoles(member,categoryName, roles, pageable);
     }
 }
