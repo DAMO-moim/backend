@@ -408,6 +408,4 @@ public class GroupService {
             throw new BusinessLogicException(ExceptionCode.INVALID_GROUP_CAPACITY_UPDATE);
         }
     }
-
-
 }
