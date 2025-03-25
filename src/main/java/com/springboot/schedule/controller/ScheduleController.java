@@ -46,7 +46,7 @@ public class ScheduleController {
     })
     @PostMapping("/schedules")
     public ResponseEntity postSchedule(@RequestBody ScheduleDto.Post schedulePostDto,
-                                       @AuthenticationPrincipal Member authenticatedmember,
+                                       @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember,
                                        @PathVariable("group-id") @Positive long groupId) {
         Schedule schedule = scheduleMapper.schedulePostToSchedule(schedulePostDto);
 
@@ -66,7 +66,7 @@ public class ScheduleController {
 
     @PatchMapping("/schedules/{schedule-id}")
     public ResponseEntity patchSchedule(@RequestBody ScheduleDto.Patch schedulePatchDto,
-                                       @AuthenticationPrincipal Member authenticatedmember,
+                                        @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember,
                                        @PathVariable("group-id") @Positive long groupId,
                                        @PathVariable("schedule-id") @Positive long scheduleId) {
         schedulePatchDto.setScheduleId(scheduleId);
@@ -85,7 +85,7 @@ public class ScheduleController {
             @ApiResponse(responseCode = "404", description = "모임 일정을 찾을 수 없습니다.")
     })
     @GetMapping("/schedules/{schedule-id}")
-    public ResponseEntity getSchedule(@AuthenticationPrincipal Member authenticatedmember,
+    public ResponseEntity getSchedule(@Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember,
                                       @PathVariable("group-id") @Positive long groupId,
                                       @PathVariable("schedule-id") @Positive long scheduleId) {
         Schedule schedule = scheduleService.findSchedule(authenticatedmember.getMemberId(), groupId, scheduleId);
@@ -103,7 +103,7 @@ public class ScheduleController {
     @GetMapping("/schedules")
     public ResponseEntity getSchedules(@RequestParam @Positive int page,
                                        @RequestParam @Positive int size,
-                                       @AuthenticationPrincipal Member authenticatedmember) {
+                                       @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember) {
         Page<Schedule> schedulePage = scheduleService.findSchedules(page -1, size, authenticatedmember.getMemberId());
 
         List<Schedule> schedules = schedulePage.getContent();
@@ -119,7 +119,7 @@ public class ScheduleController {
             @ApiResponse(responseCode = "404", description = "모임 일정이 존재하지 않음")
     })
     @DeleteMapping("/{group-id}/schedules/{schedule-id}")
-    public ResponseEntity deleteSchedule(@AuthenticationPrincipal Member authenticatedmember,
+    public ResponseEntity deleteSchedule(@Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember,
                                           @PathVariable("group-id") @Positive long groupId,
                                           @PathVariable("schedule-id") @Positive long scheduleId) {
 
