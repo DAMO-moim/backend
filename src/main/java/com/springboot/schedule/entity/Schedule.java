@@ -10,6 +10,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -50,10 +51,10 @@ public class Schedule {
     @CollectionTable(name = "schedule_days_of_week", joinColumns = @JoinColumn(name = "schedule_id"))
     @Column(name = "day_of_week")
     @Enumerated(EnumType.STRING)
-    private List<DayOfWeek> daysOfWeek;
+    private List<DayOfWeek> daysOfWeek = new ArrayList<>();
 
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.PERSIST)
-    private List<MemberSchedule> memberSchedules;
+    private List<MemberSchedule> memberSchedules = new ArrayList<>();
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

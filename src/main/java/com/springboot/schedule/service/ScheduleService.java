@@ -5,6 +5,7 @@ import com.springboot.exception.ExceptionCode;
 import com.springboot.group.entity.Group;
 import com.springboot.group.service.GroupService;
 import com.springboot.member.entity.Member;
+import com.springboot.member.entity.MemberSchedule;
 import com.springboot.member.service.MemberService;
 import com.springboot.schedule.dto.ScheduleDto;
 import com.springboot.schedule.entity.Schedule;
@@ -57,6 +58,11 @@ public class ScheduleService {
         }
         // ✅ (4) 모임 연결
         schedule.setGroup(group);
+
+        MemberSchedule memberSchedule = new MemberSchedule();
+        memberSchedule.setSchedule(schedule);
+        memberSchedule.setMember(member);
+        schedule.setMemberSchedule(memberSchedule);
 
         // ✅ (5) 저장
         return scheduleRepository.save(schedule);
@@ -141,6 +147,7 @@ public class ScheduleService {
 
         // 스케줄 존재 여부 확인
         Schedule schedule = findVerifiedMember(scheduleId);
+        schedule.setScheduleState(Schedule.ScheduleState.SCHEDULE_COMPLETED);
     }
 
     // 시작 시간이 현재보다 이전인지 검증
