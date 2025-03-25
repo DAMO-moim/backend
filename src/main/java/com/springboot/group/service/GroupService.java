@@ -210,9 +210,8 @@ public class GroupService {
         // 모임 가입한 갯수 검증
         validateGroupJoinLimit(member);
 
-        // (3) 이미 가입한 회원인지 확인
-        boolean alreadyExists = groupMemberRepository.existsByGroupAndMember_MemberId(group, memberId);
-        if (alreadyExists) {
+        // 이미 가입한 회원인지 확인
+        if (verifyGroupMember(member, group)) {
             throw new BusinessLogicException(ExceptionCode.MEMBER_ALREADY_JOINED_GROUP);
         }
 
@@ -228,6 +227,11 @@ public class GroupService {
         groupMember.setGroupRoles(GroupMember.GroupRoles.GROUP_MEMBER);
 
         groupMemberRepository.save(groupMember);
+    }
+
+    //모임에 가입된 회원인지 검증
+    public boolean verifyGroupMember(Member member, Group group) {
+        return groupMemberRepository.existsByGroupAndMember_MemberId(group, member.getMemberId());
     }
 
     @Transactional
