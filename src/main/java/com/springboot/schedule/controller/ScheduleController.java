@@ -9,6 +9,7 @@ import com.springboot.schedule.mapper.ScheduleMapper;
 import com.springboot.schedule.service.ScheduleService;
 import com.springboot.utils.UriCreator;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.data.domain.Page;
@@ -23,7 +24,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/groups")
+@RequestMapping("/groups/{group-id}")
 @Validated
 public class ScheduleController {
     private final static String SCHEDULE_DEFAULT_URL = "/groups";
@@ -41,14 +42,13 @@ public class ScheduleController {
             @ApiResponse(responseCode = "401", description = "권한 없음"),
             @ApiResponse(responseCode = "400", description = "요청이 잘못 되었음")
     })
-    @PostMapping("/{group-id}/schedules")
+    @PostMapping("/schedules")
     public ResponseEntity postSchedule(@RequestBody ScheduleDto.Post schedulePostDto,
                                        @AuthenticationPrincipal Member authenticatedmember,
                                        @PathVariable("group-id") @Positive long groupId) {
         Schedule schedule = scheduleMapper.schedulePostToSchedule(schedulePostDto);
 
-        Schedule createSchedule = scheduleService.createSchedule(schedule, groupId,
-                authenticatedmember.getMemberId());
+        Schedule createSchedule = scheduleService.createSchedule(schedule, authenticatedmember.getMemberId(), groupId);
 
         URI location = UriCreator.createUri(SCHEDULE_DEFAULT_URL, createSchedule.getScheduleId());
 
@@ -61,7 +61,8 @@ public class ScheduleController {
             @ApiResponse(responseCode = "401", description = "권한 없음"),
             @ApiResponse(responseCode = "400", description = "요청이 잘못 되었음")
     })
-    @PatchMapping("/{group-id}/schedules/{schedule-id}")
+
+    @PatchMapping("/schedules/{schedule-id}")
     public ResponseEntity patchSchedule(@RequestBody ScheduleDto.Patch schedulePatchDto,
                                        @AuthenticationPrincipal Member authenticatedmember,
                                        @PathVariable("group-id") @Positive long groupId,
@@ -81,7 +82,7 @@ public class ScheduleController {
             @ApiResponse(responseCode = "401", description = "권한 없음"),
             @ApiResponse(responseCode = "404", description = "모임 일정을 찾을 수 없습니다.")
     })
-    @GetMapping("/{group-id}/schedules/{schedule-id}")
+    @GetMapping("/schedules/{schedule-id}")
     public ResponseEntity getSchedule(@AuthenticationPrincipal Member authenticatedmember,
                                       @PathVariable("group-id") @Positive long groupId,
                                       @PathVariable("schedule-id") @Positive long scheduleId) {
@@ -97,7 +98,7 @@ public class ScheduleController {
             @ApiResponse(responseCode = "200", description = "모임 일정 생성 성공"),
             @ApiResponse(responseCode = "401", description = "권한 없음"),
     })
-    @GetMapping("/{group-id}/schedules")
+    @GetMapping("/schedules")
     public ResponseEntity getSchedules(@RequestParam @Positive int page,
                                        @RequestParam @Positive int size,
                                        @AuthenticationPrincipal Member authenticatedmember) {
