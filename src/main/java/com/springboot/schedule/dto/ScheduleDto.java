@@ -38,12 +38,12 @@ public class ScheduleDto {
 
         @NotNull
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-        @Schema(description = "시작 시간", example = "2025-04-01T10:00:00")
+        @Schema(description = "시작 시간", example = "2025-04-15T10:00:00")
         private LocalDateTime startSchedule;
 
         @NotNull
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-        @Schema(description = "종료 시간", example = "2025-04-01T10:00:00")
+        @Schema(description = "종료 시간", example = "2025-05-10T10:00:00")
         private LocalDateTime endSchedule;
 
         // 정기 일정일 경우만 사용
@@ -56,8 +56,8 @@ public class ScheduleDto {
         @Schema(description = "상세주소", example = "해태그린아파트 102동 1107호")
         private String subAddress;
 
+        @Schema(description = "모집인원", example = "30")
         @Min(1)
-        @Parameter(description = "모집인원", example = "30")
         private int maxMemberCount;
     }
 
@@ -67,7 +67,7 @@ public class ScheduleDto {
     @AllArgsConstructor
     @Builder
     public static class Patch {
-        @Schema(description = "스케줄 ID", example = "1")
+        @Schema(hidden = true)
         private Long scheduleId;
 
         @Schema(description = "일정 이름", example = "스케줄명")
@@ -77,11 +77,11 @@ public class ScheduleDto {
         private String scheduleContent;
 
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-        @Schema(description = "시작 시간", example = "2025-03-16T10:00:00")
+        @Schema(description = "시작 시간", example = "2025-04-15T10:00:00")
         private LocalDateTime startSchedule;
 
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-        @Schema(description = "종료 시간", example = "2025-03-16T16:00:00")
+        @Schema(description = "종료 시간", example = "2025-05-10T16:00:00")
         private LocalDateTime endSchedule;
 
         @Schema(description = "주소", example = "서울시 강남구 중앙학원")

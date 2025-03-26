@@ -50,13 +50,14 @@ public class GroupDto {
         @Schema(description = "서브카테고리 ID", example = "1")
         private long subCategoryId;
 
-        @Schema(description = "태그들 이름 목록", example = "[{\"tagName\": \"INFP\"}, {\"tagName\": \"화목\"}]")
+        @Schema(description = "태그들 이름 목록", example = "[{\"tagName\": \"INFP\"}, {\"tagName\": \"차분한\"}]")
         private List<TagNameDto> tags;
     }
 
     @Getter
     @Setter
     public static class Patch {
+        @Schema(hidden = true)
         private Long groupId;
 
         @Schema(description = "모임소개", example = "아마추어 5단 이상의 노인네 모임입니다.")

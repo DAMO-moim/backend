@@ -177,9 +177,9 @@ public class MemberController {
             @ApiResponse(responseCode = "404", description = "Member not found")
     })
     //프로필 이미지 저장(수정) 메서드
-    @PatchMapping("/image")
+    @PatchMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity fileUpload(@Parameter(hidden = true) @RequestPart(required = false)MultipartFile profileImage,
-                                     @AuthenticationPrincipal Member member){
+                                     @Parameter(hidden = true) @AuthenticationPrincipal Member member){
 
         memberService.uploadImage(member, profileImage);
         return new ResponseEntity<>(HttpStatus.OK);

@@ -94,7 +94,7 @@ public class ScheduleParticipationController {
     public ResponseEntity getSchedulesOnDate(
             @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
             @RequestParam("categoryId") Long categoryId,
-            @AuthenticationPrincipal Member member) {
+            @Parameter(hidden = true) @AuthenticationPrincipal Member member) {
 
         List<CalendarScheduleDto> schedules = scheduleService
                 .findSchedulesByDateAndCategory(date, categoryId, member.getMemberId());

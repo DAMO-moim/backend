@@ -104,22 +104,6 @@ public class ScheduleController {
         return ResponseEntity.ok(new SingleResponseDto<>(response));
     }
 
-    @Operation(summary = "모임 일정 전체 조회", description = "하나의 모임의 모임 일정을 전체 조회합니다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "모임 일정 생성 성공"),
-            @ApiResponse(responseCode = "401", description = "권한 없음"),
-    })
-    @GetMapping("/schedules")
-    public ResponseEntity getSchedules(@RequestParam @Positive int page,
-                                       @RequestParam @Positive int size,
-                                       @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember) {
-        Page<Schedule> schedulePage = scheduleService.findSchedules(page -1, size, authenticatedmember.getMemberId());
-
-        List<Schedule> schedules = schedulePage.getContent();
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     @Operation(summary = "모임 일정 삭제", description = "모임 일정을 삭제합니다")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "모임 일정 삭제 완료"),

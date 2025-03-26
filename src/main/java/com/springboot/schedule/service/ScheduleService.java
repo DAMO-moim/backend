@@ -160,10 +160,6 @@ public class ScheduleService {
         return schedule;
     }
 
-    public Page<Schedule> findSchedules(int page, int size, long memberId) {
-        return null;
-    }
-
     public void deleteSchedule(long memberId, long groupId, long scheduleId) {
         // 회원 검증
         Member member = memberService.findVerifiedMember(memberId);
