@@ -185,9 +185,9 @@ public class GroupController {
     })
     @GetMapping("/{group-id}/memberlist")
     public ResponseEntity memberListGroup(@PathVariable("group-id") long groupId,
-                                          @AuthenticationPrincipal Member authenticattedMember,
+                                          @AuthenticationPrincipal Member authenticatedMember,
                                           @RequestParam(value = "keyword", required = false) String keyword) {
-        List<GroupMemberResponseDto> response  = groupService.memberListGroup(groupId, authenticattedMember.getMemberId(), keyword);
+        List<GroupMemberResponseDto> response  = groupService.memberListGroup(groupId, authenticatedMember.getMemberId(), keyword);
         return ResponseEntity.ok(new SingleResponseDto<>(response));
     }
 

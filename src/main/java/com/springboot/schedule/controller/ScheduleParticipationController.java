@@ -1,6 +1,9 @@
 package com.springboot.schedule.controller;
 
+import com.springboot.dto.SingleResponseDto;
 import com.springboot.member.entity.Member;
+import com.springboot.schedule.dto.ParticipantInfoDto;
+import com.springboot.schedule.service.ScheduleService;
 import com.springboot.schedule.service.ScheduleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import javax.validation.constraints.Positive;
 
 @Tag(name = "모임 일정 참여 컨트롤러", description = "모임 일정 참여 관련 컨트롤러")
@@ -31,6 +35,7 @@ public class ScheduleParticipationController {
             @ApiResponse(responseCode = "200", description = "모임 참여 성공"),
             @ApiResponse(responseCode = "400", description = "이미 참여하고 있는 회원입니다.")
     })
+  
     @PostMapping("/{schedule-id}/participation")
     public ResponseEntity postParticipationSchedule(@PathVariable("schedule-id") long scheduleId,
                                                     @Parameter(hidden = true) @AuthenticationPrincipal Member member) {
@@ -40,8 +45,10 @@ public class ScheduleParticipationController {
 
     @GetMapping("/{schedule-id}/participation")
     public ResponseEntity getParticipationSchedule(@PathVariable("schedule-id") long scheduleId,
-                                                   @Parameter(hidden = true) @AuthenticationPrincipal Member member) {
-        return new ResponseEntity<>(HttpStatus.OK);
+                                                   @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedMember,
+                                                   @RequestParam(value= "keyword", required = false) String keyword) {
+        List<ParticipantInfoDto> response = scheduleService.findScheduleParticipants(scheduleId, authenticatedMember.getMemberId(), keyword);
+        return ResponseEntity.ok(new SingleResponseDto<>(response));
     }
 
     @Operation(summary = "모임 일정 취소", description = "참여했던 모임 일정을 취소합니다.")

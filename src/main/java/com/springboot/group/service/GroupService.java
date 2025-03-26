@@ -159,6 +159,7 @@ public class GroupService {
         // (5) 변경된 모임 정보 저장
         return groupRepository.save(existingGroup);
     }
+
     public Group findGroup(long groupId, long memberId) {
         // (1) 모임 존재 여부 확인
         Group group = groupRepository.findById(groupId)
@@ -336,6 +337,7 @@ public class GroupService {
         if (groupRepository.existsByNormalizedGroupName(groupName))
             throw new BusinessLogicException(ExceptionCode.GROUP_EXISTS);
     }
+
     // 모임ID를 기준으로 모임 조회 후 있다면 그 모임을 가져오는 메서드
     public Group findVerifiedGroup(Long groupId) {
         return groupRepository.findById(groupId)
@@ -435,7 +437,7 @@ public class GroupService {
     }
 
     @Transactional(readOnly = true)
-    public Page<GroupMember> findGroupsByRole(Member member, GroupMember.GroupRoles role, Pageable pageable) {
+    public Page<GroupMember> findGroupsByRole (Member member, GroupMember.GroupRoles role, Pageable pageable){
         return groupMemberRepository.findByMemberAndGroupRoles(member, role, pageable);
     }
 

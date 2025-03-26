@@ -8,7 +8,9 @@ import com.springboot.group.service.GroupService;
 import com.springboot.member.entity.Member;
 import com.springboot.member.entity.MemberSchedule;
 import com.springboot.member.service.MemberService;
+import com.springboot.schedule.dto.ParticipantInfoDto;
 import com.springboot.schedule.dto.ScheduleDto;
+import com.springboot.schedule.dto.ScheduleResponse;
 import com.springboot.schedule.entity.Schedule;
 import com.springboot.schedule.repository.MemberScheduleRepository;
 import com.springboot.schedule.repository.ScheduleRepository;
@@ -18,7 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Transactional
 @Service
@@ -134,8 +139,19 @@ public class ScheduleService {
         return schedule;
     }
 
+    @Transactional(readOnly = true)
     public Schedule findSchedule(long memberId, long groupId, long scheduleId) {
-        return null;
+        Group group = groupService.findVerifiedGroup(groupId);
+        groupService.validateGroupMember(group, memberId);
+
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.SCHEDULE_NOT_FOUND));
+
+        if (!schedule.getGroup().getGroupId().equals(groupId)) {
+            throw new BusinessLogicException(ExceptionCode.SCHEDULE_NOT_IN_GROUP);
+        }
+
+        return schedule;
     }
 
     public Page<Schedule> findSchedules(int page, int size, long memberId) {
@@ -155,6 +171,33 @@ public class ScheduleService {
         // 스케줄 존재 여부 확인
         Schedule schedule = findVerifiedSchedule(scheduleId);
         schedule.setScheduleState(Schedule.ScheduleState.SCHEDULE_COMPLETED);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ParticipantInfoDto> findScheduleParticipants(long scheduleId, long memberId, String keyword) {
+        // (1) 일정 존재 여부 확인
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.SCHEDULE_NOT_FOUND));
+
+        // (2) 일정이 속한 모임의 멤버인지 확인
+        groupService.validateGroupMember(schedule.getGroup(), memberId);
+
+        // (3) 참여자 목록 가져오기
+        Stream<MemberSchedule> stream = schedule.getMemberSchedules().stream();
+
+        // (4) 검색어가 있을 경우 필터링
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            String processedKeyword = keyword.trim().toLowerCase();
+            stream = stream.filter(p -> p.getMember().getName().toLowerCase().contains(processedKeyword));
+        }
+
+        return stream
+                .map(p -> ParticipantInfoDto.builder()
+                        .memberId(p.getMember().getMemberId())
+                        .name(p.getMember().getName())
+                        .image(p.getMember().getImage())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     // 모임 일정 참여
@@ -221,10 +264,11 @@ public class ScheduleService {
         // DB에서 삭제
         memberScheduleRepository.delete(memberSchedule);
     }
-
+  
     public boolean verifyMemberSchedule(Member member, Schedule schedule){
         return memberScheduleRepository.existsByScheduleAndMember(schedule, member);
     }
+
     // 시작 시간이 현재보다 이전인지 검증
     public void validateNotPastStartTime(LocalDateTime startTime) {
         if (startTime.isBefore(LocalDateTime.now())) {

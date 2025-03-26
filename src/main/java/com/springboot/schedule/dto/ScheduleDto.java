@@ -99,16 +99,18 @@ public class ScheduleDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    public static class Response {
+    public static class ResponseBasic implements ScheduleResponse {
         private Long groupScheduleId;
 
         private String scheduleName; // 일정 이름
-
+      
         private String scheduleContent; // 일정 소개글
 
-        private LocalDateTime startSchedule; // 시작 일자, 시간
+        private LocalDate startSchedule;
+        private LocalTime startTime;
 
-        private LocalDateTime endSchedule; // 종료 일자, 시간
+        private LocalDate endSchedule;
+        private LocalTime endTime;
 
         private String address; // 주소
 
@@ -142,7 +144,7 @@ public class ScheduleDto {
         private String address;
         @Schema(description = "상세 주소", example = "101동 101호")
         private String subAddress;
-
+      
         @Schema(description = "일정 설정 상태", example = "단기 일정")
         private Schedule.ScheduleStatus scheduleStatus;
         @Schema(description = "일정 상태", example = "등록중")
@@ -151,6 +153,43 @@ public class ScheduleDto {
                 example = "[{\"memberId\": 1, \"name\": \"홍길동\", \"Image\": \"https://example.com/profiles/alice.jpg\"}, " +
                         "{\"memberId\": 2, \"name\": \"김철수\", \"Image\": \"https://example.com/profiles/bob.jpg\"}]")
         private List<MemberDto.MemberOfGroupResponse> members;
+    }
+  
+    // 🎯 정기 일정 응답 DTO
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class ResponseRecurring implements ScheduleResponse {
+        private Long groupScheduleId;
+
+        private String scheduleName;
+        private String scheduleContent;
+
+        private LocalDate startSchedule;
+        private LocalDate endSchedule;
+
+        private List<DayOfWeek> daysOfWeek;
+
+        private List<RecurringDateDto> recurringDates;
+
+        private String address;
+        private String subAddress;
+
+        private int maxMemberCount;
+        private int memberCount;
+    }
+
+    // ✅ 반복 일정 날짜 + 시간 DTO
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class RecurringDateDto {
+        private LocalDate date;
+        private LocalTime time;
     }
 }
 
