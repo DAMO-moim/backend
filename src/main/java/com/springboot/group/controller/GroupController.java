@@ -190,4 +190,21 @@ public class GroupController {
         List<GroupMemberResponseDto> response  = groupService.memberListGroup(groupId, authenticattedMember.getMemberId(), keyword);
         return ResponseEntity.ok(new SingleResponseDto<>(response));
     }
+
+    @Operation(summary = "카테고리별 모임목록 조회(디폴트)", description = "우선순위가 가장높은 카테고리의 모임 목록을 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "전체 모임 정보 조회 성공"),
+            @ApiResponse(responseCode = "401", description = "권한 없음")
+    })
+    @GetMapping("/default")
+    public ResponseEntity getGroupsDefault(@RequestParam @Positive int page,
+                                    @RequestParam @Positive int size,
+                                    @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember) {
+        Page<Group> groupPage = groupService.findGroupsDefaultCategory(page - 1, size, authenticatedmember.getMemberId());
+        List<Group> groups = groupPage.getContent();
+
+        return new ResponseEntity<>(
+                new MultiResponseDto<>(groupMapper.groupsToGroupResponses(groups), groupPage),
+                HttpStatus.OK);
+    }
 }
