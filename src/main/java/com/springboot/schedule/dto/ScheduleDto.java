@@ -46,7 +46,7 @@ public class ScheduleDto {
         private LocalDateTime endSchedule;
 
         // 정기 일정일 경우만 사용
-        @Schema(description = "정기모임 요일", example = "[\"MONDAY\", \"WEDNESDAY\", \"FRIDAY\"]")
+        @Schema(description = "정기모임 요일(정기모임 아닐 시 안써도됨)", example = "[\"MONDAY\", \"WEDNESDAY\", \"FRIDAY\"]")
         private List<DayOfWeek> daysOfWeek;
 
         @Schema(description = "장소", example = "경기도 광주시 경안로 106")
@@ -55,7 +55,7 @@ public class ScheduleDto {
         @Schema(description = "상세주소", example = "해태그린아파트 102동 1107호")
         private String subAddress;
 
-        @Schema(description = "모집인원", example = "30")
+        @Schema(description = "모집인원", example = "10")
         @Min(1)
         private int maxMemberCount;
     }
@@ -75,11 +75,9 @@ public class ScheduleDto {
         @Schema(description = "일정 소개글", example = "스케줄 소개")
         private String scheduleContent;
 
-        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         @Schema(description = "시작 시간", example = "2025-04-15T10:00:00", type = "string")
         private LocalDateTime startSchedule;
 
-        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         @Schema(description = "종료 시간", example = "2025-05-10T10:00:00", type = "string")
         private LocalDateTime endSchedule;
 

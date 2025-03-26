@@ -1,6 +1,5 @@
 package com.springboot.schedule.entity;
 
-import com.springboot.audit.BaseEntity;
 import com.springboot.group.entity.Group;
 import com.springboot.member.entity.MemberSchedule;
 import lombok.Getter;
@@ -79,7 +78,8 @@ public class Schedule {
 
     public enum ScheduleState {
         SCHEDULE_ACTIVE("진행중"),     // 일정이 현재 진행 중
-        SCHEDULE_COMPLETED("종료");     // 종료된 일정
+        SCHEDULE_COMPLETED("종료"),    // 종료된 일정
+        SCHEDULE_DELETE("일정 삭제");
 
         @Getter
         private String state;
