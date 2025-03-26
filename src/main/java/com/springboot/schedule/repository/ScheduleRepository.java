@@ -32,4 +32,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     List<Schedule> findByDateAndCategoryAndMember(@Param("dateTime") LocalDateTime dateTime,
                                                   @Param("categoryId") Long categoryId,
                                                   @Param("memberId") Long memberId);
+    // 종료 시간이 현재보다 이전이고, 상태가 '진행중'인 일정들을 조회
+    List<Schedule> findAllByEndScheduleBeforeAndScheduleState(LocalDateTime now, Schedule.ScheduleState state);
 }
