@@ -93,6 +93,7 @@ public interface ScheduleMapper {
         }
 
         return builder.build();
+    }
 
 
     default List<ScheduleDto.CalendarResponse> getCalendarResponse(List<Schedule> schedules) {

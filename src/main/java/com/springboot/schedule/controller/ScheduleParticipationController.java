@@ -99,6 +99,7 @@ public class ScheduleParticipationController {
         List<CalendarScheduleDto> schedules = scheduleService
                 .findSchedulesByDateAndCategory(date, categoryId, member.getMemberId());
         return ResponseEntity.ok(new SingleResponseDto<>(schedules));
+    }
 
     @Operation(summary = "카테고리별 모임 일정", description = "모임 일정을 삭제합니다")
     @ApiResponses({
