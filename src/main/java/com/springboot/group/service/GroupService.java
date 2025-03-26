@@ -439,15 +439,25 @@ public class GroupService {
         return groupMemberRepository.findByMemberAndGroupRoles(member, role, pageable);
     }
 
-    //사용자의 카테고리별 모임 리스트
+    //사용자(모임원)의 카테고리별 모임 리스트
     @Transactional(readOnly = true)
     public Page<GroupMember> findGroupsByCategory(Member member, String categoryName, Pageable pageable) {
         return groupMemberRepository.findAllByMemberAndCategoryName(member, categoryName, pageable);
     }
 
-    //사용자의 카테고리별 모임 리스트(모임장여부)
+    //사용자(모임원)의 카테고리별 모임 리스트(모임장여부)
     @Transactional(readOnly = true)
     public Page<GroupMember> findGroupsByCategoryAndRole(Member member, String categoryName, GroupMember.GroupRoles roles, Pageable pageable){
         return groupMemberRepository.findByMemberAndCategoryNameAndGroupRoles(member,categoryName, roles, pageable);
+    }
+
+    //사용자(비모임원)의 카테고리별 모임 리스트(디폴트:우선순위가 가장높은 카테고리)
+    @Transactional(readOnly = true)
+    public Page<Group> findGroupsDefaultCategory(int page, int size, Member member){
+        Member findMember = memberService.findVerifiedMember(member.getMemberId());
+        Category category = memberService.findTopPriorityCategory(member);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        return groupRepository.findByCategory(category.getCategoryId(), pageable);
     }
 }
