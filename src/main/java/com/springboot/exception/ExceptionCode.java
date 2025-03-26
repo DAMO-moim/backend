@@ -44,9 +44,10 @@ public enum ExceptionCode {
     INVALID_SCHEDULE_CAPACITY(400,"일정 인원 수는 1명 이상이고 모임 최대 인원 이하이어야 합니다."),
     INVALID_SCHEDULE_COUNT(400,"일정 최대 인원 수는 현재 참여중인 인원수보다 낮을 수 없습니다."),
     INVALID_SCHEDULE_DAYOFWEEK(400, "정기 일정에는 최소 1일 이상의 요일이 지정되어야 합니다."),
-    INVALID_GROUP_CAPACITY_UPDATE(400, "현재 가입된 인원보다 작은 최대 인원으로 수정할 수 없습니다.");
+    INVALID_GROUP_CAPACITY_UPDATE(400, "현재 가입된 인원보다 작은 최대 인원으로 수정할 수 없습니다."),
     INVALID_REFRESH_TOKEN(400, "유효하지 않은 리플래시 토큰입니다."),
-    NOT_INTERESTED_CATEGORY(400, "해당 카테고리에 속하지 않습니다.");
+    NOT_INTERESTED_CATEGORY(400, "해당 카테고리에 속하지 않습니다."),
+    SCHEDULE_NOT_IN_GROUP(400, "해당 일정이 속한 모임이 아닙니다.");
 
 
 
