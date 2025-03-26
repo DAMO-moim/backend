@@ -96,6 +96,11 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.PATCH, "/comments/**").hasRole("USER")
                         .antMatchers(HttpMethod.DELETE, "/comments/**").hasAnyRole("USER", "ADMIN")
                         //My
+                        .antMatchers("/chatrooms").hasRole("USER")
+                        .antMatchers("/chatrooms/**").hasRole("USER")
+                        //categoriy
+                        .antMatchers("/catogories").hasRole("USER")
+                        //chatroom
                         .antMatchers("/mypage").hasRole("USER")
                         .antMatchers("/mypage/**").hasRole("USER")
                         //Schedules
