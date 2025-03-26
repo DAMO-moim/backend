@@ -1,5 +1,6 @@
 package com.springboot.schedule.mapper;
 
+import com.springboot.schedule.dto.CalendarScheduleDto;
 import com.springboot.schedule.dto.ScheduleDto;
 import com.springboot.schedule.entity.Schedule;
 import org.mapstruct.Mapper;
@@ -72,6 +73,27 @@ public interface ScheduleMapper {
 
         return result;
     }
+    // 달력 조회용 매핑 메서드
+    default CalendarScheduleDto toCalendarScheduleDto(Schedule schedule, LocalDate targetDate) {
+        CalendarScheduleDto.CalendarScheduleDtoBuilder builder = CalendarScheduleDto.builder()
+                .date(targetDate)
+                .groupName(schedule.getGroup().getGroupName())
+                .scheduleName(schedule.getScheduleName())
+                .groupImage(schedule.getGroup().getImage())
+                .address(schedule.getAddress())
+                .startTime(schedule.getStartSchedule().toLocalTime())
+                .endTime(schedule.getEndSchedule().toLocalTime())
+                .memberCount(schedule.getMemberSchedules().size())
+                .maxMemberCount(schedule.getMaxMemberCount());
+
+        // ✅ 연속 일정일 경우만 기간 정보 포함
+        if (schedule.getScheduleStatus() == Schedule.ScheduleStatus.CONTINUOUS) {
+            String duration = schedule.getStartSchedule().toLocalDate() + " ~ " + schedule.getEndSchedule().toLocalDate();
+            builder.duration(duration);
+        }
+
+        return builder.build();
+    }
+}
 
 //    List<ScheduleDto.Response> schedulesToScheduleResponses(List<Schedule> schedules);
-}
