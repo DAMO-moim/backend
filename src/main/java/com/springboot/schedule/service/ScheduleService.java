@@ -4,15 +4,14 @@ import com.springboot.category.entity.Category;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
 import com.springboot.group.entity.Group;
-import com.springboot.group.entity.GroupMember;
 import com.springboot.group.service.GroupService;
 import com.springboot.member.entity.Member;
 import com.springboot.member.entity.MemberSchedule;
 import com.springboot.member.service.MemberService;
+import com.springboot.schedule.dto.CalendarScheduleDto;
 import com.springboot.schedule.dto.ParticipantInfoDto;
-import com.springboot.schedule.dto.ScheduleDto;
-import com.springboot.schedule.dto.ScheduleResponse;
 import com.springboot.schedule.entity.Schedule;
+import com.springboot.schedule.mapper.ScheduleMapper;
 import com.springboot.schedule.repository.MemberScheduleRepository;
 import com.springboot.schedule.repository.ScheduleRepository;
 import org.springframework.data.domain.Page;
@@ -23,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -36,13 +36,15 @@ public class ScheduleService {
     private final GroupService groupService;
     private final MemberService memberService;
     private final MemberScheduleRepository memberScheduleRepository;
+    private final ScheduleMapper scheduleMapper;
 
     public ScheduleService(ScheduleRepository scheduleRepository, GroupService groupService,
-                           MemberService memberService, MemberScheduleRepository memberScheduleRepository) {
+                           MemberService memberService, MemberScheduleRepository memberScheduleRepository, ScheduleMapper scheduleMapper) {
         this.scheduleRepository = scheduleRepository;
         this.groupService = groupService;
         this.memberService = memberService;
         this.memberScheduleRepository = memberScheduleRepository;
+        this.scheduleMapper = scheduleMapper;
     }
 
 
@@ -268,7 +270,34 @@ public class ScheduleService {
         // DB에서 삭제
         memberScheduleRepository.delete(memberSchedule);
     }
-  
+
+    @Transactional(readOnly = true)
+    public List<CalendarScheduleDto> findSchedulesByDateAndCategory(LocalDate date, Long categoryId, Long memberId) {
+        // (1) 해당 날짜에 포함되는 일정들 조회 (나 + 카테고리 기준)
+
+        LocalDateTime dateTime = date.atStartOfDay();
+        List<Schedule> schedules = scheduleRepository.findByDateAndCategoryAndMember(dateTime, categoryId, memberId);
+
+        // (2) 일정 리스트를 DTO로 매핑
+        return schedules.stream()
+                .filter(schedule -> isScheduleOnDate(schedule, date))  // 정기 일정일 경우 필터링
+                .map(schedule -> scheduleMapper.toCalendarScheduleDto(schedule,date))
+                .collect(Collectors.toList());
+    }
+
+    private boolean isScheduleOnDate(Schedule schedule, LocalDate targetDate) {
+        if (schedule.getScheduleStatus() == Schedule.ScheduleStatus.RECURRING) {
+            return !targetDate.isBefore(schedule.getStartSchedule().toLocalDate())
+                    && !targetDate.isAfter(schedule.getEndSchedule().toLocalDate())
+                    && schedule.getDaysOfWeek().contains(targetDate.getDayOfWeek());
+        }
+
+        LocalDate start = schedule.getStartSchedule().toLocalDate();
+        LocalDate end = schedule.getEndSchedule().toLocalDate();
+        return !(targetDate.isBefore(start) || targetDate.isAfter(end));
+    }
+
+
     public boolean verifyMemberSchedule(Member member, Schedule schedule){
         return memberScheduleRepository.existsByScheduleAndMember(schedule, member);
     }
