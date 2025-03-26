@@ -159,6 +159,7 @@ public class GroupService {
         // (5) 변경된 모임 정보 저장
         return groupRepository.save(existingGroup);
     }
+
     public Group findGroup(long groupId, long memberId) {
         // (1) 모임 존재 여부 확인
         Group group = groupRepository.findById(groupId)
@@ -332,6 +333,7 @@ public class GroupService {
         if (groupRepository.existsByNormalizedGroupName(groupName))
             throw new BusinessLogicException(ExceptionCode.GROUP_EXISTS);
     }
+
     // 모임ID를 기준으로 모임 조회 후 있다면 그 모임을 가져오는 메서드
     public Group findVerifiedGroup(Long groupId) {
         return groupRepository.findById(groupId)
@@ -416,27 +418,30 @@ public class GroupService {
         if (newMaxCount < currentMemberCount) {
             throw new BusinessLogicException(ExceptionCode.INVALID_GROUP_CAPACITY_UPDATE);
         }
-
-    //사용자의 모임 리스트
-    @Transactional(readOnly = true)
-    public Page<Group> findGroupsByMember(Member member, Pageable pageable) {
-        return groupRepository.findAllByMember(member, pageable);
     }
 
-    @Transactional(readOnly = true)
-    public Page<GroupMember> findGroupsByRole(Member member, GroupMember.GroupRoles role, Pageable pageable) {
-        return groupMemberRepository.findByMemberAndGroupRoles(member, role, pageable);
+        //사용자의 모임 리스트
+        @Transactional(readOnly = true)
+        public Page<Group> findGroupsByMember (Member member, Pageable pageable){
+            return groupRepository.findAllByMember(member, pageable);
+        }
+
+        @Transactional(readOnly = true)
+        public Page<GroupMember> findGroupsByRole (Member member, GroupMember.GroupRoles role, Pageable pageable){
+            return groupMemberRepository.findByMemberAndGroupRoles(member, role, pageable);
+        }
+
+        //사용자의 카테고리별 모임 리스트
+        @Transactional(readOnly = true)
+        public Page<GroupMember> findGroupsByCategory (Member member, String categoryName, Pageable pageable){
+            return groupMemberRepository.findAllByMemberAndCategoryName(member, categoryName, pageable);
+        }
+
+        //사용자의 카테고리별 모임 리스트(모임장여부)
+        @Transactional(readOnly = true)
+        public Page<GroupMember> findGroupsByCategoryAndRole (Member member, String categoryName, GroupMember.GroupRoles
+        roles, Pageable pageable){
+            return groupMemberRepository.findByMemberAndCategoryNameAndGroupRoles(member, categoryName, roles, pageable);
+        }
     }
 
-    //사용자의 카테고리별 모임 리스트
-    @Transactional(readOnly = true)
-    public Page<GroupMember> findGroupsByCategory(Member member, String categoryName, Pageable pageable) {
-        return groupMemberRepository.findAllByMemberAndCategoryName(member, categoryName, pageable);
-    }
-
-    //사용자의 카테고리별 모임 리스트(모임장여부)
-    @Transactional(readOnly = true)
-    public Page<GroupMember> findGroupsByCategoryAndRole(Member member, String categoryName, GroupMember.GroupRoles roles, Pageable pageable){
-        return groupMemberRepository.findByMemberAndCategoryNameAndGroupRoles(member,categoryName, roles, pageable);
-    }
-}
