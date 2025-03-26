@@ -103,22 +103,22 @@ public class GroupController {
         return new ResponseEntity<>(new SingleResponseDto<>(groupResponse), HttpStatus.OK);
     }
 
-    @Operation(summary = "모임 정보 전체 조회", description = "전체 모임 정보를 조회합니다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "전체 모임 정보 조회 성공"),
-            @ApiResponse(responseCode = "401", description = "권한 없음")
-    })
-    @GetMapping
-    public ResponseEntity getGroups(@RequestParam @Positive int page,
-                                    @RequestParam @Positive int size,
-                                    @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember) {
-        Page<Group> groupPage = groupService.findGroups(page - 1, size, authenticatedmember.getMemberId());
-        List<Group> groups = groupPage.getContent();
-
-        return new ResponseEntity<>(
-                new MultiResponseDto<>(groupMapper.groupsToGroupResponses(groups), groupPage),
-                HttpStatus.OK);
-    }
+//    @Operation(summary = "모임 정보 전체 조회", description = "전체 모임 정보를 조회합니다.")
+//    @ApiResponses({
+//            @ApiResponse(responseCode = "200", description = "전체 모임 정보 조회 성공"),
+//            @ApiResponse(responseCode = "401", description = "권한 없음")
+//    })
+//    @GetMapping
+//    public ResponseEntity getGroups(@RequestParam @Positive int page,
+//                                    @RequestParam @Positive int size,
+//                                    @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember) {
+//        Page<Group> groupPage = groupService.findGroups(page - 1, size, authenticatedmember.getMemberId());
+//        List<Group> groups = groupPage.getContent();
+//
+//        return new ResponseEntity<>(
+//                new MultiResponseDto<>(groupMapper.groupsToGroupResponses(groups), groupPage),
+//                HttpStatus.OK);
+//    }
 
     @Operation(summary = "모임 삭제", description = "모임을 삭제합니다.")
     @ApiResponses({
@@ -191,18 +191,24 @@ public class GroupController {
         return ResponseEntity.ok(new SingleResponseDto<>(response));
     }
 
-    @Operation(summary = "카테고리별 모임목록 조회(디폴트)", description = "우선순위가 가장높은 카테고리의 모임 목록을 조회합니다.")
+    @Operation(summary = "카테고리별 모임목록 조회", description = "카테고리의 모임 목록을 조회합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "전체 모임 정보 조회 성공"),
             @ApiResponse(responseCode = "401", description = "권한 없음")
     })
-    @GetMapping("/default")
+    @GetMapping
     public ResponseEntity getGroupsDefault(@RequestParam @Positive int page,
-                                    @RequestParam @Positive int size,
-                                    @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember) {
-        Page<Group> groupPage = groupService.findGroupsDefaultCategory(page - 1, size, authenticatedmember.getMemberId());
+                                           @RequestParam @Positive int size,
+                                           @RequestParam(required = false) String category,
+                                           @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember) {
+        //만약 categoryName을 입력하지 않았다면 우선순위가 가장 높은 카테고리의 모임 리스트를 조회한다.
+        Page<Group> groupPage;
+        if(category == null){
+            groupPage = groupService.findGroupsDefaultCategory(page - 1, size, authenticatedmember);
+        }else{
+            groupPage = groupService.findGroupsSelectCategory(page - 1, size, authenticatedmember, category);
+        }
         List<Group> groups = groupPage.getContent();
-
         return new ResponseEntity<>(
                 new MultiResponseDto<>(groupMapper.groupsToGroupResponses(groups), groupPage),
                 HttpStatus.OK);
