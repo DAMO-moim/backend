@@ -1,5 +1,6 @@
 package com.springboot.schedule.service;
 
+import com.springboot.category.entity.Category;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
 import com.springboot.group.entity.Group;
@@ -14,6 +15,9 @@ import com.springboot.schedule.mapper.ScheduleMapper;
 import com.springboot.schedule.repository.MemberScheduleRepository;
 import com.springboot.schedule.repository.ScheduleRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -334,5 +338,23 @@ public class ScheduleService {
         if (scheduleMax < schedule.getMemberSchedules().size()) {
             throw new BusinessLogicException(ExceptionCode.INVALID_SCHEDULE_COUNT);
         }
+    }
+
+    //카테고리별 내가 참여할 모임 일정 조회
+    public Page<Schedule> getMySchedulesByCategory(int page, int size, Member member) {
+        Member findMember = memberService.findVerifiedMember(member.getMemberId());
+        //회원의 우선순위가 가장높은 카테고리를 디폴트로 선택하기위해 우선순위가 가장높은 카테고리를 가져온다.
+        Category category = memberService.findTopPriorityCategory(findMember);
+        Pageable pageable = PageRequest.of(page, size);
+
+        return memberScheduleRepository.findSchedulesByCategoryName(member, category.getCategoryName(), pageable);
+    }
+
+    //카테고리별 내가 참여할 모임 일정 조회
+    public Page<Schedule> getMySchedulesByCategory(int page, int size, Member member, String categoryName) {
+        Member findMember = memberService.findVerifiedMember(member.getMemberId());
+        Pageable pageable = PageRequest.of(page, size);
+
+        return memberScheduleRepository.findSchedulesByCategoryName(member, categoryName, pageable);
     }
 }

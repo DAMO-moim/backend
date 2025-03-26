@@ -77,10 +77,11 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.DELETE, "/members/**").hasAnyRole("USER", "ADMIN")
                         //Group
                         .antMatchers(HttpMethod.POST, "/groups").hasRole("USER")
+                        .antMatchers(HttpMethod.POST, "/groups/**").hasRole("USER")
                         .antMatchers(HttpMethod.GET, "/groups").hasRole("USER")
                         .antMatchers(HttpMethod.GET,"/groups/**").hasAnyRole("USER", "ADMIN")
                         .antMatchers(HttpMethod.PATCH, "/groups/**").hasRole("USER")
-                        .antMatchers(HttpMethod.DELETE, "/groups/").hasAnyRole("USER")
+                        .antMatchers(HttpMethod.DELETE, "/groups").hasAnyRole("USER")
                         .antMatchers(HttpMethod.DELETE, "/groups/**").hasAnyRole("USER", "ADMIN")
                         //Board
                         .antMatchers(HttpMethod.POST, "/boards").hasRole("USER")
@@ -90,13 +91,24 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.DELETE, "/boards/**").hasAnyRole("USER", "ADMIN")
                         //Comment
                         .antMatchers(HttpMethod.POST, "/comments").hasRole("USER")
-                        .antMatchers(HttpMethod.GET, "/boards").hasRole("USER")
-                        .antMatchers(HttpMethod.GET,"/boards/**").hasAnyRole("USER", "ADMIN")
-                        .antMatchers(HttpMethod.PATCH, "/boards/**").hasRole("USER")
-                        .antMatchers(HttpMethod.DELETE, "/boards/**").hasAnyRole("USER", "ADMIN")
+                        .antMatchers(HttpMethod.GET, "/comments").hasRole("USER")
+                        .antMatchers(HttpMethod.GET,"/comments/**").hasAnyRole("USER", "ADMIN")
+                        .antMatchers(HttpMethod.PATCH, "/comments/**").hasRole("USER")
+                        .antMatchers(HttpMethod.DELETE, "/comments/**").hasAnyRole("USER", "ADMIN")
                         //My
                         .antMatchers("/mypage").hasRole("USER")
                         .antMatchers("/mypage/**").hasRole("USER")
+                        //Schedules
+                        .antMatchers(HttpMethod.POST, "/schedules").hasRole("USER")
+                        .antMatchers(HttpMethod.POST, "/schedules/**").hasRole("USER")
+                        .antMatchers(HttpMethod.POST, "/schedules/**").hasRole("USER")
+                        .antMatchers(HttpMethod.GET, "/schedules").hasRole("USER")
+                        .antMatchers(HttpMethod.GET, "/schedules/**").hasRole("USER")
+                        .antMatchers(HttpMethod.DELETE, "/schedules/**").hasRole("USER")
+                        //모임일정 참여내역부분
+                        .antMatchers(HttpMethod.POST, "/schedules/**/participation").hasRole("USER")
+                        .antMatchers(HttpMethod.GET, "/schedules/**/participation").hasRole("USER")
+                        .antMatchers(HttpMethod.DELETE, "/schedules/**/participation").hasRole("USER")
                         .anyRequest().permitAll()
                 );
         return http.build();

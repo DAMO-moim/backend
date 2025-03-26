@@ -85,6 +85,7 @@ public class ScheduleController {
             @ApiResponse(responseCode = "401", description = "권한 없음"),
             @ApiResponse(responseCode = "404", description = "모임 일정을 찾을 수 없습니다.")
     })
+
     @GetMapping("/schedules/{schedule-id}")
     public ResponseEntity<SingleResponseDto<ScheduleResponse>> getSchedule(
             @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedMember,

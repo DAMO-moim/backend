@@ -5,6 +5,7 @@ import com.springboot.schedule.entity.Schedule;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import org.springframework.boot.context.event.SpringApplicationEvent;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
@@ -221,6 +222,22 @@ public class ScheduleDto {
 
         @Schema(description = "정기 일정 시간", example = "10:00:00")
         private LocalTime time;
+    }
+
+    //회원의 카테고리별 일정(참여중) 조회시 -> 달력에 뿌려야하므로 기간 + 상태
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class CalendarResponse {
+        @Schema(description = "일정 시작 기간", example = "2025.04.04")
+        private LocalDate startSchedule;
+        @Schema(description = "일정 끝 기간", example = "2025.04.14")
+        private LocalDate endSchedule;
+        //등록, 종료상태가아닌 (정기, 단기, 연속)
+        @Schema(description = "일정 종류 상태", example = "RECURRING")
+        private Schedule.ScheduleStatus scheduleStatus;
     }
 }
 

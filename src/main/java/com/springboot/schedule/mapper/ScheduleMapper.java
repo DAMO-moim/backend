@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface ScheduleMapper {
@@ -70,7 +71,6 @@ public interface ScheduleMapper {
             }
             current = current.plusDays(1);
         }
-
         return result;
     }
     // 달력 조회용 매핑 메서드
@@ -93,7 +93,16 @@ public interface ScheduleMapper {
         }
 
         return builder.build();
+
+
+    default List<ScheduleDto.CalendarResponse> getCalendarResponse(List<Schedule> schedules) {
+        return schedules.stream()
+                .map(schedule -> ScheduleDto.CalendarResponse.builder()
+                        .startSchedule(schedule.getStartSchedule().toLocalDate())
+                        .endSchedule(schedule.getEndSchedule().toLocalDate())
+                        .scheduleStatus(schedule.getScheduleStatus())
+                        .build())
+                .collect(Collectors.toList());
+
     }
 }
-
-//    List<ScheduleDto.Response> schedulesToScheduleResponses(List<Schedule> schedules);

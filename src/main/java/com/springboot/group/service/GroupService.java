@@ -1,9 +1,9 @@
 package com.springboot.group.service;
 
-import com.springboot.board.entity.Board;
 import com.springboot.category.entity.Category;
 import com.springboot.category.entity.SubCategory;
 import com.springboot.category.repository.SubCategoryRepository;
+import com.springboot.category.service.CategoryService;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
 import com.springboot.group.dto.GroupDto;
@@ -45,6 +45,7 @@ public class GroupService {
     private final GroupMapper groupMapper;
     private final TagRepository tagRepository;
     private final StorageService storageService;
+    private final CategoryService categoryService;
 
     public GroupService(GroupRepository groupRepository,
                         MemberService memberService,
@@ -52,6 +53,7 @@ public class GroupService {
                         GroupRecommendRepository groupRecommendRepository,
                         SubCategoryRepository subCategoryRepository,
                         GroupMapper groupMapper,
+                        CategoryService categoryService,
                         TagRepository tagRepository,
                         StorageService storageService) {
         this.groupRepository = groupRepository;
@@ -62,6 +64,7 @@ public class GroupService {
         this.groupMapper = groupMapper;
         this.tagRepository = tagRepository;
         this.storageService = storageService;
+        this.categoryService = categoryService;
     }
 
 
@@ -436,6 +439,7 @@ public class GroupService {
     @Transactional(readOnly = true)
     public Page<Group> findGroupsSelectCategory(int page, int size, Member member, String categoryName){
         Member findMember = memberService.findVerifiedMember(member.getMemberId());
+        categoryService.findVerifiedCategoryName(categoryName);
         Pageable pageable = PageRequest.of(page, size, Sort.by("groupId").descending());
 
         return groupRepository.findByCategoryName(categoryName, pageable);

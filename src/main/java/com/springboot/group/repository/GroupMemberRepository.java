@@ -18,18 +18,14 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> 
     List<GroupMember> findAllByMember(Member member);
     long countByMember(Member member);
     List<GroupMember> findByMemberAndGroupRoles(Member member, GroupMember.GroupRoles groupRoles);
-
     Page<GroupMember> findByMemberAndGroupRoles(Member member, GroupMember.GroupRoles groupRoles, Pageable pageable);
 
     //특정 회원의 카테고리별 그룹조회
-    @Query("SELECT gm FROM GroupMember gm " + "WHERE gm.member = :member " +
-            "AND gm.group.subCategory.category.categoryName = :categoryName")
+    @Query("SELECT gm FROM GroupMember gm " + "WHERE gm.member = :member AND gm.group.subCategory.category.categoryName = :categoryName")
     Page<GroupMember> findAllByMemberAndCategoryName(Member member, String categoryName,Pageable pageable);
 
     //특정 회원의 카테고리별 그룹조회(권한포함)
-    @Query("SELECT gm FROM GroupMember gm " + "WHERE gm.member = :member " +
-            "AND gm.group.subCategory.category.categoryName = :categoryName " +
-            "AND gm.groupRoles = :role")
+    @Query("SELECT gm FROM GroupMember gm WHERE gm.member = :member AND gm.group.subCategory.category.categoryName = :categoryName AND gm.groupRoles = :role")
     Page<GroupMember> findByMemberAndCategoryNameAndGroupRoles(Member member, String categoryName,
                                                                GroupMember.GroupRoles role,
                                                                Pageable pageable);

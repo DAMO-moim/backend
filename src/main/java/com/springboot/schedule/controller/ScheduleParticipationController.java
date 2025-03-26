@@ -1,9 +1,13 @@
 package com.springboot.schedule.controller;
 
+import com.springboot.dto.MultiResponseDto;
 import com.springboot.dto.SingleResponseDto;
+import com.springboot.group.entity.Group;
 import com.springboot.member.entity.Member;
 import com.springboot.schedule.dto.CalendarScheduleDto;
 import com.springboot.schedule.dto.ParticipantInfoDto;
+import com.springboot.schedule.entity.Schedule;
+import com.springboot.schedule.mapper.ScheduleMapper;
 import com.springboot.schedule.service.ScheduleService;
 import com.springboot.schedule.service.ScheduleService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,9 +33,11 @@ import javax.validation.constraints.Positive;
 @Validated
 public class ScheduleParticipationController {
     private final ScheduleService scheduleService;
+    private final ScheduleMapper mapper;
 
-    public ScheduleParticipationController(ScheduleService scheduleService) {
+    public ScheduleParticipationController(ScheduleService scheduleService, ScheduleMapper mapper) {
         this.scheduleService = scheduleService;
+        this.mapper = mapper;
     }
 
     @Operation(summary = "모임 일정 참여", description = "하나의 모임 일정에 참여합니다.")
@@ -74,6 +81,7 @@ public class ScheduleParticipationController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+
     @Operation(
             summary = "특정 날짜의 일정 목록 조회 (달력용)", description = "선택한 날짜와 카테고리 기준으로, 해당 날짜에 참여한 일정들의 모임 이름, 일정 제목, 시간, 장소 등의 정보를 조회합니다."
     )
@@ -91,5 +99,29 @@ public class ScheduleParticipationController {
         List<CalendarScheduleDto> schedules = scheduleService
                 .findSchedulesByDateAndCategory(date, categoryId, member.getMemberId());
         return ResponseEntity.ok(new SingleResponseDto<>(schedules));
+
+    @Operation(summary = "카테고리별 모임 일정", description = "모임 일정을 삭제합니다")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "모임 일정 삭제 완료"),
+            @ApiResponse(responseCode = "401", description = "권한 없음"),
+            @ApiResponse(responseCode = "404", description = "모임 일정이 존재하지 않음")
+    })
+    @GetMapping
+    public ResponseEntity getGroupsDefault(@RequestParam @Positive int page,
+                                           @RequestParam @Positive int size,
+                                           @RequestParam(required = false) String category,
+                                           @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember) {
+        //만약 categoryName을 입력하지 않았다면 우선순위가 가장 높은 카테고리의 모임 리스트를 조회한다.
+        Page<Schedule> schedulePage;
+        if(category == null || category.isEmpty()){
+            schedulePage = scheduleService.getMySchedulesByCategory(page - 1, size, authenticatedmember);
+        }else{
+            schedulePage = scheduleService.getMySchedulesByCategory(page - 1, size, authenticatedmember, category);
+        }
+        List<Schedule> schedules = schedulePage.getContent();
+        return new ResponseEntity<>(new MultiResponseDto<>
+                (mapper.getCalendarResponse(schedules), schedulePage),
+                HttpStatus.OK);
+
     }
 }
