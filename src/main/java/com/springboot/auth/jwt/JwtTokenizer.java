@@ -131,6 +131,17 @@ public class JwtTokenizer {
                 .parseClaimsJws(jws);
     }
 
+    // 토큰 유효성 검증 메서드 (true/false 반환용)
+    public boolean validateToken(String jws) {
+        try {
+            String base64EncodedSecretKey = encodedBase64SecretKey(secretKey);
+            verifySignature(jws, base64EncodedSecretKey); // 내부적으로 서명 + 만료 검증
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     //JWT의 만료 일시를 지정하기 위한 메서드, JWT 생성시 사용된다.
     public Date getTokenExpiration(int expirationMinutes){
         Calendar calendar = Calendar.getInstance();

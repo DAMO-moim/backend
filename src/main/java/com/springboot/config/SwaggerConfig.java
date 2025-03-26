@@ -1,53 +1,35 @@
 package com.springboot.config;
 
+// Java
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Configuration
-@EnableWebMvc
 public class SwaggerConfig {
-
-    private ApiInfo swaggerInfo() {
-        return new ApiInfoBuilder()
-                .title("Rest API Documentation")
-                .description("API Docs")
-                .version("1.0.0")
-                .build();
-    }
-
     @Bean
-    public Docket swaggerApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .consumes(getConsumeContentTypes())
-                .produces(getProduceContentTypes())
-                .apiInfo(swaggerInfo())
-                .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any()) // 위 패키지 안의 api 중 지정된 path만 보여줌. (any()로 설정 시 모든 api가 보여짐)
-                .build()
-                .useDefaultResponseMessages(true);
+    public OpenAPI openAPI() {
+        SecurityRequirement securityRequirement = new SecurityRequirement().addList("Authorization");
+        return new OpenAPI()
+                .addSecurityItem(new SecurityRequirement().addList("basicAuth"))  // 기본 인증 적용
+                .components(new Components().addSecuritySchemes("Authorization", new SecurityScheme()
+                        .name("Authorization")
+                        .type(SecurityScheme.Type.HTTP)
+                        .scheme("bearer")
+                        .bearerFormat("JWT")))
+                .addSecurityItem(securityRequirement)
+                .info(apiInfo());
     }
 
-    private Set<String> getConsumeContentTypes() {
-        Set<String> consumes = new HashSet<>();
-        consumes.add("application/json;charset=UTF-8");
-        consumes.add("application/x-www-form-urlencoded");
-        return consumes;
-    }
 
-    private Set<String> getProduceContentTypes() {
-        Set<String> produces = new HashSet<>();
-        produces.add("application/json;charset=UTF-8");
-        return produces;
+    private Info apiInfo() {
+        return new Info()
+                .title("Springdoc 테스트")
+                .description("Springdoc을 사용한 Swagger UI 테스트")
+                .version("1.0.0");
     }
 }

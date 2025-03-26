@@ -2,32 +2,38 @@ package com.springboot.member.controller;
 
 import com.springboot.dto.MultiResponseDto;
 import com.springboot.dto.SingleResponseDto;
+import com.springboot.member.dto.MemberCategoryDto;
 import com.springboot.member.dto.MemberDto;
 import com.springboot.member.entity.Member;
+import com.springboot.member.entity.MemberCategory;
 import com.springboot.member.mapper.MemberMapper;
 import com.springboot.member.service.MemberService;
 import com.springboot.utils.UriCreator;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.net.URI;
 import java.util.List;
 
-@ApiOperation(value = "회원 정보 API", tags = {"Member Controller"})
+@Tag(name = "회원 컨트롤러", description = "회원 관련 컨트롤러")
 @RestController
 @RequestMapping("/members")
 @Validated
 public class MemberController {
-    private static final String MEMBER_DEFAULT_URL = "/test/members";
+    private static final String MEMBER_DEFAULT_URL = "/members";
     private final MemberService memberService;
     private final MemberMapper mapper;
 
@@ -36,10 +42,10 @@ public class MemberController {
         this.mapper = mapper;
     }
 
-    @ApiOperation(value = "회원 정보 등록", notes = "회원 정보를 등록합니다.")
+    @Operation(summary = "회원 가입", description = "회원 가입을 진행합니다.")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "회원 등록 완료"),
-            @ApiResponse(code = 404, message = "Member not found")
+            @ApiResponse(responseCode = "201", description = "회원 등록 완료"),
+            @ApiResponse(responseCode = "404", description = "Member not found")
     })
     @PostMapping
     public ResponseEntity postMember(@RequestBody @Valid MemberDto.Post memberPostDto) {
@@ -50,24 +56,25 @@ public class MemberController {
 
         return ResponseEntity.created(location).build();
     }
-    @ApiOperation(value = "회원 정보 수정", notes = "회원 정보를 수정합니다.")
+
+    @Operation(summary = "회원 수정", description = "회원 정보를 수정합니다.")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "회원 수정 완료"),
-            @ApiResponse(code = 404, message = "Member Not Found")
+            @ApiResponse(responseCode = "200", description = "회원 수정 완료"),
+            @ApiResponse(responseCode = "404", description = "Member not found")
     })
     @PatchMapping("/{member-id}")
     public ResponseEntity patchMember(@PathVariable("member-id") @Positive long memberId,
-                                      @Valid @RequestBody MemberDto.Patch memberPatchDto,
-                                      @AuthenticationPrincipal Member authenticatedmember){
+                                      @RequestBody @Valid MemberDto.Patch memberPatchDto,
+                                      @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember){
         memberPatchDto.setMemberId(memberId);
         Member member = memberService.updateMember(mapper.memberPatchToMember(memberPatchDto), authenticatedmember.getMemberId());
         return new ResponseEntity<>(new SingleResponseDto<>(mapper.memberToMemberResponse(member)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "회원 정보 단일 조회", notes = "회원 단일 정보를 조회합니다.")
+    @Operation(summary = "회원 조회", description = "회원 정보를 조회합니다.")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "회원 조회 완료"),
-            @ApiResponse(code = 404, message = "Member Not Found")
+            @ApiResponse(responseCode = "200", description = "회원 조회 완료"),
+            @ApiResponse(responseCode = "404", description = "Member not found")
     })
     @GetMapping("/{member-id}")
     public ResponseEntity getMember(@PathVariable("member-id") @Positive long memberId){
@@ -75,11 +82,15 @@ public class MemberController {
         return new ResponseEntity<>(new SingleResponseDto<>(mapper.memberToMemberResponse(member)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "회원 정보 전체 조회", notes = "회원 전체 정보를 조회합니다.")
+    @Operation(summary = "회원 목록 조회", description = "회원 전체 목록을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원 조회 완료"),
+            @ApiResponse(responseCode = "404", description = "Member not found")
+    })
     @GetMapping
     public ResponseEntity getMembers(@Positive @RequestParam int page,
                                      @Positive @RequestParam int size,
-                                     @AuthenticationPrincipal Member authenticatedmember){
+                                     @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember){
         Page<Member> memberPage = memberService.findMembers(page - 1, size, authenticatedmember.getMemberId());
         List<Member> members = memberPage.getContent();
         return new ResponseEntity<>
@@ -87,16 +98,91 @@ public class MemberController {
                         (mapper.membersToMemberResponses(members),memberPage),HttpStatus.OK);
     }
 
-    @ApiOperation(value = "회원 정보 삭제", notes = "회원 정보를 삭제합니다.")
+    @Operation(summary = "회원 탈퇴(자신)", description = "자신(회원)이 탈퇴 합니다.")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "회원 삭제 완료"),
-            @ApiResponse(code = 404, message = "Member Not Found")
+            @ApiResponse(responseCode = "204", description = "회원 삭제 완료"),
+            @ApiResponse(responseCode = "404", description = "Member not found")
     })
-    @DeleteMapping("/{member-id}")
-    public ResponseEntity deleteMember(@PathVariable("member-id") @Positive long memberId,
-                                       @AuthenticationPrincipal Member authenticatedmember){
-//        memberService.deleteMember(memberId, authenticatedmember.getMemberId());
-//
+    @DeleteMapping
+    public ResponseEntity myDeleteMember(@Valid @RequestBody MemberDto.Delete memberDeleteDto,
+                                         @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember) {
+        Member member = mapper.memberDeleteToMember(memberDeleteDto);
+        memberService.myDeleteMember(member, authenticatedmember.getMemberId());
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @Operation(summary = "회원 탈퇴(관리자)", description = "관리자가 회원을 탈퇴 시킵니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "회원 삭제 완료"),
+            @ApiResponse(responseCode = "404", description = "Member not found")
+    })
+    //관리자가 회원 탈퇴시킬때 api
+    @DeleteMapping("/{member-id}")
+    public ResponseEntity deleteMember(@PathVariable("member-id") @Positive long memberId,
+                                       @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember){
+        memberService.deleteMember(memberId, authenticatedmember);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @Operation(summary = "자신의 카테고리 수정", description = "자신의 카테고리 정보를 수정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "카테고리 수정 완료"),
+            @ApiResponse(responseCode = "404", description = "Member not found")
+    })
+    //사용자의 카테고리 수정
+    @PatchMapping("/categories")
+    public ResponseEntity patchMemberCategory( @RequestBody @Valid MemberCategoryDto.Patch patchDto,
+                                               @Parameter(hidden = true) @AuthenticationPrincipal Member member) {
+
+        List<MemberCategory> memberCategories = mapper.dtoToMemberCategories(patchDto.getMemberCategories());
+        memberService.updateMemberCategories(member.getMemberId(), memberCategories);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Operation(summary = "자신의 카테고리 조회", description = "자신의 카테고리 정보를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "해당 회원의 카테고리 조회 완료"),
+            @ApiResponse(responseCode = "404", description = "Member not found"),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 요청입니다.")
+    })
+    //사용자의 카테고리 내역 조회
+    @GetMapping("/categories")
+    public ResponseEntity getMemberCategory(@Parameter(hidden = true) @AuthenticationPrincipal Member member) {
+
+        List<MemberCategory> memberCategories = memberService.findMemberCategroies(member.getMemberId());
+        List<MemberCategoryDto.Response> responseList = mapper.memberCategoriesToResponseDto(memberCategories);
+
+        return new ResponseEntity<>(new SingleResponseDto<>(responseList), HttpStatus.OK);
+    }
+
+    @Operation(summary = "아이디(이메일) 찾기", description = "잃어버린 이메일을 찾습니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "이메일을 찾았습니다."),
+            @ApiResponse(responseCode = "404", description = "Member not found")
+    })
+    //아이디 찾기 핸들러 메서드
+    @PostMapping("/id")
+    public ResponseEntity findIdGetMember(@Valid @RequestBody MemberDto.FindId findIdDto){
+        Member member = memberService.findMemberEmail(mapper.findIdDtoToMember(findIdDto));
+        MemberDto.FindIdResponse response = mapper.memberToFindId(member);
+
+        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
+    }
+
+    @Operation(summary = "프로필 이미지 등록(수정)", description = "자신의 프로필 이미지를 등록합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "프로필 이미지 등록(수정)완료"),
+            @ApiResponse(responseCode = "404", description = "Member not found")
+    })
+    //프로필 이미지 저장(수정) 메서드
+    @PatchMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity fileUpload(@Parameter(hidden = true) @RequestPart(required = false)MultipartFile profileImage,
+                                     @Parameter(hidden = true) @AuthenticationPrincipal Member member){
+
+        memberService.uploadImage(member, profileImage);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
+

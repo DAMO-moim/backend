@@ -49,8 +49,11 @@ dependencies {
     //runtimeOnly 'mysql:mysql-connector-java'
 
 	//스웨거
-	implementation 'io.springfox:springfox-boot-starter:3.0.0'
-	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+	implementation("org.springdoc:springdoc-openapi-ui:1.6.11")
+
+	//채팅 구현
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'// 추가
+	implementation("org.springframework.security:spring-security-messaging")
 }
 
 tasks.named('javadoc') {

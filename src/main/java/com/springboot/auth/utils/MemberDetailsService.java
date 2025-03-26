@@ -4,6 +4,7 @@ import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
 import com.springboot.member.entity.Member;
 import com.springboot.member.repository.MemberRepository;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -30,6 +31,9 @@ public class MemberDetailsService implements UserDetailsService {
         Member findmember = optionalMember.orElseThrow(()
                 -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
 
+        if(findmember.getMemberStatus() == Member.MemberStatus.MEMBER_QUIT){
+            throw new DisabledException("탈퇴한 회원입니다.");
+        }
         return new MemberDetails(findmember);
     }
 
@@ -38,6 +42,7 @@ public class MemberDetailsService implements UserDetailsService {
         //엔티티를 임시로 만들어놔서 여기 수정 필요!
         public MemberDetails(Member member) {
             setMemberId(member.getMemberId());
+            setMemberStatus(member.getMemberStatus());
             setRoles(member.getRoles());
             setPassword(member.getPassword());
             setEmail(member.getEmail());
