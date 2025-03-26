@@ -9,6 +9,7 @@ import com.springboot.message.dto.MessageDto;
 import com.springboot.message.entity.Message;
 import com.springboot.message.mapper.MessageMapper;
 import com.springboot.message.service.MessageService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -16,6 +17,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+@Tag(name = "메시지 컨트롤러", description = "채팅 메시지 관련 컨트롤러")
 @Controller
 @RequiredArgsConstructor
 public class MessageController {

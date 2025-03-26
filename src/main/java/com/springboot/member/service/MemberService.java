@@ -1,21 +1,18 @@
 package com.springboot.member.service;
 
 import com.springboot.auth.utils.AuthorityUtils;
-import com.springboot.board.entity.Board;
-import com.springboot.board.service.BoardService;
+import com.springboot.category.entity.Category;
 import com.springboot.category.service.CategoryService;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
 import com.springboot.file.Service.StorageService;
-import com.springboot.member.dto.AdminDto;
-import com.springboot.member.dto.MyPageDto;
 import com.springboot.member.entity.Member;
 import com.springboot.member.entity.MemberCategory;
+import com.springboot.member.repository.MemberCategoryRepository;
 import com.springboot.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,13 +21,13 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.plaf.PanelUI;
 import java.util.*;
 
 @Transactional
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final MemberCategoryRepository memberCategoryRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthorityUtils authorityUtils;
     private final CategoryService categoryService;
@@ -39,7 +36,7 @@ public class MemberService {
 
     public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder,
                          AuthorityUtils authorityUtils, CategoryService categoryService,
-                         StorageService storageService,
+                         StorageService storageService, MemberCategoryRepository memberCategoryRepository,
                          @Value("${file.default-image}") String defaultImagePath) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
@@ -47,6 +44,7 @@ public class MemberService {
         this.categoryService = categoryService;
         this.storageService = storageService;
         this.defaultImagePath = defaultImagePath;
+        this.memberCategoryRepository = memberCategoryRepository;
     }
 
     public Member createMember(Member member){
@@ -227,7 +225,7 @@ public class MemberService {
     }
 
     //이미지 등록
-    public void uploadImage(Member member, MultipartFile imageFile){
+    public void uploadImage(Member member, MultipartFile imageFile) {
         Member findMember = findVerifiedMember(member.getMemberId());
 
         // 파일을 가져왔을때 그 파일이 null이거나 빈 파일 일때 검증해야함
@@ -244,5 +242,12 @@ public class MemberService {
             // 이미지가 없다면 기본 이미지로 삽입
             findMember.setImage(defaultImagePath);
         }
+    }
+
+    //회원의 우선순위가 가장 높은 카테고리를 가져온다(모임일정, 모임 조회시 디폴트)
+    public Category findTopPriorityCategory(Member member){
+        return memberCategoryRepository.findTopByMemberCategoryOrderByPriorityAsc(member)
+                .map(MemberCategory::getCategory)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
     }
 }

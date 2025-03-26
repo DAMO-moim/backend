@@ -175,15 +175,15 @@ public class GroupService {
         return group;
     }
 
-    public Page<Group> findGroups(int page, int size, long memberId) {
-        // (1) 페이지 요청 객체 생성 (0-based index)
-        Pageable pageable = PageRequest.of(page, size, Sort.by("groupId").descending());
-
-        // (2) 회원이 가입한 모임만 조회 (or 전체 공개 모임 조회 가능)
-        Page<Group> groupPage = groupRepository.findAllByMemberId(memberId, pageable);
-
-        return groupPage;
-    }
+//    public Page<Group> findGroups(int page, int size, long memberId) {
+//        // (1) 페이지 요청 객체 생성 (0-based index)
+//        Pageable pageable = PageRequest.of(page, size, Sort.by("groupId").descending());
+//
+//        // (2) 회원이 가입한 모임만 조회 (or 전체 공개 모임 조회 가능)
+//        Page<Group> groupPage = groupRepository.findAllByMemberId(memberId, pageable);
+//
+//        return groupPage;
+//    }
 
     @Transactional
     public void deleteGroup(long groupId, long memberId) {
@@ -211,9 +211,8 @@ public class GroupService {
         // 모임 가입한 갯수 검증
         validateGroupJoinLimit(member);
 
-        // (3) 이미 가입한 회원인지 확인
-        boolean alreadyExists = groupMemberRepository.existsByGroupAndMember_MemberId(group, memberId);
-        if (alreadyExists) {
+        // 이미 가입한 회원인지 확인
+        if (verifyGroupMember(member, group)) {
             throw new BusinessLogicException(ExceptionCode.MEMBER_ALREADY_JOINED_GROUP);
         }
 
@@ -229,6 +228,11 @@ public class GroupService {
         groupMember.setGroupRoles(GroupMember.GroupRoles.GROUP_MEMBER);
 
         groupMemberRepository.save(groupMember);
+    }
+
+    //모임에 가입된 회원인지 검증
+    public boolean verifyGroupMember(Member member, Group group) {
+        return groupMemberRepository.existsByGroupAndMember_MemberId(group, member.getMemberId());
     }
 
     @Transactional
@@ -347,7 +351,7 @@ public class GroupService {
         }
     }
 
-    // 주어진 회원이 해당 모임의 모임장(GroupLeader)인지 검증
+    // 주어진 회원이 해당 모임의 모임장(GroupLeader)인지 검증 -> 너무 재사용성이 없음 isGroupLeader 리팩토링 예정
     public void validateGroupLeader(Group group, long memberId) {
         GroupMember groupMember = groupMemberRepository.findByGroupAndMember_MemberId(group, memberId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND_IN_GROUP));
@@ -363,6 +367,13 @@ public class GroupService {
         if (!isMember) {
             throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_IN_GROUP);
         }
+    }
+
+    // 주어진 회원이 해당 모임의 모임장인지 검증
+    public boolean isGroupLeader(Group group, long memberId) {
+        return groupMemberRepository.findByGroupAndMember_MemberId(group, memberId)
+                .map(gm -> gm.getGroupRoles() == GroupMember.GroupRoles.GROUP_LEADER)
+                .orElse(false);
     }
 
     // 각 카테고리 별 모임 생성 제한(3개) 메서드
@@ -419,29 +430,45 @@ public class GroupService {
             throw new BusinessLogicException(ExceptionCode.INVALID_GROUP_CAPACITY_UPDATE);
         }
     }
-
-        //사용자의 모임 리스트
-        @Transactional(readOnly = true)
-        public Page<Group> findGroupsByMember (Member member, Pageable pageable){
-            return groupRepository.findAllByMember(member, pageable);
-        }
-
-        @Transactional(readOnly = true)
-        public Page<GroupMember> findGroupsByRole (Member member, GroupMember.GroupRoles role, Pageable pageable){
-            return groupMemberRepository.findByMemberAndGroupRoles(member, role, pageable);
-        }
-
-        //사용자의 카테고리별 모임 리스트
-        @Transactional(readOnly = true)
-        public Page<GroupMember> findGroupsByCategory (Member member, String categoryName, Pageable pageable){
-            return groupMemberRepository.findAllByMemberAndCategoryName(member, categoryName, pageable);
-        }
-
-        //사용자의 카테고리별 모임 리스트(모임장여부)
-        @Transactional(readOnly = true)
-        public Page<GroupMember> findGroupsByCategoryAndRole (Member member, String categoryName, GroupMember.GroupRoles
-        roles, Pageable pageable){
-            return groupMemberRepository.findByMemberAndCategoryNameAndGroupRoles(member, categoryName, roles, pageable);
-        }
+    //사용자의 모임 리스트
+    @Transactional(readOnly = true)
+    public Page<Group> findGroupsByMember(Member member, Pageable pageable) {
+        return groupRepository.findAllByMember(member, pageable);
     }
 
+    @Transactional(readOnly = true)
+    public Page<GroupMember> findGroupsByRole (Member member, GroupMember.GroupRoles role, Pageable pageable){
+        return groupMemberRepository.findByMemberAndGroupRoles(member, role, pageable);
+    }
+
+    //사용자(모임원)의 카테고리별 모임 리스트
+    @Transactional(readOnly = true)
+    public Page<GroupMember> findGroupsByCategory(Member member, String categoryName, Pageable pageable) {
+        return groupMemberRepository.findAllByMemberAndCategoryName(member, categoryName, pageable);
+    }
+
+    //사용자(모임원)의 카테고리별 모임 리스트(모임장여부)
+    @Transactional(readOnly = true)
+    public Page<GroupMember> findGroupsByCategoryAndRole(Member member, String categoryName, GroupMember.GroupRoles roles, Pageable pageable){
+        return groupMemberRepository.findByMemberAndCategoryNameAndGroupRoles(member,categoryName, roles, pageable);
+    }
+
+    //사용자(비모임원)의 카테고리별 모임 리스트(디폴트:우선순위가 가장높은 카테고리)
+    @Transactional(readOnly = true)
+    public Page<Group> findGroupsDefaultCategory(int page, int size, Member member){
+        Member findMember = memberService.findVerifiedMember(member.getMemberId());
+        Category category = memberService.findTopPriorityCategory(member);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("groupId").descending());
+
+        return groupRepository.findByCategory(category.getCategoryId(), pageable);
+    }
+
+    //사용자(비모임원)의 카테고리별 모임 리스트(선택했을 경우)
+    @Transactional(readOnly = true)
+    public Page<Group> findGroupsSelectCategory(int page, int size, Member member, String categoryName){
+        Member findMember = memberService.findVerifiedMember(member.getMemberId());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("groupId").descending());
+
+        return groupRepository.findByCategoryName(categoryName, pageable);
+    }
+}

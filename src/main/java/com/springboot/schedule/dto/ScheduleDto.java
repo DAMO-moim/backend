@@ -1,11 +1,13 @@
 package com.springboot.schedule.dto;
 
+import com.springboot.member.dto.MemberDto;
 import com.springboot.schedule.entity.Schedule;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.Column;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -15,13 +17,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-//@Getter
-//@Setter
-//@NoArgsConstructor
-//@AllArgsConstructor
-//@Builder
 public class ScheduleDto {
-
     @Getter
     @Setter
     @NoArgsConstructor
@@ -70,7 +66,7 @@ public class ScheduleDto {
     @AllArgsConstructor
     @Builder
     public static class Patch {
-        @Setter
+        @Schema(description = "스케줄 ID", example = "1")
         private Long scheduleId;
 
         @Schema(description = "일정 이름", example = "스케줄명")
@@ -106,8 +102,9 @@ public class ScheduleDto {
     public static class ResponseBasic implements ScheduleResponse {
         private Long groupScheduleId;
 
-        private String scheduleName;
-        private String scheduleContent;
+        private String scheduleName; // 일정 이름
+      
+        private String scheduleContent; // 일정 소개글
 
         private LocalDate startSchedule;
         private LocalTime startTime;
@@ -115,13 +112,49 @@ public class ScheduleDto {
         private LocalDate endSchedule;
         private LocalTime endTime;
 
-        private String address;
-        private String subAddress;
+        private String address; // 주소
 
-        private int maxMemberCount;
-        private int memberCount;
+        private String subAddress; // 상세주소
+
+        private int maxMemberCount; // 참여 최대 가능 인원
+
+        private int memberCount; // 참여 인원 수
     }
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class ScheduleOfGroupResponse {
+        @Schema(description = "일정 ID", example = "1")
+        private long scheduleId;
+        @Schema(description = "일정 이름", example = "스케줄명")
+        private String scheduleName;
 
+       @Schema(description = "일정 시작 기간", example = "2025.03.24")
+        private LocalDate startDate;
+        @Schema(description = "일정 시작 시간", example = "12:00")
+        private LocalTime startTime;
+        @Schema(description = "일정 끝 기간", example = "2025.03.29")
+        private LocalDate endDate;
+        @Schema(description = "일정 끝 시간", example = "16:00")
+        private LocalTime endTime;
+
+        @Schema(description = "주소", example = "서울시 강남구 중앙학원")
+        private String address;
+        @Schema(description = "상세 주소", example = "101동 101호")
+        private String subAddress;
+      
+        @Schema(description = "일정 설정 상태", example = "단기 일정")
+        private Schedule.ScheduleStatus scheduleStatus;
+        @Schema(description = "일정 상태", example = "등록중")
+        private Schedule.ScheduleState state;
+        @Schema(description = "모임 멤버 목록",
+                example = "[{\"memberId\": 1, \"name\": \"홍길동\", \"Image\": \"https://example.com/profiles/alice.jpg\"}, " +
+                        "{\"memberId\": 2, \"name\": \"김철수\", \"Image\": \"https://example.com/profiles/bob.jpg\"}]")
+        private List<MemberDto.MemberOfGroupResponse> members;
+    }
+  
     // 🎯 정기 일정 응답 DTO
     @Getter
     @Setter
@@ -159,4 +192,5 @@ public class ScheduleDto {
         private LocalTime time;
     }
 }
+
 

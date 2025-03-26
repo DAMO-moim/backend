@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
+@Tag(name = "댓글 컨트롤러", description = "댓글 관련 컨트롤러")
 @RestController
 @RequestMapping("/boards/{board-id}/comment")
 public class CommentController {
@@ -75,13 +77,13 @@ public class CommentController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Operation(summary = "게시글 전체 조회", description = "게시글 전체 조회합니다.")
+    @Operation(summary = "댓글 전체 조회", description = "댓글 전체 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시글 조회 완료"),
-            @ApiResponse(responseCode = "400", description = "Board Validation failed")
+            @ApiResponse(responseCode = "400", description = "Comment Validation failed")
     })
     @GetMapping
-    public ResponseEntity getBoards(@PathVariable("board-id") long boardId,
+    public ResponseEntity getComments(@PathVariable("board-id") long boardId,
                                     @Positive @RequestParam int page,
                                     @Positive @RequestParam int size,
                                     @Parameter(hidden = true) @AuthenticationPrincipal Member member){

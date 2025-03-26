@@ -11,6 +11,7 @@ import com.springboot.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@Tag(name = "공용 컨트롤러", description = "로그인, 로그아웃, 토큰 재발급 컨트롤러")
 // 로그아웃을 하기 위한 컨트롤러 계층 구현
 @RestController
 @RequestMapping("/auth")
@@ -63,6 +65,11 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(summary = "액세스 토큰 재발급(자동로그인)", description = "만료된 액세스 토큰을 재발급 합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "액세스 재발급 완료"),
+            @ApiResponse(responseCode = "401", description = "만료된 리플래시 토큰입니다.")
+    })
     @PostMapping("/token/refresh")
     public ResponseEntity<?> refreshAccessToken(@RequestHeader("Refresh") String refreshHeader) {
         // 1. "Bearer " 제거

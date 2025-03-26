@@ -56,8 +56,8 @@ public class MemberDto {
         private String email;
 
         @Schema(description = "사용자 비밀번호", example = "zizonhuzzang123!@")
-        @Pattern(regexp = "^(?!\\s)(?!.*\\s{2,})(?!.*[~!@#$%^&*()_+=|<>?:{}\\[\\]\"';,.\\\\/`])[^\\s]{1,8}(?<!\\s)$",
-                message = "닉네임은 공백 없이 8자 이내, 특수문자를 포함하지 않아야 합니다.")
+        @Pattern(regexp = "^(?=(?:.*[A-Za-z]){6,})(?=.*\\d)(?=(?:[^%$#@!]*[%$#@!]){2,})[A-Za-z\\d%$#@!]{8,20}$",
+                message = "비밀번호는 8~20자 영문(최소 6자), 숫자, 특수문자(%,$,#,@,!) 2자 이상을 조합해야 합니다.")
         @NotBlank
         private String password;
     }
@@ -80,6 +80,7 @@ public class MemberDto {
     @NoArgsConstructor
     @Builder
     public static class FindIdResponse{
+        @Schema(description = "이메일", example = "email1@google.com")
         private String email;
     }
 
@@ -161,7 +162,9 @@ public class MemberDto {
     public static class MemberOfGroupResponse {
         @Schema(description = "사용자 ID", example = "1")
         private long memberId;
-        @Schema(description = "사용자 이름", example = "홍성민")
-        private String name;
+        @Schema(description = "사용자 프로필 이미지", example = "/profile")
+        private String image;
+//        @Schema(description = "사용자 이름", example = "홍성민")
+//        private String name;
     }
 }
