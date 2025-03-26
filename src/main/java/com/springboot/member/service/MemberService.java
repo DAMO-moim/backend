@@ -246,7 +246,7 @@ public class MemberService {
 
     //회원의 우선순위가 가장 높은 카테고리를 가져온다(모임일정, 모임 조회시 디폴트)
     public Category findTopPriorityCategory(Member member){
-        return memberCategoryRepository.findTopByMemberOrderByPriorityAsc(member)
+        return memberCategoryRepository.findTopByMemberCategoryOrderByPriorityAsc(member)
                 .map(MemberCategory::getCategory)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
     }

@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface MemberCategoryRepository extends JpaRepository<MemberCategory, Long> {
-    Optional<MemberCategory> findTopByMemberOrderByPriorityAsc(Member member);
+    Optional<MemberCategory> findTopByMemberCategoryOrderByPriorityAsc(Member member);
 }
