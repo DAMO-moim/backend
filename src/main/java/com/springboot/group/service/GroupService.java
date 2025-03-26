@@ -174,15 +174,15 @@ public class GroupService {
         return group;
     }
 
-    public Page<Group> findGroups(int page, int size, long memberId) {
-        // (1) 페이지 요청 객체 생성 (0-based index)
-        Pageable pageable = PageRequest.of(page, size, Sort.by("groupId").descending());
-
-        // (2) 회원이 가입한 모임만 조회 (or 전체 공개 모임 조회 가능)
-        Page<Group> groupPage = groupRepository.findAllByMemberId(memberId, pageable);
-
-        return groupPage;
-    }
+//    public Page<Group> findGroups(int page, int size, long memberId) {
+//        // (1) 페이지 요청 객체 생성 (0-based index)
+//        Pageable pageable = PageRequest.of(page, size, Sort.by("groupId").descending());
+//
+//        // (2) 회원이 가입한 모임만 조회 (or 전체 공개 모임 조회 가능)
+//        Page<Group> groupPage = groupRepository.findAllByMemberId(memberId, pageable);
+//
+//        return groupPage;
+//    }
 
     @Transactional
     public void deleteGroup(long groupId, long memberId) {
@@ -456,8 +456,17 @@ public class GroupService {
     public Page<Group> findGroupsDefaultCategory(int page, int size, Member member){
         Member findMember = memberService.findVerifiedMember(member.getMemberId());
         Category category = memberService.findTopPriorityCategory(member);
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("groupId").descending());
 
         return groupRepository.findByCategory(category.getCategoryId(), pageable);
+    }
+
+    //사용자(비모임원)의 카테고리별 모임 리스트(선택했을 경우)
+    @Transactional(readOnly = true)
+    public Page<Group> findGroupsSelectCategory(int page, int size, Member member, String categoryName){
+        Member findMember = memberService.findVerifiedMember(member.getMemberId());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("groupId").descending());
+
+        return groupRepository.findByCategoryName(categoryName, pageable);
     }
 }
