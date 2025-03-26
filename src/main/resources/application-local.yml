@@ -5,7 +5,7 @@ spring:
       matching-strategy: ant_path_matcher
   data:
     redis:
-      host: localhost  # Redis 서버의 호스트 주소를 설정
+      host: 127.0.0.1  # Redis 서버의 호스트 주소를 설정
       port: 6379       # Redis 서버가 수신 대기하는 포트를 설정
   h2:
     console:
