@@ -46,7 +46,7 @@ public class Group {
     @Column(nullable = false)
     private String maxBirth;
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "group", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Schedule> schedules;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.PERSIST)

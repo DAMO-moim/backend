@@ -38,12 +38,10 @@ public class ScheduleDto {
         private Schedule.ScheduleStatus scheduleStatus; // SINGLE, CONTINUOUS, RECURRING
 
         @NotNull
-        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         @Schema(description = "시작 시간", example = "2025-04-15T10:00:00", type = "string")
         private LocalDateTime startSchedule;
 
         @NotNull
-        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         @Schema(description = "종료 시간", example = "2025-05-10T10:00:00", type = "string")
         private LocalDateTime endSchedule;
 
@@ -77,12 +75,10 @@ public class ScheduleDto {
         @Schema(description = "일정 소개글", example = "스케줄 소개")
         private String scheduleContent;
 
-        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         @Schema(description = "시작 시간", example = "2025-04-15T10:00:00", type = "string")
         private LocalDateTime startSchedule;
 
-        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-        @Schema(description = "종료 시간", example = "2025-05-10T16:00:00", type = "string")
+        @Schema(description = "종료 시간", example = "2025-05-10T10:00:00", type = "string")
         private LocalDateTime endSchedule;
 
         @Schema(description = "주소", example = "서울시 강남구 중앙학원")

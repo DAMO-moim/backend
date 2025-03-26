@@ -187,6 +187,8 @@ public class GroupService {
         // (2) 요청한 사용자가 모임장인지 검증
         validateGroupLeader(group, memberId);
 
+        // 모임이 삭제될 경우 해당 모임에 모임일정도 삭제되어야 한다. (영속성전이 추가)
+        // 모임이 삭제 될 경우 모임에 속한 그룹멤버들이 삭제된다.
         groupMemberRepository.deleteAllByGroup(group);
 
         // (3) 모임 삭제
