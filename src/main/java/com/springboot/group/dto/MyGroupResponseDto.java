@@ -36,10 +36,10 @@ public class MyGroupResponseDto {
         @Schema(description = "모임 인원 수", example = "17")
         private int memberCount;
 
-        @Parameter(description = "카테고리 ID", example = "1")
+        @Schema(description = "카테고리 ID", example = "1")
         private Long categoryId;
 
-        @Parameter(description = "카테고리 명", example = "스포츠")
+        @Schema(description = "카테고리 명", example = "스포츠")
         private String categoryName;
     }
 }

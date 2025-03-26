@@ -80,27 +80,6 @@ public interface GroupMapper {
                 .map(this::groupToGroupResponse) // 단일 조회용 매핑 재사용
                 .collect(Collectors.toList());
     }
-    default MyGroupResponseDto.GroupInfo toMyGroupGroupInfo(Group group) {
-        return MyGroupResponseDto.GroupInfo.builder()
-                .groupId(group.getGroupId())
-                .name(group.getGroupName())
-                .introduction(group.getIntroduction())
-                .maxMemberCount(group.getMaxMemberCount())
-                .memberCount(group.getGroupMembers().size())
-                .categoryId(group.getSubCategory().getCategory().getCategoryId())
-                .categoryName(group.getSubCategory().getCategory().getCategoryName())
-                .build();
-    }
-    default MyGroupResponseDto toMyGroupResponse(String groupRole, List<Group> groups) {
-        List<MyGroupResponseDto.GroupInfo> groupInfos = groups.stream()
-                .map(this::toMyGroupGroupInfo)
-                .collect(Collectors.toList());
-
-        return MyGroupResponseDto.builder()
-                .groupRole(groupRole)
-                .groups(groupInfos)
-                .build();
-    }
 
     default GroupMemberResponseDto groupMemberToResponse(GroupMember groupMember) {
         return GroupMemberResponseDto.builder()

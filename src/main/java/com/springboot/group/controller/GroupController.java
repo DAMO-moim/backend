@@ -103,23 +103,6 @@ public class GroupController {
         return new ResponseEntity<>(new SingleResponseDto<>(groupResponse), HttpStatus.OK);
     }
 
-//    @Operation(summary = "모임 정보 전체 조회", description = "전체 모임 정보를 조회합니다.")
-//    @ApiResponses({
-//            @ApiResponse(responseCode = "200", description = "전체 모임 정보 조회 성공"),
-//            @ApiResponse(responseCode = "401", description = "권한 없음")
-//    })
-//    @GetMapping
-//    public ResponseEntity getGroups(@RequestParam @Positive int page,
-//                                    @RequestParam @Positive int size,
-//                                    @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember) {
-//        Page<Group> groupPage = groupService.findGroups(page - 1, size, authenticatedmember.getMemberId());
-//        List<Group> groups = groupPage.getContent();
-//
-//        return new ResponseEntity<>(
-//                new MultiResponseDto<>(groupMapper.groupsToGroupResponses(groups), groupPage),
-//                HttpStatus.OK);
-//    }
-
     @Operation(summary = "모임 삭제", description = "모임을 삭제합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "모임 삭제 완료"),
@@ -156,12 +139,6 @@ public class GroupController {
                                           @Parameter(hidden = true) @AuthenticationPrincipal Member member) {
         groupService.toggleRecommend(groupId, member.getMemberId());
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/my/groups")
-    public ResponseEntity getMyGroups(@Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedMember) {
-        List<MyGroupResponseDto> response = groupService.getMyGroups(authenticatedMember.getMemberId());
-        return new ResponseEntity<>(new SingleResponseDto<>(response), HttpStatus.OK);
     }
 
     @Operation(summary = "모임 탈퇴", description = "회원이 모임을 탈퇴합니다.")
@@ -203,7 +180,7 @@ public class GroupController {
                                            @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember) {
         //만약 categoryName을 입력하지 않았다면 우선순위가 가장 높은 카테고리의 모임 리스트를 조회한다.
         Page<Group> groupPage;
-        if(category == null){
+        if(category == null || category.isEmpty()){
             groupPage = groupService.findGroupsDefaultCategory(page - 1, size, authenticatedmember);
         }else{
             groupPage = groupService.findGroupsSelectCategory(page - 1, size, authenticatedmember, category);
