@@ -2,6 +2,7 @@ package com.springboot.schedule.controller;
 
 import com.springboot.dto.SingleResponseDto;
 import com.springboot.member.entity.Member;
+import com.springboot.schedule.dto.CalendarScheduleDto;
 import com.springboot.schedule.dto.ParticipantInfoDto;
 import com.springboot.schedule.service.ScheduleService;
 import com.springboot.schedule.service.ScheduleService;
@@ -10,12 +11,14 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import javax.validation.constraints.Positive;
 
@@ -43,6 +46,13 @@ public class ScheduleParticipationController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(summary = "일정 참여자 목록 조회", description = "지정된 일정에 참여한 회원들의 ID, 이름, 프로필 이미지 목록을 조회합니다. " +
+            "검색어(keyword)를 통해 참여자 이름 필터링도 가능합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "일정 참여자 목록 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "일정을 찾을 수 없습니다"),
+            @ApiResponse(responseCode = "403", description = "해당 일정이 속한 모임에 가입된 회원만 조회 가능합니다")
+    })
     @GetMapping("/{schedule-id}/participation")
     public ResponseEntity getParticipationSchedule(@PathVariable("schedule-id") long scheduleId,
                                                    @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedMember,
@@ -64,17 +74,22 @@ public class ScheduleParticipationController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-//    //내가 참여하고있는 모임일정 리스트
-//    @GetMapping("/{schedule-id}/participation")
-//    public ResponseEntity getParticipatedSchedules(@PathVariable("schedule-id") long scheduleId,
-//                                                   @Parameter(hidden = true) @AuthenticationPrincipal Member member) {
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
-//
-//    //해당 일정에 참여예정인 모임일정 리스트
-//    @GetMapping("/{schedule-id}/participation")
-//    public ResponseEntity getParticipationSchedule1(@PathVariable("schedule-id") long scheduleId,
-//                                                   @Parameter(hidden = true) @AuthenticationPrincipal Member member) {
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
+    @Operation(
+            summary = "특정 날짜의 일정 목록 조회 (달력용)", description = "선택한 날짜와 카테고리 기준으로, 해당 날짜에 참여한 일정들의 모임 이름, 일정 제목, 시간, 장소 등의 정보를 조회합니다."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "해당 날짜의 일정 목록 조회 성공"),
+            @ApiResponse(responseCode = "400", description = "요청 파라미터 형식이 잘못되었거나, 유효하지 않은 카테고리입니다"),
+            @ApiResponse(responseCode = "404", description = "해당 날짜에 표시할 일정이 존재하지 않음")
+    })
+    @GetMapping("/calendar")
+    public ResponseEntity getSchedulesOnDate(
+            @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+            @RequestParam("categoryId") Long categoryId,
+            @AuthenticationPrincipal Member member) {
+
+        List<CalendarScheduleDto> schedules = scheduleService
+                .findSchedulesByDateAndCategory(date, categoryId, member.getMemberId());
+        return ResponseEntity.ok(new SingleResponseDto<>(schedules));
+    }
 }
