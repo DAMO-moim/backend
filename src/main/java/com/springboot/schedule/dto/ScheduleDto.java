@@ -100,25 +100,38 @@ public class ScheduleDto {
     @AllArgsConstructor
     @Builder
     public static class ResponseBasic implements ScheduleResponse {
+        @Schema(description = "일정 ID", example = "1")
         private Long groupScheduleId;
 
-        private String scheduleName; // 일정 이름
-      
-        private String scheduleContent; // 일정 소개글
+        @Schema(description = "일정 이름", example = "강남역 스터디 모임")
+        private String scheduleName;
 
+        @Schema(description = "일정 소개글", example = "스터디 카페에서 스프링 강의 복습 모임입니다.")
+        private String scheduleContent;
+
+        @Schema(description = "일정 시작 날짜", example = "2025-04-01")
         private LocalDate startSchedule;
+
+        @Schema(description = "일정 시작 시간", example = "14:00:00")
         private LocalTime startTime;
 
+        @Schema(description = "일정 종료 날짜", example = "2025-04-01")
         private LocalDate endSchedule;
+
+        @Schema(description = "일정 종료 시간", example = "16:00:00")
         private LocalTime endTime;
 
-        private String address; // 주소
+        @Schema(description = "장소 주소", example = "서울특별시 강남구 테헤란로 123")
+        private String address;
 
-        private String subAddress; // 상세주소
+        @Schema(description = "상세 주소", example = "2층 스터디룸 A")
+        private String subAddress;
 
-        private int maxMemberCount; // 참여 최대 가능 인원
+        @Schema(description = "최대 참여 인원", example = "10")
+        private int maxMemberCount;
 
-        private int memberCount; // 참여 인원 수
+        @Schema(description = "현재 참여 인원 수", example = "6")
+        private int memberCount;
     }
     @Getter
     @Setter
@@ -131,7 +144,7 @@ public class ScheduleDto {
         @Schema(description = "일정 이름", example = "스케줄명")
         private String scheduleName;
 
-       @Schema(description = "일정 시작 기간", example = "2025.03.24")
+        @Schema(description = "일정 시작 기간", example = "2025.03.24")
         private LocalDate startDate;
         @Schema(description = "일정 시작 시간", example = "12:00")
         private LocalTime startTime;
@@ -162,22 +175,37 @@ public class ScheduleDto {
     @AllArgsConstructor
     @Builder
     public static class ResponseRecurring implements ScheduleResponse {
+        @Schema(description = "일정 ID", example = "1")
         private Long groupScheduleId;
 
+        @Schema(description = "일정 이름", example = "정기 운동 모임")
         private String scheduleName;
+
+        @Schema(description = "일정 소개글", example = "매주 월수금 헬스장에서 운동하는 모임입니다.")
         private String scheduleContent;
 
+        @Schema(description = "일정 시작 날짜", example = "2025-04-01")
         private LocalDate startSchedule;
+
+        @Schema(description = "일정 종료 날짜", example = "2025-05-01")
         private LocalDate endSchedule;
 
+        @Schema(description = "정기 요일", example = "[\"MONDAY\", \"WEDNESDAY\", \"FRIDAY\"]")
         private List<DayOfWeek> daysOfWeek;
 
+        @Schema(description = "실제 반복되는 날짜 리스트 (날짜 + 시간 정보 포함)")
         private List<RecurringDateDto> recurringDates;
 
+        @Schema(description = "주소", example = "서울시 강남구 논현로 100")
         private String address;
+
+        @Schema(description = "상세 주소", example = "2층 GX룸")
         private String subAddress;
 
+        @Schema(description = "최대 참여 인원", example = "20")
         private int maxMemberCount;
+
+        @Schema(description = "현재 참여 인원", example = "15")
         private int memberCount;
     }
 
@@ -188,7 +216,10 @@ public class ScheduleDto {
     @AllArgsConstructor
     @Builder
     public static class RecurringDateDto {
+        @Schema(description = "정기 일정 날짜", example = "2025-04-03")
         private LocalDate date;
+
+        @Schema(description = "정기 일정 시간", example = "10:00:00")
         private LocalTime time;
     }
 }
