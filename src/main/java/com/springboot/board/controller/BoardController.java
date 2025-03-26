@@ -61,7 +61,7 @@ public class BoardController {
             @ApiResponse(responseCode = "201", description = "게시글 수정 완료"),
             @ApiResponse(responseCode = "400", description = "Board Not Found")
     })
-    @PatchMapping("/{board-id}")
+    @PatchMapping(value = "/{board-id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity patchBoard(@PathVariable("board-id") @Positive long boardId,
                                      @PathVariable("group-id") Long groupId,
                                      @Valid @RequestPart BoardDto.Patch boardPatchDto,

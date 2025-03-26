@@ -70,7 +70,7 @@ public class GroupController {
             @ApiResponse(responseCode = "401", description = "권한 없음"),
             @ApiResponse(responseCode = "400", description = "요청이 잘못되었음")
     })
-    @PatchMapping("/{group-id}")
+    @PatchMapping(value = "/{group-id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity patchGroup(@PathVariable("group-id") @Positive long groupId,
                                      @RequestPart @Valid GroupDto.Patch groupPatchDto,
                                      @RequestPart(required = false) MultipartFile groupImage,
@@ -162,7 +162,7 @@ public class GroupController {
     })
     @GetMapping("/{group-id}/memberlist")
     public ResponseEntity memberListGroup(@PathVariable("group-id") long groupId,
-                                          @AuthenticationPrincipal Member authenticatedMember,
+                                          @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedMember,
                                           @RequestParam(value = "keyword", required = false) String keyword) {
         List<GroupMemberResponseDto> response  = groupService.memberListGroup(groupId, authenticatedMember.getMemberId(), keyword);
         return ResponseEntity.ok(new SingleResponseDto<>(response));
