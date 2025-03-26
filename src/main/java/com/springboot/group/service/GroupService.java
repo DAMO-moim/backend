@@ -178,16 +178,6 @@ public class GroupService {
         return group;
     }
 
-//    public Page<Group> findGroups(int page, int size, long memberId) {
-//        // (1) 페이지 요청 객체 생성 (0-based index)
-//        Pageable pageable = PageRequest.of(page, size, Sort.by("groupId").descending());
-//
-//        // (2) 회원이 가입한 모임만 조회 (or 전체 공개 모임 조회 가능)
-//        Page<Group> groupPage = groupRepository.findAllByMemberId(memberId, pageable);
-//
-//        return groupPage;
-//    }
-
     @Transactional
     public void deleteGroup(long groupId, long memberId) {
         // (1) 삭제할 모임 조회
