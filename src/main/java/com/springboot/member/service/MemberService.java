@@ -6,6 +6,8 @@ import com.springboot.category.service.CategoryService;
 import com.springboot.exception.BusinessLogicException;
 import com.springboot.exception.ExceptionCode;
 import com.springboot.file.Service.StorageService;
+import com.springboot.group.entity.GroupMember;
+import com.springboot.group.service.GroupMemberService;
 import com.springboot.member.entity.Member;
 import com.springboot.member.entity.MemberCategory;
 import com.springboot.member.repository.MemberCategoryRepository;
@@ -32,11 +34,13 @@ public class MemberService {
     private final AuthorityUtils authorityUtils;
     private final CategoryService categoryService;
     private final StorageService storageService;
+    private final GroupMemberService groupMemberService;
     private final String defaultImagePath;
+
 
     public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder,
                          AuthorityUtils authorityUtils, CategoryService categoryService,
-                         StorageService storageService, MemberCategoryRepository memberCategoryRepository,
+                         StorageService storageService, MemberCategoryRepository memberCategoryRepository, GroupMemberService groupMemberService,
                          @Value("${file.default-image}") String defaultImagePath) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
@@ -45,6 +49,7 @@ public class MemberService {
         this.storageService = storageService;
         this.defaultImagePath = defaultImagePath;
         this.memberCategoryRepository = memberCategoryRepository;
+        this.groupMemberService = groupMemberService;
     }
 
     public Member createMember(Member member){
@@ -116,10 +121,15 @@ public class MemberService {
     }
 
     public void myDeleteMember(Member member, long memberId){
-        //로그인한 사용자 찾기
+        //사용자가 맞는지 검증
         Member findMember = findVerifiedMember(memberId);
-        //입력한 이메일과 비밀번호를 가진 사용자 찾기
-        // Optional<Member> deleteMember = memberRepository.findByEmail(member.getEmail());
+
+        //사용자가 어떤 모임의 모임장인지 검증(탈퇴 불가)
+        if(groupMemberService.findLeader(findMember)){
+            throw new BusinessLogicException(ExceptionCode.CANNOT_DELETE_GROUP_LEADER);
+        }
+
+        //입력한 이메일과 비밀번호가 자신의 이메일과 비밀번호가 일치하는지 검증
         if(!member.getEmail().equals(findMember.getEmail())){
             throw new BusinessLogicException(ExceptionCode.INVALID_CREDENTIALS);
         }
@@ -131,16 +141,28 @@ public class MemberService {
         //둘다 문제없으면 탈퇴
         findMember.setMemberStatus(Member.MemberStatus.MEMBER_QUIT);
         memberRepository.save(findMember);
+        //회원이 탈퇴되면 모임원일 경우 가입된 모임과 모임일정에서 탈퇴
+        groupMemberService.deleteAllGroups(findMember);
     }
 
     public void deleteMember(long memberId, Member admin){
         if(!isAdmin(admin.getMemberId())){
            throw new BusinessLogicException(ExceptionCode.ACCESS_DENIED);
         }
+
         //삭제할 멤버 찾기
         Member findMember = findVerifiedMember(memberId);
+
+        //사용자가 어떤 모임의 모임장인지 검증(탈퇴 불가)
+        if(groupMemberService.findLeader(findMember)){
+            throw new BusinessLogicException(ExceptionCode.CANNOT_DELETE_GROUP_LEADER);
+        }
+
         findMember.setMemberStatus(Member.MemberStatus.MEMBER_QUIT);
         memberRepository.save(findMember);
+
+        //회원이 탈퇴되면 모임원일 경우 가입된 모임과 모임일정에서 탈퇴
+        groupMemberService.deleteAllGroups(findMember);
     }
 
     public void updateMemberCategories(long memberId, List<MemberCategory> memberCategories){
@@ -195,11 +217,13 @@ public class MemberService {
         return member;
     }
 
+    //해당 사용자가 본인인지 검증하는 메서드
     public void isAuthenticatedMember(long memberId, long authenticationMemberId){
         if(memberId != authenticationMemberId){
             throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED_MEMBER_ACCESS);
         }
     }
+
     //관리자 여부 확인 메서드
     public boolean isAdmin(long memberId){
         Member member = findVerifiedMember(memberId);
@@ -244,6 +268,7 @@ public class MemberService {
         }
     }
 
+    //회원의 우선순위가 높은 카테고리를 가져오기 위한 메서드
     //회원의 우선순위가 가장 높은 카테고리를 가져온다(모임일정, 모임 조회시 디폴트)
     public Category findTopPriorityCategory(Member member){
         return memberCategoryRepository.findTopByMemberOrderByPriorityAsc(member)

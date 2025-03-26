@@ -53,7 +53,7 @@ public class Schedule {
     @Enumerated(EnumType.STRING)
     private List<DayOfWeek> daysOfWeek = new ArrayList<>();
 
-    @OneToMany(mappedBy = "schedule", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "schedule", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private List<MemberSchedule> memberSchedules = new ArrayList<>();
 
     @Column(nullable = false)

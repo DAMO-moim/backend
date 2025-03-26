@@ -1,5 +1,6 @@
 package com.springboot.schedule.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.springboot.member.dto.MemberDto;
 import com.springboot.schedule.entity.Schedule;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -37,13 +38,11 @@ public class ScheduleDto {
         private Schedule.ScheduleStatus scheduleStatus; // SINGLE, CONTINUOUS, RECURRING
 
         @NotNull
-        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-        @Schema(description = "시작 시간", example = "2025-04-15T10:00:00")
+        @Schema(description = "시작 시간", example = "2025-04-15T10:00:00", type = "string")
         private LocalDateTime startSchedule;
 
         @NotNull
-        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-        @Schema(description = "종료 시간", example = "2025-05-10T10:00:00")
+        @Schema(description = "종료 시간", example = "2025-05-10T10:00:00", type = "string")
         private LocalDateTime endSchedule;
 
         // 정기 일정일 경우만 사용
@@ -77,11 +76,11 @@ public class ScheduleDto {
         private String scheduleContent;
 
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-        @Schema(description = "시작 시간", example = "2025-04-15T10:00:00")
+        @Schema(description = "시작 시간", example = "2025-04-15T10:00:00", type = "string")
         private LocalDateTime startSchedule;
 
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-        @Schema(description = "종료 시간", example = "2025-05-10T16:00:00")
+        @Schema(description = "종료 시간", example = "2025-05-10T10:00:00", type = "string")
         private LocalDateTime endSchedule;
 
         @Schema(description = "주소", example = "서울시 강남구 중앙학원")
