@@ -118,7 +118,6 @@ public class ScheduleService {
                 .ifPresent(end -> findSchedule.setEndSchedule(end));
 
         //시작 시간이 종료시간보다 이후인지검증
-        validateStartBeforeEnd(schedule.getStartSchedule(), schedule.getEndSchedule());
         validateRecurringScheduleLength(schedule);
 
         Optional.ofNullable(schedule.getAddress())
@@ -130,6 +129,7 @@ public class ScheduleService {
 
         //참여인원수가 1이상이고, 이 일정의 모임 최대 인원수보다 낮은지 검증
         validateScheduleCapacity(schedule.getMaxMemberCount(), group.getMaxMemberCount());
+        validateNotExceedMaxMemberCount(schedule.getMaxMemberCount(), schedule);
 
         //현재 일정참여인원수보다 최대인원수보다 낮은지 검증
         validateNotExceedMaxMemberCount(findSchedule.getMaxMemberCount(), findSchedule);
