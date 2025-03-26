@@ -25,7 +25,7 @@ import java.util.List;
 
 @Tag(name = "댓글 컨트롤러", description = "댓글 관련 컨트롤러")
 @RestController
-@RequestMapping("/boards/{board-id}/comment")
+@RequestMapping("/boards/{board-id}/comments")
 public class CommentController {
     private final CommentService commentService;
     private final CommentMapper mapper;
