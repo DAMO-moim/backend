@@ -14,10 +14,12 @@ import com.springboot.schedule.entity.Schedule;
 import com.springboot.schedule.mapper.ScheduleMapper;
 import com.springboot.schedule.repository.MemberScheduleRepository;
 import com.springboot.schedule.repository.ScheduleRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +33,7 @@ import java.util.stream.Stream;
 
 @Transactional
 @Service
+@Slf4j
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final GroupService groupService;
@@ -73,6 +76,8 @@ public class ScheduleService {
             if (schedule.getDaysOfWeek() == null || schedule.getDaysOfWeek().isEmpty()) {
                 throw new BusinessLogicException(ExceptionCode.INVALID_SCHEDULE_DAYOFWEEK);
             }
+        } else {
+            schedule.setDaysOfWeek(null);
         }
         // ✅ (4) 모임 연결
         schedule.setGroup(group);
@@ -172,7 +177,7 @@ public class ScheduleService {
 
         // 스케줄 존재 여부 확인
         Schedule schedule = findVerifiedSchedule(scheduleId);
-        schedule.setScheduleState(Schedule.ScheduleState.SCHEDULE_COMPLETED);
+        schedule.setScheduleState(Schedule.ScheduleState.SCHEDULE_DELETE);
     }
 
     @Transactional(readOnly = true)
@@ -352,5 +357,26 @@ public class ScheduleService {
         Pageable pageable = PageRequest.of(page, size);
 
         return memberScheduleRepository.findSchedulesByCategoryName(member, categoryName, pageable);
+    }
+
+    // 매일 새벽 3시에 이 메서드를 자동으로 실행함 (cron 표현식: 초 분 시 일 월 요일)
+    @Scheduled(cron = "0 * * * * *")
+    @Transactional
+    public void updateExpiredSchedules() {
+        // 현재 시각을 가져옴 (이 시각을 기준으로 일정 종료 여부 판단)
+        LocalDateTime now = LocalDateTime.now();
+
+        // 종료 시간이 현재 시각 이전이고, 아직 종료 상태(SCHEDULE_COMPLETED)로 바뀌지 않은
+        // '진행 중(SCHEDULE_ACTIVE)'인 일정들을 모두 조회함
+        List<Schedule> expiredSchedules = scheduleRepository
+                .findAllByEndScheduleBeforeAndScheduleState(now, Schedule.ScheduleState.SCHEDULE_ACTIVE);
+
+        // 조회된 일정들을 하나씩 순회하면서 상태를 '종료(SCHEDULE_COMPLETED)'로 변경
+        for (Schedule schedule : expiredSchedules) {
+            schedule.setScheduleState(Schedule.ScheduleState.SCHEDULE_COMPLETED);
+        }
+
+        // 로그로 자동 상태 변경된 일정 개수를 출력함 (서버 로그에서 확인 가능)
+        log.info("✅ 자동 종료된 일정 개수: {}", expiredSchedules.size());
     }
 }
