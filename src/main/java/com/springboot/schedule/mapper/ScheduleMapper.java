@@ -84,7 +84,8 @@ public interface ScheduleMapper {
                 .startTime(schedule.getStartSchedule().toLocalTime())
                 .endTime(schedule.getEndSchedule().toLocalTime())
                 .memberCount(schedule.getMemberSchedules().size())
-                .maxMemberCount(schedule.getMaxMemberCount());
+                .maxMemberCount(schedule.getMaxMemberCount())
+                .scheduleStatus(schedule.getScheduleStatus());
 
         // ✅ 연속 일정일 경우만 기간 정보 포함
         if (schedule.getScheduleStatus() == Schedule.ScheduleStatus.CONTINUOUS) {
