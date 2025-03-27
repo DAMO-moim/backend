@@ -358,15 +358,15 @@ public class ScheduleService {
         Category category = memberService.findTopPriorityCategory(findMember);
         Pageable pageable = PageRequest.of(page, size);
 
-        return memberScheduleRepository.findSchedulesByCategoryName(member, category.getCategoryName(), pageable);
+        return memberScheduleRepository.findSchedulesByCategoryId(member, category.getCategoryId(), pageable);
     }
 
     //카테고리별 내가 참여할 모임 일정 조회
-    public Page<Schedule> getMySchedulesByCategory(int page, int size, Member member, String categoryName) {
+    public Page<Schedule> getMySchedulesByCategory(int page, int size, Member member, long categoryId) {
         Member findMember = memberService.findVerifiedMember(member.getMemberId());
         Pageable pageable = PageRequest.of(page, size);
 
-        return memberScheduleRepository.findSchedulesByCategoryName(member, categoryName, pageable);
+        return memberScheduleRepository.findSchedulesByCategoryId(member, categoryId, pageable);
     }
 
     // 매일 새벽 3시에 이 메서드를 자동으로 실행함 (cron 표현식: 초 분 시 일 월 요일)

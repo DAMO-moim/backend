@@ -100,23 +100,23 @@ public class ScheduleParticipationController {
         return ResponseEntity.ok(new SingleResponseDto<>(schedules));
     }
 
-    @Operation(summary = "카테고리별 모임 일정", description = "모임 일정을 삭제합니다")
+    @Operation(summary = "카테고리별 모임 일정", description = "카테고리별 모임 일정을 조회합니다")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "모임 일정 삭제 완료"),
+            @ApiResponse(responseCode = "204", description = "카테고리별 모임 일정 조회성공"),
             @ApiResponse(responseCode = "401", description = "권한 없음"),
             @ApiResponse(responseCode = "404", description = "모임 일정이 존재하지 않음")
     })
     @GetMapping
     public ResponseEntity getGroupsDefault(@RequestParam @Positive int page,
                                            @RequestParam @Positive int size,
-                                           @RequestParam(required = false) String category,
+                                           @RequestParam(required = false) Long categoryId,
                                            @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember) {
         //만약 categoryName을 입력하지 않았다면 우선순위가 가장 높은 카테고리의 모임 리스트를 조회한다.
         Page<Schedule> schedulePage;
-        if(category == null || category.isEmpty()){
+        if(categoryId == null){
             schedulePage = scheduleService.getMySchedulesByCategory(page - 1, size, authenticatedmember);
         }else{
-            schedulePage = scheduleService.getMySchedulesByCategory(page - 1, size, authenticatedmember, category);
+            schedulePage = scheduleService.getMySchedulesByCategory(page - 1, size, authenticatedmember, categoryId);
         }
         List<Schedule> schedules = schedulePage.getContent();
         return new ResponseEntity<>(new MultiResponseDto<>
