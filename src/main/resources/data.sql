@@ -94,88 +94,82 @@ INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUE
 INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (30, '그외', 3);
 
 INSERT INTO category (category_id, category_name) VALUES (4, '댄스');
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (30, '줌바', 4);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (31, '힙합', 4);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (32, '왈츠', 4);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (33, '탭댄스', 4);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (34, '탱고', 4);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (35, 'K-POP', 4);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (36, '현대무용', 4);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (37, '그외', 4);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (31, '줌바', 4);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (32, '힙합', 4);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (33, '왈츠', 4);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (34, '탭댄스', 4);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (35, '탱고', 4);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (36, 'K-POP', 4);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (37, '현대무용', 4);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (38, '그외', 4);
 
 
 INSERT INTO category (category_id, category_name) VALUES (5, '반려동물');
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (38, '강아지', 5);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (39, '고양이', 5);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (40, '햄스터', 5);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (41, '조류', 5);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (42, '미어캣', 5);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (43, '프레디독', 5);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (44, '뱀', 5);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (45, '도마뱀', 5);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (46, '그외', 5);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (39, '강아지', 5);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (40, '고양이', 5);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (41, '햄스터', 5);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (42, '조류', 5);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (43, '미어캣', 5);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (44, '프레디독', 5);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (45, '뱀', 5);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (46, '도마뱀', 5);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (47, '그외', 5);
 
 
 INSERT INTO category (category_id, category_name) VALUES (6, '사교');
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (47, '지역', 6);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (48, '결혼', 6);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (49, '맛집', 6);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (50, '주류', 6);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (51, '그외', 6);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (48, '지역', 6);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (49, '결혼', 6);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (50, '맛집', 6);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (51, '주류', 6);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (52, '그외', 6);
 
 INSERT INTO category (category_id, category_name) VALUES (7, '음식');
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (52, '한식', 7);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (53, '양식', 7);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (54, '중식', 7);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (55, '일식', 7);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (56, '베이킹/제과', 7);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (57, '핸드드립', 7);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (58, '와인', 7);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (59, '조주', 7);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (60, '그외', 7);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (53, '한식', 7);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (54, '양식', 7);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (55, '중식', 7);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (56, '일식', 7);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (57, '베이킹/제과', 7);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (58, '핸드드립', 7);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (59, '와인', 7);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (60, '조주', 7);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (61, '그외', 7);
 
 INSERT INTO category (category_id, category_name) VALUES (8, '오락');
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (60, '보드게임', 8);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (61, '온라인게임', 8);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (62, '카드게임', 8);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (63, '그외', 8);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (61, '보드게임', 8);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (62, '온라인게임', 8);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (63, '카드게임', 8);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (64, '그외', 8);
 
 INSERT INTO category (category_id, category_name) VALUES (9, '포토');
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (64, '야외', 9);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (65, '실내', 9);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (66, '카메라', 9);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (67, '영상', 9);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (68, '그외', 9);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (65, '야외', 9);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (66, '실내', 9);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (67, '카메라', 9);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (68, '영상', 9);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (69, '그외', 9);
 
 INSERT INTO category (category_id, category_name) VALUES (10, '공부');
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (69, '인문학', 10);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (70, '심리학', 10);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (71, '철학', 10);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (72, '역사', 10);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (73, '시사/경제', 10);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (74, '작문/글쓰기', 10);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (75, '책/독서', 10);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (76, '그외', 10);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (70, '인문학', 10);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (71, '심리학', 10);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (72, '철학', 10);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (73, '역사', 10);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (74, '시사/경제', 10);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (75, '작문/글쓰기', 10);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (76, '책/독서', 10);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (77, '그외', 10);
 
 INSERT INTO category (category_id, category_name) VALUES (11, '노래');
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (77, '발라드', 11);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (78, '랩/힙합', 11);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (79, '클래식', 11);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (80, '재즈', 11);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (81, 'R&B', 11);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (82, '인디밴드', 11);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (83, '그외', 11);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (78, '발라드', 11);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (79, '랩/힙합', 11);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (80, '클래식', 11);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (81, '재즈', 11);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (82, 'R&B', 11);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (83, '인디밴드', 11);
+INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (84, '그외', 11);
 
 INSERT INTO category (category_id, category_name) VALUES (12, '공예');
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (77, '발라드', 11);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (78, '랩/힙합', 11);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (79, '클래식', 11);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (80, '재즈', 11);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (81, 'R&B', 11);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (82, '인디밴드', 11);
-INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (83, '그외', 11);
-INSERT INTO category (category_id, category_name) VALUES (13, '주류');
-INSERT INTO category (category_id, category_name) VALUES (14, '사교');
+
+INSERT INTO category (category_id, category_name) VALUES (13, '자동차');
+INSERT INTO category (category_id, category_name) VALUES (14, '여행');
 INSERT INTO category (category_id, category_name) VALUES (15, '춤');
 
 INSERT INTO chat_room (chat_room_id, category_id) VALUES
