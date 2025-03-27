@@ -123,7 +123,7 @@ INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUE
 INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (51, '주류', 6);
 INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (52, '그외', 6);
 
-INSERT INTO category (category_id, category_name) VALUES (7, '음식');
+INSERT INTO category (category_id, category_name) VALUES (7, '요리/레시피');
 INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (53, '한식', 7);
 INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (54, '양식', 7);
 INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (55, '중식', 7);
@@ -134,7 +134,7 @@ INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUE
 INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (60, '조주', 7);
 INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (61, '그외', 7);
 
-INSERT INTO category (category_id, category_name) VALUES (8, '오락');
+INSERT INTO category (category_id, category_name) VALUES (8, '게임/오락');
 INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (62, '보드게임', 8);
 INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (63, '온라인게임', 8);
 INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (64, '카드게임', 8);
@@ -147,7 +147,7 @@ INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUE
 INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (69, '영상', 9);
 INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (70, '그외', 9);
 
-INSERT INTO category (category_id, category_name) VALUES (10, '공부');
+INSERT INTO category (category_id, category_name) VALUES (10, '독서');
 INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (71, '인문학', 10);
 INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (72, '심리학', 10);
 INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (73, '철학', 10);
