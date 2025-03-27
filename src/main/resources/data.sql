@@ -140,7 +140,7 @@ INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUE
 INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (64, '카드게임', 8);
 INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (65, '그외', 8);
 
-INSERT INTO category (category_id, category_name) VALUES (9, '포토');
+INSERT INTO category (category_id, category_name) VALUES (9, '사진/영상');
 INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (66, '야외', 9);
 INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (67, '실내', 9);
 INSERT INTO sub_category (sub_category_id, sub_category_name, category_id) VALUES (68, '카메라', 9);
