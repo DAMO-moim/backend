@@ -176,14 +176,14 @@ public class GroupController {
     @GetMapping
     public ResponseEntity getGroupsDefault(@RequestParam @Positive int page,
                                            @RequestParam @Positive int size,
-                                           @RequestParam(required = false) String category,
+                                           @RequestParam(required = false) Long categoryId,
                                            @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember) {
         //만약 categoryName을 입력하지 않았다면 우선순위가 가장 높은 카테고리의 모임 리스트를 조회한다.
         Page<Group> groupPage;
-        if(category == null || category.isEmpty()){
+        if(categoryId == null){
             groupPage = groupService.findGroupsDefaultCategory(page - 1, size, authenticatedmember);
         }else{
-            groupPage = groupService.findGroupsSelectCategory(page - 1, size, authenticatedmember, category);
+            groupPage = groupService.findGroupsSelectCategory(page - 1, size, authenticatedmember, categoryId);
         }
         List<Group> groups = groupPage.getContent();
         return new ResponseEntity<>(

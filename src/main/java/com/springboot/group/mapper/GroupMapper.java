@@ -75,9 +75,9 @@ public interface GroupMapper {
                 );
                 return builder.build();
     }
-    default List<GroupDto.Response> groupsToGroupResponses(List<Group> groups) {
+    default List<GroupDto.CategoryResponse> groupsToGroupResponses(List<Group> groups) {
         return groups.stream()
-                .map(this::groupToGroupResponse) // 단일 조회용 매핑 재사용
+                .map(this::groupToCategoryToGroupResponse) // 단일 조회용 매핑 재사용
                 .collect(Collectors.toList());
     }
 
@@ -93,6 +93,28 @@ public interface GroupMapper {
         return groupMembers.stream()
                 .map(this::groupMemberToResponse)
                 .collect(Collectors.toList());
+    }
+
+    default GroupDto.CategoryResponse groupToCategoryToGroupResponse(Group group) {
+        GroupDto.CategoryResponse.CategoryResponseBuilder builder = GroupDto.CategoryResponse.builder()
+                .categoryId(group.getSubCategory().getCategory().getCategoryId())
+                .groupId(group.getGroupId())
+                .image(group.getImage())
+                .name(group.getGroupName())
+                .introduction(group.getIntroduction())
+                .maxMemberCount(group.getMaxMemberCount())
+                .memberCount(group.getGroupMembers().size())
+                .recommend(group.getRecommend())
+                .subCategoryName(group.getSubCategory().getSubCategoryName())
+                .tags(
+                        group.getGroupTags().stream()
+                                .map(GroupTag::getTag)
+                                .collect(Collectors.groupingBy(
+                                        Tag::getTagType,
+                                        Collectors.mapping(Tag::getTagName, Collectors.toList())
+                                ))
+                );
+        return builder.build();
     }
 
 }

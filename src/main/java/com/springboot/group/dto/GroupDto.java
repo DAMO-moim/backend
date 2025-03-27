@@ -131,4 +131,41 @@ public class GroupDto {
                         "\"groupSchedulestatus\": \"종료상태\", \"address\": \"이천시 중리동 cgv\", \"subaddress\": \"5층\"}]")
         private List<ScheduleDto.ScheduleOfGroupResponse> schedules;
     }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    @Setter
+    @NoArgsConstructor
+    public static class CategoryResponse {
+        @Schema(description = "카테고리 ID", example = "1")
+        private Long categoryId;
+
+        @Schema(description = "그룹 ID", example = "1")
+        private Long groupId;
+
+        @Schema(description = "모임 프로필 이미지", example = "/image/profile")
+        private String image;
+
+        @Schema(description = "모임명", example = "바둑 아마추어 5단이상 노장모임")
+        private String name;
+
+        @Schema(description = "모임소개", example = "바둑 아마추어 5단이상 노장모임")
+        private String introduction;
+
+        @Schema(description = "모임 추천 수", example = "15")
+        private int recommend;
+
+        @Schema(description = "모임 인원 수", example = "17")
+        private int memberCount;
+
+        @Schema(description = "모임 최대 인원 수", example = "20")
+        private int maxMemberCount;
+
+        @Schema(description = "서브 카테고리 이름", example = "바둑")
+        private String subCategoryName;
+
+        @Schema(description = "태그들 ID 목록", example = "[{\"tagId\": 1}, {\"tagId\": 2}]")
+        private Map<String, List<String>> tags;
+    }
 }

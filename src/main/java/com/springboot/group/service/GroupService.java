@@ -417,14 +417,14 @@ public class GroupService {
 
     //사용자(모임원)의 카테고리별 모임 리스트
     @Transactional(readOnly = true)
-    public Page<GroupMember> findGroupsByCategory(Member member, String categoryName, Pageable pageable) {
-        return groupMemberRepository.findAllByMemberAndCategoryName(member, categoryName, pageable);
+    public Page<GroupMember> findGroupsByCategory(Member member, Long categoryId, Pageable pageable) {
+        return groupMemberRepository.findAllByMemberAndCategoryId(member, categoryId, pageable);
     }
 
     //사용자(모임원)의 카테고리별 모임 리스트(모임장여부)
     @Transactional(readOnly = true)
-    public Page<GroupMember> findGroupsByCategoryAndRole(Member member, String categoryName, GroupMember.GroupRoles roles, Pageable pageable){
-        return groupMemberRepository.findByMemberAndCategoryNameAndGroupRoles(member,categoryName, roles, pageable);
+    public Page<GroupMember> findGroupsByCategoryAndRole(Member member, Long categoryId, GroupMember.GroupRoles roles, Pageable pageable){
+        return groupMemberRepository.findByMemberAndCategoryIdAndGroupRoles(member,categoryId, roles, pageable);
     }
 
     //사용자(비모임원)의 카테고리별 모임 리스트(디폴트:우선순위가 가장높은 카테고리)
@@ -439,11 +439,11 @@ public class GroupService {
 
     //사용자(비모임원)의 카테고리별 모임 리스트(선택했을 경우)
     @Transactional(readOnly = true)
-    public Page<Group> findGroupsSelectCategory(int page, int size, Member member, String categoryName){
+    public Page<Group> findGroupsSelectCategory(int page, int size, Member member, Long categoryId){
         Member findMember = memberService.findVerifiedMember(member.getMemberId());
-        categoryService.findVerifiedCategoryName(categoryName);
+        categoryService.findVerifiedCategoryId(categoryId);
         Pageable pageable = PageRequest.of(page, size, Sort.by("groupId").descending());
 
-        return groupRepository.findByCategoryName(categoryName, pageable);
+        return groupRepository.findByCategory(categoryId, pageable);
     }
 }
