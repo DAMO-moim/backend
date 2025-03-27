@@ -66,6 +66,8 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
                         .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        //WebSocket 관련 경로 허용
+                        .antMatchers("/ws-stomp/**", "/pub/**", "/sub/**").permitAll()
                         //Admin
                         .antMatchers("/admin/**").hasRole("ADMIN")
                         //Memeber
