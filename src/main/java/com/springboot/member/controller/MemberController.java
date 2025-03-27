@@ -178,7 +178,7 @@ public class MemberController {
     })
     //프로필 이미지 저장(수정) 메서드
     @PatchMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity fileUpload(@Parameter(hidden = true) @RequestPart(required = false)MultipartFile profileImage,
+    public ResponseEntity fileUpload(@RequestPart(required = false)MultipartFile profileImage,
                                      @Parameter(hidden = true) @AuthenticationPrincipal Member member){
 
         memberService.uploadImage(member, profileImage);

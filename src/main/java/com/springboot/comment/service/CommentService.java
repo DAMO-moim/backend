@@ -45,8 +45,10 @@ public class CommentService {
     public Comment updateComment(long boardId, Comment comment, long memberId){
         Member findMember = memberService.findVerifiedMember(memberId);
         Board findBoard = boardService.findVerifiedBoard(boardId);
+
         //해당 댓글이 실제로 존재하는지 확인이 필요
         Comment findComment = findVerifiedComment(comment.getCommentId());
+
         //해당 댓글의 작성자인지 검증이 필요하다.
         isCommentOwner(findComment, memberId);
 
@@ -60,8 +62,10 @@ public class CommentService {
     public void deleteComment(long commentId, long boardId, long memberId) {
         Member findMember = memberService.findVerifiedMember(memberId);
         Board findBoard = boardService.findVerifiedBoard(boardId);
+
         //해당 댓글이 실제로 존재하는지 확인이 필요
         Comment findComment = findVerifiedComment(commentId);
+
         //해당 댓글의 작성자인지 검증이 필요하다.
         isCommentOwner(findComment, memberId);
 
@@ -89,6 +93,6 @@ public class CommentService {
 
     //사용자의 모임 리스트
     public Page<Comment> findCommentsByMember(Member member, Pageable pageable) {
-        return commentRepository.findByMember(member, pageable);
+        return commentRepository.findByMemberAndCommentStatusNot(member, Comment.CommentStatus.COMMENT_DELETE, pageable);
     }
 }
