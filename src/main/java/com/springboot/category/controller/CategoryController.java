@@ -1,6 +1,7 @@
 package com.springboot.category.controller;
 
 import com.springboot.category.dto.CategoryDto;
+import com.springboot.category.dto.SubCategoryDto;
 import com.springboot.category.entity.Category;
 import com.springboot.category.entity.SubCategory;
 import com.springboot.category.mapper.CategoryMapper;
@@ -45,5 +46,18 @@ public class CategoryController {
         List<Category> categories = categoryService.findCategories();
         List<CategoryDto.ResponseDto> result = mapper.categoryToCategoryResponseDtos(categories);
         return new ResponseEntity(new SingleResponseDto<>(result), HttpStatus.OK);
+    }
+
+    @Operation(summary = "서브 카테고리 목록 전체 조회", description = "모임 생성시 조회될 카테고리별 서브 카테고리 목록 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "카테고리 목록 조회 완료"),
+            @ApiResponse(responseCode = "404", description = "category not found"),
+    })
+    @GetMapping("{category-id}/subcategories")
+    public ResponseEntity getSubCategories(@PathVariable("category-id") Long categoryId) {
+        List<SubCategory> subCategories = categoryService.findSubCategoriesByCategoryId(categoryId);
+        List<SubCategoryDto.Response> result = mapper.subCategoriesToResponses(subCategories);
+
+        return new ResponseEntity<>(new SingleResponseDto<>(result), HttpStatus.OK);
     }
 }
