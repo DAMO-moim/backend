@@ -16,6 +16,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Page<Board> findByMemberAndBoardStatusNot(Member member, Board.BoardStatus status, Pageable pageable);
 
     //해당 멤버의 삭제 상태가 아닌 카테고리별 게시글 조회
-    Page<Board> findByMemberAndGroup_SubCategory_Category_CategoryNameAndBoardStatusNot(
-            Member member, String categoryName, Board.BoardStatus status, Pageable pageable);
+    Page<Board> findByMemberAndGroup_SubCategory_Category_CategoryIdAndBoardStatusNot(
+            Member member, Long categoryId, Board.BoardStatus status, Pageable pageable);
 }

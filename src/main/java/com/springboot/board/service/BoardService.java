@@ -182,9 +182,9 @@ public class BoardService {
     }
 
     //사용자의 게시글 리스트(카테고리 별)
-    public Page<Board> findBoardByMemberCategory(Member member, String categoryName, Pageable pageable){
-        return boardRepository.findByMemberAndGroup_SubCategory_Category_CategoryNameAndBoardStatusNot(
-                member, categoryName, Board.BoardStatus.BOARD_DELETE, pageable);
+    public Page<Board> findBoardByMemberCategory(Member member, Long categoryId, Pageable pageable){
+        return boardRepository.findByMemberAndGroup_SubCategory_Category_CategoryIdAndBoardStatusNot(
+                member, categoryId, Board.BoardStatus.BOARD_DELETE, pageable);
     }
 
     //작성자 존재 여부와 작성자가 모임원인지 검증하는 메서드
