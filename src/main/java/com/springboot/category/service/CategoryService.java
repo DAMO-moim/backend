@@ -33,8 +33,14 @@ public class CategoryService {
         return category;
     }
 
-    public void findVerifiedCategoryName(String categoryName){
-        Optional<Category> optionalCategory = categoryRepository.findByCategoryName(categoryName);
+//    public void findVerifiedCategoryName(String categoryName){
+//        Optional<Category> optionalCategory = categoryRepository.findByCategoryName(categoryName);
+//        optionalCategory.orElseThrow(() ->
+//                new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
+//    }
+
+    public void findVerifiedCategoryId(Long categoryId){
+        Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
         optionalCategory.orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
     }

@@ -15,7 +15,7 @@ public interface MemberScheduleRepository extends JpaRepository<MemberSchedule, 
     boolean existsByScheduleAndMember(Schedule schedule, Member member);
     Optional<MemberSchedule> findByMemberAndSchedule(Member member, Schedule schedule);
 
-    @Query("SELECT s FROM MemberSchedule ms JOIN ms.schedule s WHERE ms.member = :member AND s.group.subCategory.category.id = :categoryIdORDER BY s.startSchedule ASC")
+    @Query("SELECT s FROM MemberSchedule ms JOIN ms.schedule s WHERE ms.member = :member AND s.group.subCategory.category.id = :categoryId ORDER BY s.startSchedule ASC")
     Page<Schedule> findSchedulesByCategoryId(
             @Param("member") Member member, @Param("categoryId") Long categoryId, Pageable pageable);
 }

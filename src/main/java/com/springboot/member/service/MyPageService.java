@@ -30,25 +30,25 @@ public class MyPageService {
         this.myPageMapper = myPageMapper;
     }
 
-    public Page<MyPageDto.BoardsResponse> getMyBoards(long memberId, String category, int page, int size){
+    public Page<MyPageDto.BoardsResponse> getMyBoards(long memberId, Long categoryId, int page, int size){
         Member findMember = memberService.findVerifiedMember(memberId);
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<Board> boards;
 
-        if(category.equalsIgnoreCase("ALL")){
+        if(categoryId == null){
             boards = boardService.findBoardsByMember(findMember, pageable);
         }else{
-            boards = boardService.findBoardByMemberCategory(findMember, category, pageable);
+            boards = boardService.findBoardByMemberCategory(findMember, categoryId, pageable);
         }
 
         return boards.map(myPageMapper::boardToBoardsResponse);
     }
 
-    public Page<MyPageDto.GroupsResponse> getMyGroups(long memberId, String category, boolean leaderOnly, int page, int size){
+    public Page<MyPageDto.GroupsResponse> getMyGroups(long memberId, Long categoryId, boolean leaderOnly, int page, int size){
         Member findMember = memberService.findVerifiedMember(memberId);
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
-        if (category.equalsIgnoreCase("ALL")) {
+        if (categoryId == null) {
             if (leaderOnly) {
                 // 전체 모임 중에서 내가 리더인 것만
                 Page<GroupMember> groupMembers = groupService.findGroupsByRole(
@@ -65,12 +65,12 @@ public class MyPageService {
             if (leaderOnly) {
                 // 특정 카테고리 + 내가 리더인 모임
                 Page<GroupMember> groupMembers = groupService.findGroupsByCategoryAndRole(
-                        findMember, category, GroupMember.GroupRoles.GROUP_LEADER, pageable);
+                        findMember, categoryId, GroupMember.GroupRoles.GROUP_LEADER, pageable);
                 return groupMembers.map(gm ->
                         myPageMapper.groupToGroupsResponse(gm.getGroup(), findMember));
             } else {
                 // 특정 카테고리 + 내가 속한 모든 모임
-                Page<GroupMember> groupMembers = groupService.findGroupsByCategory(findMember, category, pageable);
+                Page<GroupMember> groupMembers = groupService.findGroupsByCategory(findMember, categoryId, pageable);
                 return groupMembers.map(gm ->
                         myPageMapper.groupToGroupsResponse(gm.getGroup(),
                                 findMember));

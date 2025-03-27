@@ -70,11 +70,11 @@ public class MyPageController {
     })
     @GetMapping("/boards")
     public ResponseEntity getMyBoards(@Parameter(hidden = true) @AuthenticationPrincipal Member member,
-                                      @RequestParam(defaultValue = "ALL") String category,
+                                      @RequestParam(required = false) Long categoryId,
                                       @Positive @RequestParam int page,
                                       @Positive @RequestParam int size) {
         Page<MyPageDto.BoardsResponse> boardPage = myPageService.getMyBoards(
-                member.getMemberId(), category, page - 1, size);
+                member.getMemberId(), categoryId, page - 1, size);
         List<MyPageDto.BoardsResponse> content = boardPage.getContent();
 
         return ResponseEntity.ok(new MultiResponseDto<>(content, boardPage));
@@ -89,12 +89,12 @@ public class MyPageController {
     })
     @GetMapping("/groups")
     public ResponseEntity getMyGroups(@Parameter(hidden = true) @AuthenticationPrincipal Member member,
-                                      @RequestParam(defaultValue = "ALL") String category,
+                                      @RequestParam(required = false) Long categoryId,
                                       @RequestParam(defaultValue = "false") boolean leaderOnly, //true면 모임장인거만 보여야함
                                       @Positive @RequestParam int page,
                                       @Positive @RequestParam int size) {
         Page<MyPageDto.GroupsResponse> groupPage = myPageService.getMyGroups(
-                member.getMemberId(), category, leaderOnly, page - 1 , size);
+                member.getMemberId(), categoryId, leaderOnly, page - 1 , size);
         List<MyPageDto.GroupsResponse> content = groupPage.getContent();
 
         return ResponseEntity.ok(new MultiResponseDto<>(content, groupPage));
