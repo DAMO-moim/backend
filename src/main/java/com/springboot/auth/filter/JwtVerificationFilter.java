@@ -40,6 +40,15 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException
     {
+        // ✅ WebSocket 요청은 필터 건너뜀
+        // 웹소켓을 연결하면 토큰을 검증하는데 여기서 검증하는 jwt 검증 로직은 HTTP 연결방식 (500에러뜸)
+        // 그렇기에 WebSocket 연결은 별도 처리 (보통은 StompHandler에서 토큰 검증)
+        String uri = request.getRequestURI();
+        if (uri.startsWith("/ws-stomp")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         //서명 검증에서 발생할 수 있는 Exception 예외 처리
         //예외가 발생하면 SecurityContext에 클라이언트 인증정보(Authentication 객체)가 저장되지 않는다.
         //저장되지 않으면, Security Filter 내부에서 AuthenticationException이 발생 -> AuthenticationEntryPoint가 처리
