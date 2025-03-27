@@ -115,8 +115,8 @@ public class Group {
     }
 
     public enum GroupGender {
-        MAN("남자"),
-        GIRL("여자"),
+        MALE("남자"),
+        FEMALE("여자"),
         NONE("무관");
 
         @Getter

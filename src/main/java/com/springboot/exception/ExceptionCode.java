@@ -7,6 +7,7 @@ public enum ExceptionCode {
     MEMBER_EXISTS(409,"Member exists"),
     MEMBER_NOT_OWNER(403, "You are not the owner of this resource"),
     MEMBER_NAME_EXISTS(409, "Member Name exists"),
+    MEMBER_PHONE_NUMBER_EXISTS(409, "Member Phone Number exists"),
     GROUP_NOT_FOUND(404,"Group not found"),
     GROUP_EXISTS(409,"Group exists"),
     SCHEDULE_NOT_FOUND(404,"Group Schedule not found"),

@@ -208,6 +208,14 @@ public class MemberService {
             throw new BusinessLogicException(ExceptionCode.MEMBER_NAME_EXISTS);
     }
 
+    //폰번호 중복 여부 확인 메서드
+    public void verifyExistsPhoneNumber(String phoneNumber){
+        Optional<Member> member = memberRepository.findByPhoneNumber(phoneNumber);
+
+        if(member.isPresent())
+            throw new BusinessLogicException(ExceptionCode.MEMBER_PHONE_NUMBER_EXISTS);
+    }
+
     //회원가입한 회원인지 확인하는 메서드
     public Member findVerifiedMember(long memberId){
         Optional<Member> optionalMember = memberRepository.findById(memberId);

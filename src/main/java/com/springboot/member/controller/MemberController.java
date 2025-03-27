@@ -42,6 +42,39 @@ public class MemberController {
         this.mapper = mapper;
     }
 
+    @Operation(summary = "이메일 유효성 검증", description = "이메일이 유효한지 검증합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "이메일 검증 완료"),
+            @ApiResponse(responseCode = "409", description = "해당 이메일이 이미 존재합니다.")
+    })
+    @PostMapping("/email")
+    public ResponseEntity validateEmail(@Valid @RequestBody MemberDto.Emailvalid emailDto) {
+        memberService.verifyExistsEmail(emailDto.getEmail());
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "닉네임 유효성 검증", description = "닉네임이 유효한지 검증합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "닉네임 검증 완료"),
+            @ApiResponse(responseCode = "409", description = "해당 닉네임이 이미 존재합니다.")
+    })
+    @PostMapping("/name")
+    public ResponseEntity validateName(@Valid @RequestBody MemberDto.Name nameDto) {
+        memberService.verifyExistsName(nameDto.getName());
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "폰번호 유효성 검증", description = "폰번호이 유효한지 검증합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "폰번호 검증 완료"),
+            @ApiResponse(responseCode = "409", description = "해당 폰번호이 이미 존재합니다.")
+    })
+    @PostMapping("/phone")
+    public ResponseEntity validatePhone(@Valid @RequestBody MemberDto.Phone phoneDto) {
+        memberService.verifyExistsPhoneNumber(phoneDto.getPhoneNumber());
+        return ResponseEntity.ok().build();
+    }
+
     @Operation(summary = "회원 가입", description = "회원 가입을 진행합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "회원 등록 완료"),

@@ -370,7 +370,7 @@ public class ScheduleService {
     }
 
     // 매일 새벽 3시에 이 메서드를 자동으로 실행함 (cron 표현식: 초 분 시 일 월 요일)
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 0 0/6 * * *")
     @Transactional
     public void updateExpiredSchedules() {
         // 현재 시각을 가져옴 (이 시각을 기준으로 일정 종료 여부 판단)

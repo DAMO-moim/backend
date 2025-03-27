@@ -39,11 +39,9 @@ public class GroupDto {
         @Schema(description = "성별", example = "NONE")
         private Group.GroupGender gender;
 
-        @NotNull
         @Schema(description = "최소년생", example = "1720")
         private String minBirth;
 
-        @NotNull
         @Schema(description = "최대년생", example = "2500")
         private String maxBirth;
 

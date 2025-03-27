@@ -126,9 +126,8 @@ public class Member extends BaseEntity {
     }
 
     public enum Gender {
-        MAN("남자"),
-        GIRL("여자"),
-        NONE("무관");
+        MALE("남자"),
+        FEMALE("여자");
 
         @Getter
         private String gender;

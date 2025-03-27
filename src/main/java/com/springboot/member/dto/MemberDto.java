@@ -14,6 +14,32 @@ import java.util.List;
 @Builder
 public class MemberDto {
     @Getter
+    public static class Emailvalid{
+        @NotBlank(message = "이메일은 공백이 아니어야 합니다.")
+        @Email(message = "이메일 형식을 잘못 입력했습니다.")
+        @Schema(description = "사용자 이메일", example = "example@gmail.com")
+        private String email;
+    }
+
+    @Getter
+    public static class Name{
+        @NotBlank(message = "닉네임은 공백이 아니어야 합니다.")
+        @Pattern(regexp = "^(?!\\s)(?!.*\\s{2,})(?!.*[~!@#$%^&*()_+=|<>?:{}\\[\\]\"';,.\\\\/`])[^\\s]{1,8}(?<!\\s)$",
+                message = "닉네임은 공백 없이 8자 이내, 특수문자를 포함하지 않아야 합니다.")
+        @Schema(description = "사용자 이름", example = "홍성민")
+        private String name;
+    }
+
+    @Getter
+    public static class Phone{
+        @Pattern(regexp = "^010-\\d{3,4}-\\d{4}$",
+                message = "휴대폰 번호는 010으로 시작하는 11자리 숫자와 '-'로 구성되어야 합니다.")
+        @Schema(description = "사용자 전화번호", example = "010-1111-2222")
+        private String phoneNumber;
+    }
+
+
+    @Getter
     public static class Post {
         @NotBlank(message = "이메일은 공백이 아니어야 합니다.")
         @Email(message = "이메일 형식을 잘못 입력했습니다.")
@@ -26,7 +52,7 @@ public class MemberDto {
         @Schema(description = "사용자 비밀번호", example = "zizonhuzzang123!@")
         private String password;
 
-        @Schema(description = "사용자 성별", example = "MAN")
+        @Schema(description = "사용자 성별", example = "MALE")
         private Member.Gender gender;
 
         @Schema(description = "사용자 출생년도", example = "1892")

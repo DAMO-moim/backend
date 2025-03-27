@@ -25,6 +25,7 @@ public class MemberSchedule {
     @JoinColumn(name = "schedule")
     private Schedule schedule;
 
+    @Enumerated(EnumType.STRING)
     private ParticipationStatus participationStatus = ParticipationStatus.PARTICIPATION_YES;
 
     public enum ParticipationStatus {
