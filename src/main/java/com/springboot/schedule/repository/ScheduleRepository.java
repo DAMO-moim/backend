@@ -20,18 +20,9 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     @Query("SELECT s FROM Schedule s WHERE s.group.subCategory.category.categoryName = :categoryName")
     Page<Schedule> findByCategoryName(@Param("categoryName") String categoryName, Pageable pageable);
 
-    @Query("SELECT s FROM Schedule s " +
-            "JOIN s.group g " +
-            "JOIN g.subCategory sc " +
-            "JOIN sc.category c " +
-            "JOIN g.groupMembers gm " +
-            "WHERE gm.member.memberId = :memberId " +
-            "AND c.categoryId = :categoryId " +
-            "AND s.startSchedule <= :dateTime " +
-            "AND s.endSchedule >= :dateTime")
-    List<Schedule> findByDateAndCategoryAndMember(@Param("dateTime") LocalDateTime dateTime,
-                                                  @Param("categoryId") Long categoryId,
-                                                  @Param("memberId") Long memberId);
+    @Query("SELECT s FROM MemberSchedule ms JOIN ms.schedule s JOIN s.group g JOIN g.subCategory sc JOIN sc.category c WHERE ms.member.memberId = :memberId AND c.categoryId = :categoryId")
+    List<Schedule> findSchedulesByMemberAndCategoryId(@Param("memberId") Long memberId, @Param("categoryId") Long categoryId);
+
     // 종료 시간이 현재보다 이전이고, 상태가 '진행중'인 일정들을 조회
     List<Schedule> findAllByEndScheduleBeforeAndScheduleState(LocalDateTime now, Schedule.ScheduleState state);
 }
