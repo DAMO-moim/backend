@@ -99,12 +99,19 @@ public interface ScheduleMapper {
 
     default List<ScheduleDto.CalendarResponse> getCalendarResponse(List<Schedule> schedules) {
         return schedules.stream()
-                .map(schedule -> ScheduleDto.CalendarResponse.builder()
-                        .startSchedule(schedule.getStartSchedule().toLocalDate())
-                        .endSchedule(schedule.getEndSchedule().toLocalDate())
-                        .scheduleStatus(schedule.getScheduleStatus())
-                        .build())
-                .collect(Collectors.toList());
+                .map(schedule -> {
+                    ScheduleDto.CalendarResponse.CalendarResponseBuilder builder =
+                            ScheduleDto.CalendarResponse.builder()
+                                    .startSchedule(schedule.getStartSchedule().toLocalDate())
+                                    .endSchedule(schedule.getEndSchedule().toLocalDate())
+                                    .scheduleStatus(schedule.getScheduleStatus());
+                    // 정기 일정일 경우 요일 정보 추가
+                    if (schedule.getScheduleStatus() == Schedule.ScheduleStatus.RECURRING) {
+                        builder.daysOfWeek(schedule.getDaysOfWeek());
+                    }
 
+                    return builder.build();
+                })
+                .collect(Collectors.toList());
     }
 }
