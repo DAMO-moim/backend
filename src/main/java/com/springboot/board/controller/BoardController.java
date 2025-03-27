@@ -53,7 +53,7 @@ public class BoardController {
                                     @Parameter(hidden = true) @AuthenticationPrincipal Member member) {
         Board board = boardService.createBoard(mapper.boardPostDtoToBoard(boardPostDto), member.getMemberId(), groupId, boardImage);
 
-        return new ResponseEntity<>(new SingleResponseDto<>(mapper.boardToBoardResponseDto(board)), HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Operation(summary = "게시글 수정", description = "게시글을 수정합니다.")

@@ -274,30 +274,40 @@ public class ScheduleService {
 
     @Transactional(readOnly = true)
     public List<CalendarScheduleDto> findSchedulesByDateAndCategory(LocalDate date, Long categoryId, Long memberId) {
-        // (1) 해당 날짜에 포함되는 일정들 조회 (나 + 카테고리 기준)
-
+        // 1. 날짜를 LocalDateTime으로 변환 (하루 기준)
         LocalDateTime dateTime = date.atStartOfDay();
-        List<Schedule> schedules = scheduleRepository.findByDateAndCategoryAndMember(dateTime, categoryId, memberId);
 
-        // (2) 일정 리스트를 DTO로 매핑
+        // 2. 이 날짜에 걸칠 수 있는 일정 목록을 모두 가져오기
+        List<Schedule> schedules = scheduleRepository.findSchedulesByMemberAndCategoryId(memberId, categoryId);
+
+        // 3. 정기 일정인 경우 해당 요일에 포함되는 것만 필터링
         return schedules.stream()
-                .filter(schedule -> isScheduleOnDate(schedule, date))  // 정기 일정일 경우 필터링
-                .map(schedule -> scheduleMapper.toCalendarScheduleDto(schedule,date))
-                .collect(Collectors.toList());
+                .filter(schedule -> isScheduleOnDate(schedule, date))
+                .map(schedule -> scheduleMapper.toCalendarScheduleDto(schedule, date))
+                  .collect(Collectors.toList());
     }
 
-    private boolean isScheduleOnDate(Schedule schedule, LocalDate targetDate) {
-        if (schedule.getScheduleStatus() == Schedule.ScheduleStatus.RECURRING) {
-            return !targetDate.isBefore(schedule.getStartSchedule().toLocalDate())
-                    && !targetDate.isAfter(schedule.getEndSchedule().toLocalDate())
-                    && schedule.getDaysOfWeek().contains(targetDate.getDayOfWeek());
-        }
 
+    private boolean isScheduleOnDate(Schedule schedule, LocalDate date) {
         LocalDate start = schedule.getStartSchedule().toLocalDate();
         LocalDate end = schedule.getEndSchedule().toLocalDate();
-        return !(targetDate.isBefore(start) || targetDate.isAfter(end));
-    }
 
+        switch (schedule.getScheduleStatus()) {
+            case SINGLE:
+                return start.isEqual(date);
+
+            case CONTINUOUS:
+                return !date.isBefore(start) && !date.isAfter(end);
+
+            case RECURRING:
+                return !date.isBefore(start)
+                        && !date.isAfter(end)
+                        && schedule.getDaysOfWeek().contains(date.getDayOfWeek());
+
+            default:
+                return false;
+        }
+    }
 
     public boolean verifyMemberSchedule(Member member, Schedule schedule){
         return memberScheduleRepository.existsByScheduleAndMember(schedule, member);

@@ -39,7 +39,7 @@ server:
       force-response: true
 mail:
   address:
-    admin: ${ADMIN_EMAIL}
+    admin: admin@example.com
 jwt:
   key: ${JWT_SECRET_KEY}
   access-token-expiration-minutes: 1000

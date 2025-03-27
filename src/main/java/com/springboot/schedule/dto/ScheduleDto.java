@@ -235,6 +235,9 @@ public class ScheduleDto {
         //등록, 종료상태가아닌 (정기, 단기, 연속)
         @Schema(description = "일정 종류 상태", example = "RECURRING")
         private Schedule.ScheduleStatus scheduleStatus;
+
+        // 정기 일정(RECURRING)일 경우만 값이 들어감
+        private List<DayOfWeek> daysOfWeek;
     }
 }
 

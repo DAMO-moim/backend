@@ -74,6 +74,9 @@ public class BoardService {
         //해당 게시글이 존재하는지 검증
         Board findBoard = findVerifiedBoard(board.getBoardId());
 
+        //해당 모임의 모임원인지 확인
+        isMemberOfGroup(member, group);
+
         //해당 게시글의 작성자인지 검증
         isBoardOwner(findBoard, memberId);
 
@@ -108,10 +111,12 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public Board findBoard(long boardId, long memberId, long groupId) {
-        //작성자 존재 여부와 해당 모임의 모임원인지 확인한다. (테스트 필요)
-        //isMemberOfGroup(memberId, groupId);
+        //해당 모임의 모임원인지 확인한다.
+        Group group = groupService.findVerifiedGroup(groupId);
         Member member = memberService.findVerifiedMember(memberId);
         Board findBoard = findVerifiedBoard(boardId);
+
+        isMemberOfGroup(member, group);
 
         if (!findBoard.getBoardStatus().equals(Board.BoardStatus.BOARD_POST)) {
             throw new BusinessLogicException(ExceptionCode.BOARD_NOT_FOUND);
@@ -124,25 +129,35 @@ public class BoardService {
     public Page<Board> findBoards(int page, int size, long memberId, long groupId) {
         //게시글 정렬기능 있다면 생각
         //Page<Board> boards = PageRequest.of(page, size, sortType));
+        Group group = groupService.findVerifiedGroup(groupId);
+        Member member = memberService.findVerifiedMember(memberId);
+
+        isMemberOfGroup(member, group);
 
         return boardRepository.findByBoardStatusNot(Board.BoardStatus.BOARD_DELETE,
                 PageRequest.of(page, size, Sort.by("boardId").descending()));
     }
 
     public void deleteBoard(long boardId, long memberId, long groupId) {
-        //isMemberOfGroup(memberId, groupId);
-
+        Group group = groupService.findVerifiedGroup(groupId);
+        Member member = memberService.findVerifiedMember(memberId);
         //해당 게시글이 있는지 검증
         Board board = findVerifiedBoard(boardId);
+
         //삭제는 작성자만 가능해야 한다.
         //작성자가 맞는지 검증
         isBoardOwner(board, memberId);
+        isMemberOfGroup(member, group);
 
         if (!board.getBoardStatus().equals(Board.BoardStatus.BOARD_POST)) {
             throw new BusinessLogicException(ExceptionCode.BOARD_NOT_FOUND);
         }
 
         board.setBoardStatus(Board.BoardStatus.BOARD_DELETE);
+        //게시글이 삭제되면 그 게시글의 댓글들도 삭제상태가 된다.
+        board.getComments().forEach(comment ->
+                comment.setCommentStatus(Comment.CommentStatus.COMMENT_DELETE)
+        );
         boardRepository.save(board);
     }
 
@@ -163,12 +178,13 @@ public class BoardService {
 
     //사용자의 게시글 리스트(모든 카테고리)
     public Page<Board> findBoardsByMember(Member member, Pageable pageable) {
-        return boardRepository.findByMember(member, pageable);
+        return boardRepository.findByMemberAndBoardStatusNot(member, Board.BoardStatus.BOARD_DELETE, pageable);
     }
 
     //사용자의 게시글 리스트(카테고리 별)
     public Page<Board> findBoardByMemberCategory(Member member, String categoryName, Pageable pageable){
-        return boardRepository.findByMemberAndGroup_SubCategory_Category_CategoryName(member, categoryName, pageable);
+        return boardRepository.findByMemberAndGroup_SubCategory_Category_CategoryNameAndBoardStatusNot(
+                member, categoryName, Board.BoardStatus.BOARD_DELETE, pageable);
     }
 
     //작성자 존재 여부와 작성자가 모임원인지 검증하는 메서드

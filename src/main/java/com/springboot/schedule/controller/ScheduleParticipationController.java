@@ -81,7 +81,6 @@ public class ScheduleParticipationController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-
     @Operation(
             summary = "특정 날짜의 일정 목록 조회 (달력용)", description = "선택한 날짜와 카테고리 기준으로, 해당 날짜에 참여한 일정들의 모임 이름, 일정 제목, 시간, 장소 등의 정보를 조회합니다."
     )
@@ -90,7 +89,7 @@ public class ScheduleParticipationController {
             @ApiResponse(responseCode = "400", description = "요청 파라미터 형식이 잘못되었거나, 유효하지 않은 카테고리입니다"),
             @ApiResponse(responseCode = "404", description = "해당 날짜에 표시할 일정이 존재하지 않음")
     })
-    @GetMapping("/calendar")
+    @PostMapping("/calendar")
     public ResponseEntity getSchedulesOnDate(
             @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
             @RequestParam("categoryId") Long categoryId,

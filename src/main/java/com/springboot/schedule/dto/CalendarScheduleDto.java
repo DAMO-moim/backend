@@ -1,5 +1,6 @@
 package com.springboot.schedule.dto;
 
+import com.springboot.schedule.entity.Schedule;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -41,4 +42,7 @@ public class CalendarScheduleDto {
 
     @Schema(description = "일정 기간 (연속 일정일 경우에만 사용)", example = "2025-03-25 ~ 2025-03-28", nullable = true)
     private String duration;
+
+    @Schema(description = "일정 종류 상태", example = "일정 종류 상태(단기, 정기, 연속)")
+    private Schedule.ScheduleStatus scheduleStatus;
 }
