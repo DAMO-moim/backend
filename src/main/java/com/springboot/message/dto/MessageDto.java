@@ -28,6 +28,7 @@ public class MessageDto {
         private long messageId;               // 메시지의 고유 ID (DB에서 생성됨)
         private String content;        // 메시지 내용
         private String writer;         // 메시지 작성자
+        private String writerProfileImage;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime createdAt; // 메시지 작성 시간
     }

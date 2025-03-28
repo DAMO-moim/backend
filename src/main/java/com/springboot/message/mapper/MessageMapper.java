@@ -14,6 +14,7 @@ public interface MessageMapper {
     @Mapping(target = "chatRoom.chatRoomId", source = "chatRoomId")
     Message messagePostToMessage(MessageDto.Post requestBody);
 
+    @Mapping(source = "member.image", target = "writerProfileImage")
     @Mapping(source = "member.name", target = "writer")
     @Mapping(source = "createdAt", target = "createdAt")
     MessageDto.Response messageToMessageResponse(Message message);
