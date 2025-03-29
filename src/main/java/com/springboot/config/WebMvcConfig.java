@@ -11,8 +11,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
                 .addResourceHandler("/images/**")  // URL 경로
-                //file 프로토콜
-                .addResourceLocations("file:" + System.getProperty("user.dir") + "/fileImage/");
+                //file 프로토콜(로컬)
+                //.addResourceLocations("file:" + System.getProperty("user.dir") + "/fileImage/");
+                .addResourceLocations("file:/app/fileImage/");
     }
 
     @Override
