@@ -407,7 +407,7 @@ public class GroupService {
     //사용자의 모임 리스트
     @Transactional(readOnly = true)
     public Page<Group> findGroupsByMember(Member member, Pageable pageable) {
-        return groupRepository.findAllByMember(member, pageable);
+        return groupRepository.findAllByMemberAndGroupStatus(member, Group.GroupStatus.GROUP_ACTIVE, pageable);
     }
 
     @Transactional(readOnly = true)
