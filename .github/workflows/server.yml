@@ -57,6 +57,7 @@ jobs:
               'sudo docker pull hogeun99/spring-cicd:${GITHUB_SHA::7}',
               'sudo docker tag hogeun99/spring-cicd:${GITHUB_SHA::7} spring-cicd',
               'sudo docker run -d --name server -p 8080:8080 \\
+                -v /home/ubuntu/fileImage:/app/fileImage
                 -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \\
                 -e ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }} \\
                 spring-cicd'

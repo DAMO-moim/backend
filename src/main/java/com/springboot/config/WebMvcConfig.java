@@ -14,7 +14,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 //file 프로토콜(로컬)
                 //.addResourceLocations("file:" + System.getProperty("user.dir") + "/fileImage/");
                 .addResourceLocations( "classpath:/static/images/",
-                        "file:/home/ubuntu/fileImage/,");
+                        "file:/app/fileImage/");
     }
 
     @Override
