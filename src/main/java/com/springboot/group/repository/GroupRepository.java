@@ -23,7 +23,9 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
     @Query("SELECT gm.group FROM GroupMember gm WHERE gm.member = :member")
     Page<Group> findAllByMember(@Param("member") Member member, Pageable pageable);
 
-    Page<Group> findAllByMemberAndGroupStatus(Member member, Group.GroupStatus groupStatus, Pageable pageable);
+    //member를 가지고있는건 groupMember 이기 때문에 쿼리사용
+    @Query("SELECT gm.group FROM GroupMember gm WHERE gm.member = :member AND gm.group.groupStatus = :status")
+    Page<Group> findAllByMemberAndGroupStatus(Member member, Group.GroupStatus status, Pageable pageable);
 
     //해당 카테고리의 모임들을 조회한다(id로 받을경우)
     @Query("SELECT g FROM Group g WHERE g.subCategory.category.categoryId = :categoryId")
