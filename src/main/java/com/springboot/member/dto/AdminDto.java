@@ -23,8 +23,11 @@ public class AdminDto {
         @Schema(description = "사용자 이름", example = "홍성민")
         private String name;
 
-        @Schema(description = "사용자 성별", example = "Girl")
+        @Schema(description = "사용자 성별", example = "MALE")
         private Member.Gender gender;
+
+        @Schema(description = "사용자 성별", example = "2001")
+        private String birth;
     }
 
     @AllArgsConstructor
