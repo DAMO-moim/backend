@@ -69,6 +69,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setHeader("Authorization", "Bearer " + accessToken);
         //RefreshToken를 추가한다. 액세스토큰을 재발급하기 위해 사용
         response.setHeader("Refresh", refreshToken);
+        response.setHeader("MemberId", String.valueOf(member.getMemberId()));
 
         String message = "로그인에 성공하셨습니다.";
         Gson gson = new Gson();
