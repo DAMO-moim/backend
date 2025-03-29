@@ -39,7 +39,7 @@ server:
       force-response: true
 mail:
   address:
-    admin: ${ADMIN_EMAIL}
+    admin:
 jwt:
   key: ${JWT_SECRET_KEY}
   access-token-expiration-minutes: 1000
@@ -54,5 +54,5 @@ springdoc:
     display-request-duration: true
     try-it-out-enabled: true
 file:
-  upload-dir: fileImage
+  upload-dir: /home/ubuntu/fileImage
   default-image: /images/noImage.png

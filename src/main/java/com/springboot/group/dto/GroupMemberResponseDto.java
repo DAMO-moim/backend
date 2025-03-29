@@ -15,7 +15,7 @@ public class GroupMemberResponseDto {
     @Parameter(description = "사용자 명", example = "권택현")
     private String name;
 
-    @Parameter(description = "사용자 프로필 사진", example = "/images/noImage.png")
+    @Parameter(description = "사용자 프로필 사진", example = "/static/images/noImage.png")
     private String image;
 }
 

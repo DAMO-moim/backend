@@ -4,6 +4,5 @@ FROM openjdk:11
 ARG JAR_FILE=build/libs/*-SNAPSHOT.jar
 # jar 빌드 파일을 도커 컨테이너로 복사
 COPY ${JAR_FILE} app.jar
-COPY fileImage /app/fileImage
 # jar 파일 실행
 ENTRYPOINT ["java","-Dspring.profiles.active=local","-jar","/app.jar"]

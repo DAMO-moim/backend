@@ -13,7 +13,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addResourceHandler("/images/**")  // URL 경로
                 //file 프로토콜(로컬)
                 //.addResourceLocations("file:" + System.getProperty("user.dir") + "/fileImage/");
-                .addResourceLocations("file:/app/fileImage/");
+                .addResourceLocations( "classpath:/static/images/",
+                        "file:/home/ubuntu/fileImage/,");
     }
 
     @Override
