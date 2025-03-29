@@ -90,18 +90,34 @@ public class MemberController {
         return ResponseEntity.created(location).build();
     }
 
-    @Operation(summary = "회원 수정", description = "회원 정보를 수정합니다.")
+    @Operation(summary = "비밀번호 변경", description = "비밀번호를 변경 합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "비밀번호 변경 완료"),
+            @ApiResponse(responseCode = "404", description = "Member not found"),
+            @ApiResponse(responseCode = "404", description = "INVALID_CREDENTIALS(비밀번호가 잘못되었음)")
+    })
+    @PatchMapping("/password")
+    public ResponseEntity patchMember(@RequestBody @Valid MemberDto.PatchPassword passwordDto,
+                                      @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember){
+
+        memberService.updatePassword(passwordDto, authenticatedmember.getMemberId());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Operation(summary = "회원 수정(닉네임)", description = "회원 정보를 수정합니다(닉네임만).")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 수정 완료"),
             @ApiResponse(responseCode = "404", description = "Member not found")
     })
-    @PatchMapping("/{member-id}")
-    public ResponseEntity patchMember(@PathVariable("member-id") @Positive long memberId,
+    //@PatchMapping("/{member-id}")
+    @PatchMapping
+    public ResponseEntity patchMember(//@PathVariable("member-id") @Positive long memberId,
                                       @RequestBody @Valid MemberDto.Patch memberPatchDto,
                                       @Parameter(hidden = true) @AuthenticationPrincipal Member authenticatedmember){
-        memberPatchDto.setMemberId(memberId);
+        //memberPatchDto.setMemberId(memberId);
         Member member = memberService.updateMember(mapper.memberPatchToMember(memberPatchDto), authenticatedmember.getMemberId());
-        return new ResponseEntity<>(new SingleResponseDto<>(mapper.memberToMemberResponse(member)), HttpStatus.OK);
+        //return new ResponseEntity<>(new SingleResponseDto<>(mapper.memberToMemberResponse(member)), HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(summary = "회원 조회", description = "회원 정보를 조회합니다.")

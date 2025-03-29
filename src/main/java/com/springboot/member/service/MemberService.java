@@ -8,6 +8,7 @@ import com.springboot.exception.ExceptionCode;
 import com.springboot.file.Service.StorageService;
 import com.springboot.group.entity.GroupMember;
 import com.springboot.group.service.GroupMemberService;
+import com.springboot.member.dto.MemberDto;
 import com.springboot.member.entity.Member;
 import com.springboot.member.entity.MemberCategory;
 import com.springboot.member.repository.MemberCategoryRepository;
@@ -103,19 +104,31 @@ public class MemberService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
+    public void updatePassword(MemberDto.PatchPassword dto, long memberId){
+        Member findMember = findVerifiedMember(memberId);
+        //기존 비밀번호랑 해당 회원의 DB 비밀번호가 같은지 비교
+        if(!passwordEncoder.matches(dto.getCurrentPassword(), findMember.getPassword())){
+            throw new BusinessLogicException(ExceptionCode.INVALID_CREDENTIALS);
+        }
+
+        //새로운 비밀번호로 수정
+        String encoded = passwordEncoder.encode(dto.getNewPassword());
+        findMember.setPassword(encoded);
+        memberRepository.save(findMember);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
     public Member updateMember(Member member, long memberId){
+        //중복 이름 여부 확인
+        verifyExistsName(member.getName());
+
         //멤버가 DB에 존재하는지 확인
-        Member findMember = findVerifiedMember(member.getMemberId());
-
+        Member findMember = findVerifiedMember(memberId);
         //로그인한 멤버가 맞는지 확인
-        isAuthenticatedMember(member.getMemberId(), memberId);
+        //isAuthenticatedMember(member.getMemberId(), memberId);
 
-        //null처리를 위해서 Optional를 사용한다.
         Optional.ofNullable(member.getName())
                 .ifPresent(name -> findMember.setName(name));
-
-        //중복 이름 여부 확인
-        verifyExistsName(findMember.getName());
 
         return memberRepository.save(findMember);
     }
@@ -145,6 +158,7 @@ public class MemberService {
         groupMemberService.deleteAllGroups(findMember);
     }
 
+    //관리자의 회원탈퇴
     public void deleteMember(long memberId, Member admin){
         if(!isAdmin(admin.getMemberId())){
            throw new BusinessLogicException(ExceptionCode.ACCESS_DENIED);
