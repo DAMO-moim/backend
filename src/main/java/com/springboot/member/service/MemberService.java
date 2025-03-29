@@ -99,8 +99,10 @@ public class MemberService {
 
         //모든 회원을 페이지 단위로 받아 반환 (Page 객체를 반환한다.)
         //회원 목록을 페이지네이션 및 정렬하여 조회
-        return memberRepository.findAll(PageRequest.of(page, size,
-                Sort.by("memberId").descending()));
+        return memberRepository.findByMemberStatus(
+                Member.MemberStatus.MEMBER_ACTIVE,
+                PageRequest.of(page, size, Sort.by("memberId").descending())
+        );
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.SERIALIZABLE)
