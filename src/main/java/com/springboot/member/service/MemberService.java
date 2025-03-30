@@ -110,7 +110,11 @@ public class MemberService {
         Member findMember = findVerifiedMember(memberId);
         //기존 비밀번호랑 해당 회원의 DB 비밀번호가 같은지 비교
         if(!passwordEncoder.matches(dto.getCurrentPassword(), findMember.getPassword())){
-            throw new BusinessLogicException(ExceptionCode.INVALID_CREDENTIALS);
+            throw new BusinessLogicException(ExceptionCode.PASSWORD_NOT_MATCHED);
+        }
+
+        if(!passwordEncoder.matches(dto.getNewPassword(), findMember.getPassword())){
+            throw new BusinessLogicException(ExceptionCode.PASSWORD_SAME_AS_OLD);
         }
 
         //새로운 비밀번호로 수정
