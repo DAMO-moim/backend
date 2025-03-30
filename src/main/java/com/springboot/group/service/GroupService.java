@@ -216,6 +216,16 @@ public class GroupService {
             throw new BusinessLogicException(ExceptionCode.GROUP_FULL);
         }
 
+        // 성별 조건 검사 ( 모임에 성별 제한이 있고, 내 성별이 해당 조건과 다르면 가입 불가 )
+        // 모임 성별 조건과 멤버의 성별이 일치하면 false
+        if(group.getGender() != Group.GroupGender.NONE &&
+                !group.getGender().name().equals(member.getGender().name())){
+            throw new BusinessLogicException(ExceptionCode.INVALID_GENDER);
+        }
+
+        // 생년(나이) 조건 검사
+        validateAgeCondition(member, group);
+
         // (4) 모임원으로 등록
         GroupMember groupMember = new GroupMember();
         groupMember.setGroup(group);
@@ -223,6 +233,21 @@ public class GroupService {
         groupMember.setGroupRoles(GroupMember.GroupRoles.GROUP_MEMBER);
 
         groupMemberRepository.save(groupMember);
+    }
+
+    //모임에 나이 가입조건이 맞는지 확인
+    private void validateAgeCondition(Member member, Group group) {
+        if (group.getMinBirth() == null || group.getMaxBirth() == null) {
+            return; // 조건 없음
+        }
+
+        int birth = Integer.parseInt(member.getBirth());
+        int min = Integer.parseInt(group.getMinBirth());
+        int max = Integer.parseInt(group.getMaxBirth());
+
+        if (birth < min || birth > max) {
+            throw new BusinessLogicException(ExceptionCode.INVALID_AGE);
+        }
     }
 
     //모임에 가입된 회원인지 검증

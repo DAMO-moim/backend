@@ -40,10 +40,10 @@ public class Group {
     @Column(nullable = false)
     private GroupGender gender = GroupGender.NONE;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String minBirth;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String maxBirth;
 
     @OneToMany(mappedBy = "group", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
