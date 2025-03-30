@@ -53,7 +53,9 @@ public enum ExceptionCode {
     MEMBER_ALREADY_JOINED_SCHEDULE(400, "이미 해당 일정에 참여하고 있는 회원입니다."),
     MEMBER_NOT_JOINED_SCHEDULE(400, "해당 일정에 참여하지 않은 회원입니다."),
     LEADER_CANNOT_CANCEL_SCHEDULE(400, "모임장은 일정을 취소할 수 없습니다."),
-    CANNOT_DELETE_GROUP_LEADER(400, "모임장은 회원 탈퇴할 수 없습니다.");
+    CANNOT_DELETE_GROUP_LEADER(400, "모임장은 회원 탈퇴할 수 없습니다."),
+    PASSWORD_NOT_MATCHED(400, "기존 비밀번호가 일치하지 않습니다."),
+    PASSWORD_SAME_AS_OLD(400, "새 비밀번호는 기존에 사용한 비밀번호와 동일합니다.");
 
 
 
