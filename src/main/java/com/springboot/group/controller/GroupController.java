@@ -81,7 +81,7 @@ public class GroupController {
 
         Group updateGroup = groupService.updateGroup(group, authenticatedmember.getMemberId(), groupImage);
 
-        GroupDto.Response groupResponse = groupMapper.groupToGroupResponse(updateGroup);
+        GroupDto.Response groupResponse = groupMapper.groupToGroupResponse(updateGroup, authenticatedmember);
 
         return new ResponseEntity<>(groupResponse, HttpStatus.OK);
     }
@@ -98,7 +98,8 @@ public class GroupController {
 
         Group group = groupService.findGroup(groupId, authenticatedmember.getMemberId());
 
-        GroupDto.Response groupResponse = groupMapper.groupToGroupResponse(group);
+        //현재 사용자의 정보도 보내서 이 정보를 조회하는 사람이 무슨 권한을 가지고있는지 체크
+        GroupDto.Response groupResponse = groupMapper.groupToGroupResponse(group, authenticatedmember);
 
         return new ResponseEntity<>(new SingleResponseDto<>(groupResponse), HttpStatus.OK);
     }

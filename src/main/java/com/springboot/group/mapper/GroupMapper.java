@@ -7,6 +7,7 @@ import com.springboot.group.entity.Group;
 import com.springboot.group.entity.GroupMember;
 import com.springboot.group.entity.GroupTag;
 import com.springboot.member.dto.MemberDto;
+import com.springboot.member.entity.Member;
 import com.springboot.schedule.dto.ScheduleDto;
 import com.springboot.tag.dto.GroupTagResponseDto;
 import com.springboot.tag.dto.TagResponseDto;
@@ -20,7 +21,14 @@ import java.util.stream.Collectors;
 public interface GroupMapper {
     Group groupPostToGroup(GroupDto.Post groupPost);
     Group groupPatchToGroup(GroupDto.Patch groupPatch);
-    default GroupDto.Response groupToGroupResponse(Group group) {
+    default GroupDto.Response groupToGroupResponse(Group group, Member currentUser) {
+        //만약 모임원이 아닐경우 NON_MEMBER로 처리
+        String myRole = group.getGroupMembers().stream()
+                .filter(gm -> gm.getMember().getMemberId().equals(currentUser.getMemberId()))
+                .map(gm -> gm.getGroupRoles().name()) // "GROUP_LEADER" or "GROUP_MEMBER"
+                .findFirst()
+                .orElse("NON_MEMBER");
+
         GroupDto.Response.ResponseBuilder builder = GroupDto.Response.builder()
                 .categoryId(group.getSubCategory().getCategory().getCategoryId())
                 .groupId(group.getGroupId())
@@ -34,6 +42,7 @@ public interface GroupMapper {
                 .maxBirth(group.getMaxBirth())
                 .recommend(group.getRecommend())
                 .subCategoryName(group.getSubCategory().getSubCategoryName())
+                .myRole(myRole)
                 // 멤버 리스트 변환
                 .members(group.getGroupMembers().stream()
                         .map(groupMember -> MemberDto.MemberOfGroupResponse.builder()

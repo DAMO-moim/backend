@@ -113,6 +113,8 @@ public class GroupDto {
         @Schema(description = "서브 카테고리 이름", example = "바둑")
         private String subCategoryName;
 
+        private String myRole;
+
         @Schema(description = "모임 멤버 목록",
                 example = "[{\"memberId\": 1, \"name\": \"홍길동\", \"Image\": \"https://example.com/profiles/alice.jpg\"}, " +
                         "{\"memberId\": 2, \"name\": \"김철수\", \"Image\": \"https://example.com/profiles/bob.jpg\"}]")

@@ -171,8 +171,8 @@ public class GroupService {
         // 회원이 존재하는지
         memberService.findVerifiedMember(memberId);
 
-        // (2) 사용자가 해당 모임의 멤버인지 검증
-        validateGroupMember(group, memberId);
+//        // (2) 사용자가 해당 모임의 멤버인지 검증
+//        validateGroupMember(group, memberId);
 
         // (3) 모임 정보 반환
         return group;
