@@ -29,6 +29,8 @@ public enum ExceptionCode {
     MEMBER_ALREADY_JOINED_GROUP(409, "이미 모임에 가입한 회원입니다."),
     GROUP_FULL(400, "모임의 최대 인원 수를 초과했습니다."),
     INVALID_CREDENTIALS(400,"비밀번호 또는 이메일이 틀렸습니다."),
+    INVALID_GENDER(400,"성별 조건에 부합하지 않아 가입이 불가능합니다."),
+    INVALID_AGE(400,"나이 조건에 부합하지 않아 가입이 불가능합니다."),
     CATEGORY_NOT_FOUND(404,"Category not found"),
     CHAT_NOT_FOUND(404,"ChatRoom not found"),
     MESSAGE_NOT_FOUND(404,"Message nof found"),
