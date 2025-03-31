@@ -11,6 +11,9 @@ jobs:
     env:
       JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
       ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+      AWS_S3_ACCESS_KEY: ${{secrets.AWS_S3_ACCESS_KEY}}
+      AWS_S3_SECRET_KEY: ${{secrets.AWS_S3_SECRET_KEY}}
+      AWS_BUCKET_NAME: ${{secrets.AWS_BUCKET_NAME}}
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
@@ -60,6 +63,9 @@ jobs:
                 -v /home/ubuntu/fileImage:/app/fileImage \\
                 -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \\
                 -e ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }} \\
+                -e AWS_S3_ACCESS_KEY=${{ secrets.AWS_S3_ACCESS_KEY }} \\
+                -e AWS_S3_SECRET_KEY=${{ secrets.AWS_S3_SECRET_KEY }} \\
+                -e AWS_BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME }} \\
                 spring-cicd'
             ]" \
             --output text

@@ -57,6 +57,7 @@ public class FileSystemStorageService implements StorageService{
             throw new StorageException("Failed to upload file.", e);
         }
     }
+
     private String getFileExtension(String fileName){
         int lastDot = fileName.lastIndexOf(".");
         if (lastDot == -1) return "";
