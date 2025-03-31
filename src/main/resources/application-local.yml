@@ -55,7 +55,7 @@ springdoc:
     try-it-out-enabled: true
 file:
   upload-dir: /app/fileImage
-  default-image: /images/noImage.png
+  default-image: http://ec2-3-39-190-50.ap-northeast-2.compute.amazonaws.com:8080/images/noImage.png
 cloud:
   aws:
     credentials:

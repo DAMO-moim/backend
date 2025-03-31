@@ -2,9 +2,10 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost{서버명}:3306{포트번호}/(DB명)
-    username: {root}
-    password: {password}
+#    url: jdbc:mysql://localhost{서버명}:3306{포트번호}/(DB명)
+    url: ${RDS_ENDPOINT}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: create  # (1) 스키마 자동 생성
