@@ -135,7 +135,7 @@ public class BoardService {
 
         isMemberOfGroup(member, group);
 
-        return boardRepository.findByBoardStatusNot(Board.BoardStatus.BOARD_DELETE,
+        return boardRepository.findByGroupAndBoardStatusNot(group, Board.BoardStatus.BOARD_DELETE,
                 PageRequest.of(page, size, Sort.by("boardId").descending()));
     }
 
