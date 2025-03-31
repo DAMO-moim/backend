@@ -144,7 +144,6 @@ public class GroupService {
 //        String imageUrl = "/images/" + relativePath;
         String imageUrl = storageService.store(image, pathWithoutExt);
         group.setImage(imageUrl);
-        group.setImage(imageUrl);
 
         // (2) 모임장 검증 (메서드 활용)
         validateGroupLeader(existingGroup, memberId);

@@ -18,6 +18,9 @@ public class S3StorageService implements StorageService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+    @Value("${cloud.aws.region.static}")
+    private String region;
+
     public S3StorageService(AmazonS3 amazonS3) {
         this.amazonS3 = amazonS3;
     }
@@ -36,7 +39,7 @@ public class S3StorageService implements StorageService {
             amazonS3.putObject(putObjectRequest);
             log.info("S3 업로드 완료: {}", fileName);
 
-            return fileName; // 또는 필요 시 전체 URL 반환 가능
+            return "https://" + bucket + ".s3." + region + ".amazonaws.com/" + fileName; // 또는 필요 시 전체 URL 반환 가능
         } catch (IOException e) {
             throw new RuntimeException("S3 파일 업로드 실패", e);
         }
