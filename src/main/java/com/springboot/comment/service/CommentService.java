@@ -77,7 +77,7 @@ public class CommentService {
         Member findMember = memberService.findVerifiedMember(memberId);
         Board findBoard = boardService.findVerifiedBoard(boardId);
 
-        return commentRepository.findByCommentStatusNot(Comment.CommentStatus.COMMENT_DELETE,
+        return commentRepository.findByBoardAndCommentStatusNot(findBoard, Comment.CommentStatus.COMMENT_DELETE,
                 PageRequest.of(page, size, Sort.by("commentId").descending()));
     }
     //작성자가 맞는지 검증하는 메서드
