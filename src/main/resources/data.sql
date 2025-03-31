@@ -24,36 +24,28 @@ INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (22, 'age', '60대');
 INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (23, 'age', '70대');
 INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (24, 'age', '80대');
 
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (25, 'age_range', '10대 - 20대');
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (26, 'age_range', '20대 - 30대');
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (27, 'age_range', '30대 - 40대');
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (28, 'age_range', '40대 - 50대');
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (29, 'age_range', '50대 - 60대');
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (30, 'age_range', '60대 - 70대');
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (31, 'age_range', '70대 - 80대');
+INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (25, 'mood', '차분한');
+INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (26, 'mood', '활발한');
+INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (27, 'mood', '고급진');
+INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (28, 'mood', '편안한');
+INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (29, 'mood', '친구같은');
+INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (30, 'mood', '우아한');
+INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (31, 'mood', '시끌벅적');
 
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (32, 'mood', '차분한');
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (33, 'mood', '활발한');
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (34, 'mood', '고급진');
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (35, 'mood', '편안한');
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (36, 'mood', '친구같은');
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (37, 'mood', '우아한');
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (38, 'mood', '시끌벅적');
+INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (32, 'place', '실내');
+INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (33, 'place', '실외');
+INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (34, 'place', '실내 / 실외');
 
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (39, 'place', '실내');
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (40, 'place', '실외');
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (41, 'place', '실내 / 실외');
+INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (35, 'region', '서울');
+INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (36, 'region', '경기도');
+INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (37, 'region', '전라도');
+INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (38, 'region', '강원도');
+INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (39, 'region', '충청도');
+INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (40, 'region', '경상도');
+INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (41, 'region', '제주도');
 
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (42, 'region', '서울');
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (43, 'region', '경기도');
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (44, 'region', '전라도');
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (45, 'region', '강원도');
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (46, 'region', '충청도');
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (47, 'region', '경상도');
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (48, 'region', '제주도');
-
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (49, 'fee', '유');
-INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (50, 'fee', '무');
+INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (42, 'fee', '유');
+INSERT INTO tag (tag_id, tag_type, tag_name) VALUES (43, 'fee', '무');
 
 
 INSERT INTO category (category_id, category_name) VALUES (1, '스포츠');
