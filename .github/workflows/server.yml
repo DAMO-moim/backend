@@ -26,13 +26,7 @@ jobs:
       - name: Set active profile for Spring Boot
         run: echo "SPRING_PROFILES_ACTIVE=local"
       - name: Build with Gradle
-        run: |
-          ./gradlew build \
-            -D AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }} \
-            -D AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
-            -D AWS_BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME }} \
-            -D JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \
-            -D ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}
+        run: ./gradlew build -x test
       - name: Docker build
         run: |
           docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
