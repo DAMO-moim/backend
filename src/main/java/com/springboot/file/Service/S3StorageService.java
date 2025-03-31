@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Slf4j
-@Service
 public class S3StorageService implements StorageService {
     private final AmazonS3 amazonS3;
 
