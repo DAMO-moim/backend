@@ -54,9 +54,11 @@ public class BoardService {
             String uuid = UUID.randomUUID().toString();
             String pathWithoutExt = "groups/" + group.getGroupId() + "/" + uuid;
             // 이미지가 저장되며 내부적으로 확장자를 붙임
-            String relativePath = storageService.store(imageFile, pathWithoutExt);
+            //String relativePath = storageService.store(imageFile, pathWithoutExt);
             // 실제 접근가능한 url -> 프론트가 이 링크 사용할 예정
-            String imageUrl = "/images/" + relativePath;
+            //String imageUrl = "/images/" + relativePath;
+
+            String imageUrl = storageService.store(imageFile, pathWithoutExt);
             // 실제 db에 이미지 경로 저장
             board.setImage(imageUrl);
         } else {
@@ -101,9 +103,8 @@ public class BoardService {
             // 새 이미지 저장
             String uuid = UUID.randomUUID().toString();
             String pathWithoutExt = "groups/" + group.getGroupId() + "/" + uuid;
-            String relativePath = storageService.store(imageFile, pathWithoutExt);
-            String imageUrl = "/images/" + relativePath;
 
+            String imageUrl = storageService.store(imageFile, pathWithoutExt);
             findBoard.setImage(imageUrl);
         }
         return boardRepository.save(findBoard);
