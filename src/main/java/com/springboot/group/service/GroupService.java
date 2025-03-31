@@ -102,8 +102,9 @@ public class GroupService {
 
         // 이미지 저장
         String pathWithoutExt = "groups/" + group.getGroupId() + "/profile"; // 혹은 groupId 이후 재지정
-        String relativePath = storageService.store(image, pathWithoutExt);
-        String imageUrl = "/images/" + relativePath;
+        //String relativePath = storageService.store(image, pathWithoutExt);
+        //String imageUrl = "/images/" + relativePath;
+        String imageUrl = storageService.store(image, pathWithoutExt);
         group.setImage(imageUrl);
 
         // (6) 모임장(`GroupMember`) 정보 저장
@@ -139,8 +140,10 @@ public class GroupService {
 
         // 이미지 저장
         String pathWithoutExt = "groups/" + existingGroup.getGroupId() + "/profile"; // 혹은 groupId 이후 재지정
-        String relativePath = storageService.store(image, pathWithoutExt);
-        String imageUrl = "/images/" + relativePath;
+//        String relativePath = storageService.store(image, pathWithoutExt);
+//        String imageUrl = "/images/" + relativePath;
+        String imageUrl = storageService.store(image, pathWithoutExt);
+        group.setImage(imageUrl);
         group.setImage(imageUrl);
 
         // (2) 모임장 검증 (메서드 활용)
