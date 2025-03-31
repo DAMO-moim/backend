@@ -56,12 +56,12 @@ springdoc:
 file:
   upload-dir: /app/fileImage
   default-image: /images/noImage.png
-#cloud:
-#  aws:
-#    credentials:
-#      accessKey: ${AWS_ACCESS_KEY}
-#      secretKey: ${AWS_SECRET_ACCESS_KEY}
-#    region:
-#      static: ap-northeast-2
-#    s3:
-#      bucket: ${AWS_BUCKET_NAME}
+cloud:
+  aws:
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY}
+      secretKey: ${AWS_SECRET_ACCESS_KEY}
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: ${AWS_BUCKET_NAME}
