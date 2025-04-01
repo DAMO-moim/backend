@@ -63,7 +63,7 @@ public class StompHandler implements ChannelInterceptor {
                 accessor.getSessionAttributes().put("username", username);
                 accessor.getSessionAttributes().put("memberId", memberId);
 
-                Authentication authentication = jwtTokenizer.get(token);
+                Authentication authentication = jwtTokenizer.getAuthentication(token);
                 accessor.setUser(authentication);
             } catch (Exception e) {
                 throw new AccessDeniedException("Invalid token"); // 토큰 검증 실패 시 예외 발생
