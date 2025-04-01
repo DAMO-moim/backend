@@ -10,6 +10,7 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -61,6 +62,9 @@ public class StompHandler implements ChannelInterceptor {
                 // WebSocket 세션에 사용자 정보 저장 (메시지 핸들러에서 사용 가능)
                 accessor.getSessionAttributes().put("username", username);
                 accessor.getSessionAttributes().put("memberId", memberId);
+
+                Authentication authentication = jwtTokenizer.get(token);
+                accessor.setUser(authentication);
             } catch (Exception e) {
                 throw new AccessDeniedException("Invalid token"); // 토큰 검증 실패 시 예외 발생
             }

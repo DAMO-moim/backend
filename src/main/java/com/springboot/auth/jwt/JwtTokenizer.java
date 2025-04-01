@@ -10,14 +10,17 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 //JWT 생성, 검증, 발급하는 클래스
@@ -162,5 +165,17 @@ public class JwtTokenizer {
                     return true;
                 })
                 .orElse(false); // 키가 존재하지 않거나 삭제되지 않았을 때 false 반환
+    }
+
+    //리액트 네이티브와 웹 소켓 연동을 위한 메서드(권하 객체 생성 -> stompHandler에 쓰임)
+    public Authentication getAuthentication(String token) {
+        String base64EncodedSecretKey = encodedBase64SecretKey(secretKey);
+        Claims claims = getClaims(token, base64EncodedSecretKey).getBody();
+
+        String username = claims.get("username", String.class);
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER")); // 기본 권한 부여
+
+        UserDetails userDetails = new User(username, "", authorities);
+        return new UsernamePasswordAuthenticationToken(userDetails, token, authorities);
     }
 }
