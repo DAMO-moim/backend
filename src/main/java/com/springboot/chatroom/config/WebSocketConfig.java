@@ -29,9 +29,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/ws-stomp") // WebSocket 연결 엔드포인트 설정
                 //.setAllowedOrigins("http://localhost:8080") // 특정 도메인에서만 WebSocket 허용 (보안 강화)
                 //.setAllowedOrigins("*")
-                .setAllowedOriginPatterns("http://localhost:3000")
+                .setAllowedOriginPatterns("*");
                 //포스트맨에선 사용불가능
-                .withSockJS(); // WebSocket을 지원하지 않는 환경에서도 사용 가능 (폴백 처리)
+                //.withSockJS(); // WebSocket을 지원하지 않는 환경에서도 사용 가능 (폴백 처리)
     }
 
     //메세지 브로커는 메세지 전송을 중계

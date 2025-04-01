@@ -12,10 +12,12 @@ spring:
       port: 6379       # Redis 서버가 수신 대기하는 포트를 설정
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
+#    무조건 mysql 들어가서 내가 사용한 데이터베이스 명 적기!
     url: jdbc:mysql://${RDS_ENDPOINT}:13306/damo_database?serverTimezone=Asia/Seoul&useSSL=false
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
   jpa:
+    #무조건 테이블이 생성되고 나서야 sql파일을 실행되게 한다.
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: update  # (1) 스키마 자동 생성
