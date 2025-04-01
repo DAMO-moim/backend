@@ -12,7 +12,7 @@ spring:
       port: 6379       # Redis 서버가 수신 대기하는 포트를 설정
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${RDS_ENDPOINT}
+    url: jdbc:mysql://${RDS_ENDPOINT}:13306/damo-database-deploy?serverTimezone=Asia/Seoul&useSSL=false
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
   jpa:
