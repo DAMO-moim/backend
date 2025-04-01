@@ -97,8 +97,6 @@ public class GroupService {
         if (image == null || image.isEmpty()) {
             throw new BusinessLogicException(ExceptionCode.IMAGE_REQUIRED);
         }
-        // (5) 모임 저장
-        Group savedGroup = groupRepository.save(group);
 
         // 이미지 저장
         String pathWithoutExt = "groups/" + group.getGroupId() + "/profile"; // 혹은 groupId 이후 재지정
@@ -106,6 +104,9 @@ public class GroupService {
         //String imageUrl = "/images/" + relativePath;
         String imageUrl = storageService.store(image, pathWithoutExt);
         group.setImage(imageUrl);
+
+        // (5) 모임 저장
+        Group savedGroup = groupRepository.save(group);
 
         // (6) 모임장(`GroupMember`) 정보 저장
         GroupMember groupLeader = new GroupMember();
