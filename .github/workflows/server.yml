@@ -64,7 +64,6 @@ jobs:
               'sudo docker tag hogeun99/spring-cicd:${GITHUB_SHA::7} spring-cicd',
               'sudo docker run -d --name server -p 8080:8080 \\
                 -v /home/ubuntu/fileImage:/app/fileImage \\
-                -e SPRING_PROFILES_ACTIVE=server \\
                 -e RDS_ENDPOINT=${{ secrets.RDS_ENDPOINT }} \\
                 -e MYSQL_USER=${{ secrets.MYSQL_USER }} \\
                 -e MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }} \\
