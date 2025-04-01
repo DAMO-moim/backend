@@ -1,7 +1,7 @@
 #local, server 공통 실행 환경 설정
 spring:
   profiles:
-    active: local #server배포시 변경필요
+    active: server # server 사용시 local에서 변경해야함
   servlet:
     multipart:
       max-file-size: 10MB

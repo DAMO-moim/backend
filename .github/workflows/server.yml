@@ -14,6 +14,9 @@ jobs:
       AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+      RDS_ENDPOINT: ${{ secrets.RDS_ENDPOINT }}
+      MYSQL_USER: ${{ secrets.MYSQL_USER }}
+      MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
@@ -24,7 +27,7 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Set active profile for Spring Boot
-        run: echo "SPRING_PROFILES_ACTIVE=local"
+        run: echo "SPRING_PROFILES_ACTIVE=server" # =server, =local 로 환경설정
       - name: Build with Gradle
         run: ./gradlew build -x test
       - name: Docker build
@@ -61,6 +64,9 @@ jobs:
               'sudo docker tag hogeun99/spring-cicd:${GITHUB_SHA::7} spring-cicd',
               'sudo docker run -d --name server -p 8080:8080 \\
                 -v /home/ubuntu/fileImage:/app/fileImage \\
+                -e RDS_ENDPOINT=${{ secrets.RDS_ENDPOINT }} \\
+                -e MYSQL_USER=${{ secrets.MYSQL_USER }} \\
+                -e MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }} \\
                 -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \\
                 -e ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }} \\
                 -e AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }} \\
