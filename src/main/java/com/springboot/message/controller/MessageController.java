@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -30,7 +31,7 @@ public class MessageController {
     //클라이언트로 메세지 전송 요청을 받으면 클라이언트가 chatRoomID를 가진 채팅방에 메세지를 보낸다.
     @MessageMapping("/chat/{chatRoomId}/sendMessage") // 메시지 발행 엔드포인트
     public void sendMessage(@DestinationVariable String chatRoomId,
-                            MessageDto.Post messageDto,
+                            @Payload MessageDto.Post messageDto,
                             SimpMessageHeaderAccessor headerAccessor){
         //Stomp 세션 ID 가져오기
         String sessionId = headerAccessor.getSessionId();
