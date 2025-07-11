@@ -41,14 +41,13 @@ public class StompHandler implements ChannelInterceptor {
             if (token == null) {
                 throw new AccessDeniedException("Token is missing"); // 토큰이 없으면 예외 발생
             }
-
             try {
                 // JWT 토큰 검증
                 String base64EncodedSecretKey = jwtTokenizer.encodedBase64SecretKey(jwtTokenizer.getSecretKey());
                 Jws<Claims> claimsJws = jwtTokenizer.getClaims(token, base64EncodedSecretKey);
                 Claims claims = claimsJws.getBody(); // 토큰에서 클레임(사용자 정보) 추출
 
-                // 사용자 정보 추출 (토큰 생성 시 "username", "memberId" 키로 저장했다고 가정)
+                // 사용자 정보 추출
                 String username = claims.get("username", String.class);
                 Long memberId = claims.get("memberId", Long.class);
 
