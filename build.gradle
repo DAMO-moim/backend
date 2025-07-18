@@ -52,6 +52,7 @@ dependencies {
 
 	//채팅 구현
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'// 추가
+	implementation 'org.springframework:spring-messaging'
 	implementation("org.springframework.security:spring-security-messaging")
 
 	//아마존 연동
